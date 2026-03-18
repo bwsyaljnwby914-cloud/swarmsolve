@@ -193,17 +193,11 @@
         currentStep = n;
     }
 
-    // Avatar upload
+    // Avatar upload via server
     document.getElementById("setup-avatar-input").addEventListener("change", function(e) {
         var file = e.target.files[0];
         if (!file) return;
         if (file.size > 2 * 1024 * 1024) { alert("Image too large (max 2MB)"); return; }
-
-        var userId = "{{ user.id }}";
-        var ext = file.name.split(".").pop();
-        var fileName = userId + "/avatar." + ext;
-        var supabaseUrl = "{{ supabase_url }}";
-        var supabaseKey = "{{ supabase_key }}";
 
         // Show preview immediately
         var reader = new FileReader();
@@ -221,14 +215,14 @@
         };
         reader.readAsDataURL(file);
 
-        // Upload to Supabase
-        fetch(supabaseUrl + "/storage/v1/object/avatars/" + fileName, {
-            method: "POST",
-            headers: {"apikey": supabaseKey, "Authorization": "Bearer " + supabaseKey, "Content-Type": file.type, "x-upsert": "true"},
-            body: file
-        }).then(function(r) {
-            if (r.ok) {
-                window._uploadedAvatarUrl = supabaseUrl + "/storage/v1/object/public/avatars/" + fileName + "?t=" + Date.now();
+        // Upload via server
+        var fd = new FormData();
+        fd.append("avatar", file);
+        fetch("/profile/upload-avatar", {method: "POST", body: fd})
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (d.ok) {
+                window._uploadedAvatarUrl = d.url;
             }
         });
     });

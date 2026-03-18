@@ -303,47 +303,36 @@ body.rtl .nav-links.active{left:0!important}
         .catch(function(){btn.disabled=false;btn.textContent="Save";showToast("Network error");});
     }
 
-    // Avatar upload
+    // Avatar upload via server
     document.getElementById("avatar-input").addEventListener("change",function(e){
         var file=e.target.files[0];
         if(!file)return;
         if(file.size>2*1024*1024){showToast("Image too large (max 2MB)");return;}
 
-        // Upload to Supabase Storage
-        var userId="{{user.id}}";
-        var ext=file.name.split(".").pop();
-        var fileName=userId+"/avatar."+ext;
-        var supabaseUrl="{{supabase_url}}";
-        var supabaseKey="{{supabase_key}}";
+        showToast("Uploading...");
+        var fd=new FormData();
+        fd.append("avatar",file);
 
-        fetch(supabaseUrl+"/storage/v1/object/avatars/"+fileName,{
-            method:"POST",
-            headers:{"apikey":supabaseKey,"Authorization":"Bearer "+supabaseKey,"Content-Type":file.type,"x-upsert":"true"},
-            body:file
-        })
-        .then(function(r){
-            if(!r.ok)throw new Error("Upload failed");
-            var publicUrl=supabaseUrl+"/storage/v1/object/public/avatars/"+fileName+"?t="+Date.now();
-            // Update profile with new avatar URL
-            return fetch("/profile/update",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({avatar_url:publicUrl})});
-        })
+        fetch("/profile/upload-avatar",{method:"POST",body:fd})
         .then(function(r){return r.json();})
         .then(function(d){
             if(d.ok){
-                // Update display
                 var display=document.getElementById("avatar-display");
                 if(display.tagName==="IMG"){
-                    display.src=supabaseUrl+"/storage/v1/object/public/avatars/"+fileName+"?t="+Date.now();
+                    display.src=d.url;
                 } else {
                     var img=document.createElement("img");
-                    img.src=supabaseUrl+"/storage/v1/object/public/avatars/"+fileName+"?t="+Date.now();
+                    img.src=d.url;
                     img.className="avatar-img";img.id="avatar-display";
                     display.parentNode.replaceChild(img,display);
                 }
                 showToast("Photo updated!");
+            } else {
+                showToast("Upload failed: "+(d.error||"Unknown error"));
             }
         })
-        .catch(function(err){showToast("Upload failed: "+err.message);});
+        .catch(function(err){showToast("Upload failed");});
+    });
     });
 
     // Toast

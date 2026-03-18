@@ -280,6 +280,72 @@ def profile_update():
     return jsonify({"error": "No data"}), 400
 
 
+@app.route("/profile/upload-avatar", methods=["POST"])
+def upload_avatar():
+    """Upload avatar image via server to Supabase Storage"""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    if "avatar" not in request.files:
+        return jsonify({"error": "No file"}), 400
+
+    file = request.files["avatar"]
+    if not file.filename:
+        return jsonify({"error": "No file"}), 400
+
+    # Check size (max 2MB)
+    file.seek(0, 2)
+    size = file.tell()
+    file.seek(0)
+    if size > 2 * 1024 * 1024:
+        return jsonify({"error": "File too large (max 2MB)"}), 400
+
+    # Determine content type
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else "jpg"
+    content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "gif": "image/gif", "webp": "image/webp"}.get(ext, "image/jpeg")
+
+    file_path = f"{user['id']}/avatar.{ext}"
+    access_token = session.get("access_token", SUPABASE_KEY)
+
+    # Upload to Supabase Storage
+    r = requests.post(
+        f"{SUPABASE_URL}/storage/v1/object/avatars/{file_path}",
+        headers={
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": content_type,
+            "x-upsert": "true"
+        },
+        data=file.read()
+    )
+
+    if r.status_code not in [200, 201]:
+        # Try with anon key if access token fails
+        file.seek(0)
+        r = requests.post(
+            f"{SUPABASE_URL}/storage/v1/object/avatars/{file_path}",
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": content_type,
+                "x-upsert": "true"
+            },
+            data=file.read()
+        )
+
+    if r.status_code in [200, 201]:
+        public_url = f"{SUPABASE_URL}/storage/v1/object/public/avatars/{file_path}?t={int(__import__('time').time())}"
+        # Update profile
+        update_profile(user["id"], {"avatar_url": public_url}, access_token)
+        user["avatar_url"] = public_url
+        session["user"] = user
+        session.modified = True
+        return jsonify({"ok": True, "url": public_url})
+
+    return jsonify({"error": "Upload failed", "detail": r.text}), 500
+
+
 # ===== OTHER PAGES =====
 
 @app.route("/new-agent")
