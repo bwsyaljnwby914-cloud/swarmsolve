@@ -57,7 +57,7 @@
         .then(function(r) { return r.json(); })
         .then(function(data) {
             if (data.ok) {
-                window.location.href = "/profile";
+                window.location.href = data.is_new ? "/setup" : "/profile";
             } else {
                 throw new Error(data.error || "Failed");
             }

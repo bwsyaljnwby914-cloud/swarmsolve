@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile — SwarmSolve</title>
+    <link rel="stylesheet" href="/static/style.css?v=7">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.setup-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.setup-card{background:#0d1117;border:1px solid #161b22;border-radius:20px;width:100%;max-width:520px;overflow:hidden}
+.setup-header{background:linear-gradient(135deg,#22d3ee20,#818cf820);padding:32px 28px 24px;text-align:center}
+.setup-header h1{font-size:26px;font-weight:800;color:#f0f6fc;margin-bottom:6px}
+.setup-header p{color:#8b949e;font-size:14px}
+.setup-steps{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.setup-step{width:36px;height:4px;border-radius:4px;background:#21262d;transition:.3s}
+.setup-step.active{background:#22d3ee}
+.setup-step.done{background:#34d399}
+
+.setup-body{padding:28px}
+
+/* Step containers */
+.step-content{display:none}
+.step-content.active{display:block}
+
+/* Avatar step */
+.avatar-pick{text-align:center;margin:20px 0}
+.avatar-pick-img{width:120px;height:120px;border-radius:50%;border:4px solid #161b22;object-fit:cover;display:block;margin:0 auto 16px;background:#161b22}
+.avatar-pick-placeholder{width:120px;height:120px;border-radius:50%;border:4px solid #161b22;background:linear-gradient(135deg,#22d3ee,#818cf8);display:flex;align-items:center;justify-content:center;font-size:48px;color:#060911;font-weight:800;margin:0 auto 16px}
+.avatar-pick-btn{display:inline-block;background:#161b22;color:#22d3ee;border:1px solid #22d3ee40;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.avatar-pick-btn:hover{background:#22d3ee20}
+.avatar-pick-btn input{display:none}
+.avatar-hint{color:#6e7681;font-size:12px;margin-top:8px}
+
+/* Form fields */
+.setup-field{margin-bottom:18px}
+.setup-field label{display:block;font-size:14px;font-weight:600;color:#c9d1d9;margin-bottom:6px}
+.setup-field .required{color:#f87171}
+.setup-field input,.setup-field textarea{width:100%;background:#161b22;border:1px solid #21262d;color:#f0f6fc;padding:12px 14px;border-radius:10px;font-size:16px;font-family:'Plus Jakarta Sans',sans-serif;transition:.2s;-webkit-appearance:none}
+.setup-field input:focus,.setup-field textarea:focus{outline:none;border-color:#22d3ee}
+.setup-field .field-hint{font-size:12px;color:#6e7681;margin-top:4px}
+.setup-field .field-error{font-size:12px;color:#f87171;margin-top:4px;display:none}
+
+/* Username check */
+.username-status{font-size:12px;margin-top:4px}
+.username-ok{color:#34d399}
+.username-taken{color:#f87171}
+
+/* Buttons */
+.setup-buttons{display:flex;gap:10px;margin-top:24px}
+.btn-next{flex:1;background:linear-gradient(135deg,#22d3ee,#06b6d4);color:#060911;padding:14px;border-radius:10px;font-size:16px;font-weight:700;border:none;cursor:pointer;transition:.2s}
+.btn-next:hover{transform:translateY(-1px);box-shadow:0 4px 16px #22d3ee30}
+.btn-next:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{background:#161b22;color:#c9d1d9;padding:14px 20px;border-radius:10px;font-size:15px;font-weight:600;border:1px solid #21262d;cursor:pointer;transition:.2s}
+.btn-back:hover{border-color:#30363d}
+.btn-skip{background:none;color:#6e7681;border:none;font-size:13px;cursor:pointer;padding:8px;transition:.2s;display:block;margin:12px auto 0}
+.btn-skip:hover{color:#8b949e}
+
+/* Welcome animation */
+.welcome-check{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#34d399,#22d3ee);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 20px;animation:popIn .4s ease}
+@keyframes popIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+.welcome-title{font-size:28px;font-weight:800;color:#f0f6fc;text-align:center;margin-bottom:8px}
+.welcome-sub{color:#8b949e;text-align:center;font-size:15px;margin-bottom:24px;line-height:1.6}
+
+/* Mobile */
+@media(max-width:768px){
+    .setup-page{padding:12px;align-items:flex-start;padding-top:40px}
+    .setup-card{border-radius:16px}
+    .setup-header{padding:24px 20px 20px}
+    .setup-header h1{font-size:22px}
+    .setup-body{padding:20px}
+    .avatar-pick-img,.avatar-pick-placeholder{width:100px;height:100px;font-size:40px}
+}
+</style>
+</head>
+<body>
+    <div class="setup-page">
+        <div class="setup-card">
+            <div class="setup-header">
+                <h1>🧬 Welcome to SwarmSolve!</h1>
+                <p>Let's set up your profile in 3 quick steps</p>
+                <div class="setup-steps">
+                    <div class="setup-step active" id="dot-1"></div>
+                    <div class="setup-step" id="dot-2"></div>
+                    <div class="setup-step" id="dot-3"></div>
+                </div>
+            </div>
+
+            <div class="setup-body">
+
+                <!-- STEP 1: Avatar -->
+                <div class="step-content active" id="step-1">
+                    <div class="avatar-pick">
+                        {% if user.avatar_url %}
+                            <img src="{{ user.avatar_url }}" class="avatar-pick-img" id="setup-avatar">
+                        {% else %}
+                            <div class="avatar-pick-placeholder" id="setup-avatar">{{ (user.name or 'U')[0] | upper }}</div>
+                        {% endif %}
+                        <label class="avatar-pick-btn">
+                            📷 Choose Photo
+                            <input type="file" id="setup-avatar-input" accept="image/*">
+                        </label>
+                        <div class="avatar-hint">Or keep your Google photo</div>
+                    </div>
+                    <div class="setup-buttons">
+                        <button class="btn-next" onclick="goStep(2)">Next →</button>
+                    </div>
+                    <button class="btn-skip" onclick="goStep(2)">Skip for now</button>
+                </div>
+
+                <!-- STEP 2: Username & Name -->
+                <div class="step-content" id="step-2">
+                    <div class="setup-field">
+                        <label>Username <span class="required">*</span></label>
+                        <input type="text" id="setup-username" placeholder="e.g. ahmed_ai" maxlength="30">
+                        <div class="field-hint">This is your public display name on the leaderboard</div>
+                        <div class="username-status" id="username-status"></div>
+                    </div>
+                    <div class="setup-field">
+                        <label>Full Name</label>
+                        <input type="text" id="setup-fullname" value="{{ user.name or '' }}" placeholder="Your full name">
+                    </div>
+                    <div class="setup-field">
+                        <label>Bio</label>
+                        <textarea id="setup-bio" rows="3" placeholder="I build AI agents that optimize algorithms..."></textarea>
+                    </div>
+                    <div class="setup-buttons">
+                        <button class="btn-back" onclick="goStep(1)">←</button>
+                        <button class="btn-next" id="btn-step2-next" onclick="goStep(3)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Links -->
+                <div class="step-content" id="step-3">
+                    <div class="setup-field">
+                        <label>GitHub</label>
+                        <input type="text" id="setup-github" placeholder="github.com/username">
+                        <div class="field-hint">Optional — shows on your public profile</div>
+                    </div>
+                    <div class="setup-field">
+                        <label>LinkedIn</label>
+                        <input type="text" id="setup-linkedin" placeholder="linkedin.com/in/username">
+                        <div class="field-hint">Optional — helps recruiters find you</div>
+                    </div>
+                    <div class="setup-buttons">
+                        <button class="btn-back" onclick="goStep(2)">←</button>
+                        <button class="btn-next" id="btn-finish" onclick="finishSetup()">Complete Setup ✓</button>
+                    </div>
+                    <button class="btn-skip" onclick="finishSetup()">Skip and finish</button>
+                </div>
+
+                <!-- STEP 4: Welcome! -->
+                <div class="step-content" id="step-4">
+                    <div class="welcome-check">✓</div>
+                    <div class="welcome-title">You're all set!</div>
+                    <div class="welcome-sub">Your profile is ready. Now build your first AI agent and start competing with the world.</div>
+                    <div class="setup-buttons" style="flex-direction:column;gap:10px">
+                        <button class="btn-next" onclick="window.location.href='/new-agent'" style="width:100%">🤖 Create Your First Agent</button>
+                        <button class="btn-back" onclick="window.location.href='/'" style="width:100%;text-align:center">Browse Challenges →</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var currentStep = 1;
+
+    function goStep(n) {
+        // Validate step 2
+        if (n === 3) {
+            var username = document.getElementById("setup-username").value.trim();
+            if (!username) {
+                document.getElementById("setup-username").style.borderColor = "#f87171";
+                document.getElementById("username-status").innerHTML = '<span class="username-taken">Username is required</span>';
+                return;
+            }
+        }
+
+        // Hide all steps
+        document.querySelectorAll(".step-content").forEach(function(s) { s.classList.remove("active"); });
+        document.getElementById("step-" + n).classList.add("active");
+
+        // Update dots
+        for (var i = 1; i <= 3; i++) {
+            var dot = document.getElementById("dot-" + i);
+            dot.className = "setup-step";
+            if (i < n) dot.classList.add("done");
+            if (i === n) dot.classList.add("active");
+        }
+
+        currentStep = n;
+    }
+
+    // Avatar upload
+    document.getElementById("setup-avatar-input").addEventListener("change", function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) { alert("Image too large (max 2MB)"); return; }
+
+        var userId = "{{ user.id }}";
+        var ext = file.name.split(".").pop();
+        var fileName = userId + "/avatar." + ext;
+        var supabaseUrl = "{{ supabase_url }}";
+        var supabaseKey = "{{ supabase_key }}";
+
+        // Show preview immediately
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            var display = document.getElementById("setup-avatar");
+            if (display.tagName === "IMG") {
+                display.src = ev.target.result;
+            } else {
+                var img = document.createElement("img");
+                img.src = ev.target.result;
+                img.className = "avatar-pick-img";
+                img.id = "setup-avatar";
+                display.parentNode.replaceChild(img, display);
+            }
+        };
+        reader.readAsDataURL(file);
+
+        // Upload to Supabase
+        fetch(supabaseUrl + "/storage/v1/object/avatars/" + fileName, {
+            method: "POST",
+            headers: {"apikey": supabaseKey, "Authorization": "Bearer " + supabaseKey, "Content-Type": file.type, "x-upsert": "true"},
+            body: file
+        }).then(function(r) {
+            if (r.ok) {
+                window._uploadedAvatarUrl = supabaseUrl + "/storage/v1/object/public/avatars/" + fileName + "?t=" + Date.now();
+            }
+        });
+    });
+
+    // Username validation
+    var usernameTimer;
+    document.getElementById("setup-username").addEventListener("input", function() {
+        var val = this.value.trim();
+        this.style.borderColor = "#21262d";
+        document.getElementById("username-status").innerHTML = "";
+        if (!val) return;
+
+        // Basic validation
+        if (!/^[a-zA-Z0-9_]{3,30}$/.test(val)) {
+            document.getElementById("username-status").innerHTML = '<span class="username-taken">3-30 characters, letters, numbers, underscore only</span>';
+            return;
+        }
+
+        document.getElementById("username-status").innerHTML = '<span style="color:#6e7681">Checking...</span>';
+    });
+
+    // Finish setup
+    function finishSetup() {
+        var btn = document.getElementById("btn-finish");
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+
+        var data = {
+            username: document.getElementById("setup-username").value.trim(),
+            full_name: document.getElementById("setup-fullname").value.trim(),
+            bio: document.getElementById("setup-bio").value.trim(),
+            github: document.getElementById("setup-github").value.trim(),
+            linkedin: document.getElementById("setup-linkedin").value.trim()
+        };
+
+        if (window._uploadedAvatarUrl) {
+            data.avatar_url = window._uploadedAvatarUrl;
+        }
+
+        fetch("/profile/update", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            // Show welcome step regardless
+            goStep(4);
+            // Update all dots to done
+            for (var i = 1; i <= 3; i++) {
+                document.getElementById("dot-" + i).className = "setup-step done";
+            }
+        })
+        .catch(function() {
+            goStep(4);
+        });
+    }
+    </script>
+</body>
+</html>

@@ -206,13 +206,23 @@ def set_session():
     session["access_token"] = access_token
     session.modified = True
 
-    return jsonify({"ok": True})
+    is_new = not profile or not profile.get("username")
+    return jsonify({"ok": True, "is_new": is_new})
 
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home"))
+
+
+@app.route("/setup")
+def setup():
+    """Setup page for new users to complete their profile"""
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login"))
+    return render_template("setup.html", user=user, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
 
 
 # ===== PROFILE =====
