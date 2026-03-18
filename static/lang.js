@@ -328,45 +328,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== HAMBURGER MENU =====
-  const hamburger = document.getElementById("hamburger");
-  const navLinks = document.getElementById("nav-links");
-  if (hamburger && navLinks) {
-    hamburger.addEventListener("click", (e) => {
-      e.stopPropagation();
-      hamburger.classList.toggle("active");
-      navLinks.classList.toggle("active");
-      // Prevent body scroll when menu is open
-      document.body.style.overflow = navLinks.classList.contains("active") ? "hidden" : "";
-    });
-
-    // Close menu when clicking any link inside nav
-    navLinks.querySelectorAll("a, button:not(#lang-toggle)").forEach((link) => {
-      // Skip the lang toggle since it doesn't navigate
-      if (link.id === "lang-toggle") return;
-      link.addEventListener("click", () => {
-        hamburger.classList.remove("active");
-        navLinks.classList.remove("active");
-        document.body.style.overflow = "";
-      });
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener("click", (e) => {
-      if (navLinks.classList.contains("active") && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-        hamburger.classList.remove("active");
-        navLinks.classList.remove("active");
-        document.body.style.overflow = "";
-      }
-    });
-
-    // Close on Escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && navLinks.classList.contains("active")) {
-        hamburger.classList.remove("active");
-        navLinks.classList.remove("active");
-        document.body.style.overflow = "";
-      }
-    });
-  }
 });
