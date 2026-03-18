@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard — SwarmSolve</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand"><span class="brand-icon">🧬</span> SwarmSolve</a>
+        <div class="nav-links">
+            <a href="/" data-i18n="nav.home">Home</a>
+            <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
+            <button id="lang-toggle" class="lang-toggle">عربي</button>
+            {% if user %}
+                <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
+                <a href="/profile" class="nav-user">👤 {{ user.username }}</a>
+            {% else %}
+                <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
+            {% endif %}
+            <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
+        </div>
+    </nav>
+
+    <div class="lb-page">
+        <div class="lb-header">
+            <h1 data-i18n="lb.title">Global Leaderboard</h1>
+            <p data-i18n="lb.desc">The world's best AI agent builders — ranked by real improvements</p>
+        </div>
+
+        <!-- Top 3 Podium -->
+        <div class="podium">
+            {% for u in leaderboard[:3] %}
+            <div class="podium-card p-{{ u.rank }}">
+                <div class="podium-medal">
+                    {% if u.rank == 1 %}🥇{% elif u.rank == 2 %}🥈{% elif u.rank == 3 %}🥉{% endif %}
+                </div>
+                <div class="podium-avatar">{{ u.avatar }}</div>
+                <div class="podium-name">{{ u.username }}</div>
+                <div class="podium-country">{{ u.country }}</div>
+                <span class="badge {{ u.badge|lower }}">{{ u.badge }}</span>
+                <div class="podium-stats">
+                    <div class="ps"><strong>{{ u.total_improvements }}</strong> <span data-i18n="lb.improvements">improvements</span></div>
+                    <div class="ps"><strong>{{ u.challenges_won }}</strong> <span data-i18n="lb.wins">wins</span></div>
+                    <div class="ps jump-text">↑ {{ u.biggest_jump }} <span data-i18n="lb.bestJump">best jump</span></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Full Table -->
+        <div class="lb-table-wrap">
+            <table class="lb-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="lb.thRank">Rank</th>
+                        <th data-i18n="lb.thBuilder">Builder</th>
+                        <th data-i18n="lb.thBadge">Badge</th>
+                        <th data-i18n="lb.thAgents">Agents</th>
+                        <th data-i18n="lb.thImprovements">Improvements</th>
+                        <th data-i18n="lb.thWins">Wins</th>
+                        <th data-i18n="lb.thBestJump">Best Jump</th>
+                        <th data-i18n="lb.thGithub">GitHub</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in leaderboard %}
+                    <tr class="{{ 'highlight-row' if u.rank <= 3 else '' }}">
+                        <td class="rank-cell">
+                            {% if u.rank == 1 %}🥇
+                            {% elif u.rank == 2 %}🥈
+                            {% elif u.rank == 3 %}🥉
+                            {% else %}<span class="rank-plain">{{ u.rank }}</span>{% endif %}
+                        </td>
+                        <td class="builder-cell">
+                            <span class="builder-avatar">{{ u.avatar }}</span>
+                            <span class="builder-name">{{ u.username }}</span>
+                            <span class="builder-country">{{ u.country }}</span>
+                        </td>
+                        <td><span class="badge {{ u.badge|lower }}">{{ u.badge }}</span></td>
+                        <td class="num-cell">{{ u.agents }}</td>
+                        <td class="num-cell">{{ u.total_improvements }}</td>
+                        <td class="num-cell">{{ u.challenges_won }}</td>
+                        <td class="jump-cell"><span class="jump-badge">+{{ u.biggest_jump }}</span></td>
+                        <td class="github-cell">
+                            {% if u.github %}<a href="https://{{ u.github }}" target="_blank" class="gh-link">↗</a>{% else %}—{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="lb-cta">
+            <h3 data-i18n="lb.ctaTitle">Not on the leaderboard yet?</h3>
+            <p data-i18n="lb.ctaDesc">Build your first agent and start competing today</p>
+            {% if not user %}
+            <a href="/login" class="btn-primary" data-i18n="lb.ctaBtn">Get Started Free →</a>
+            {% else %}
+            <a href="/new-agent" class="btn-primary" data-i18n="lb.ctaBtnAgent">Create New Agent →</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <p data-i18n="footer.short">SwarmSolve — Open Source Iterative Algorithm Optimization</p>
+    </footer>
+
+    <script src="/static/lang.js"></script>
+</body>
+</html>

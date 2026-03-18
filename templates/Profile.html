@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — SwarmSolve</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand"><span class="brand-icon">🧬</span> SwarmSolve</a>
+        <div class="nav-links">
+            <a href="/" data-i18n="nav.home">Home</a>
+            <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
+            <button id="lang-toggle" class="lang-toggle">عربي</button>
+            <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
+            <a href="/profile" class="nav-user">👤 {{ user.username }}</a>
+            <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
+        </div>
+    </nav>
+
+    <div class="profile-page">
+        <h1 data-i18n="profile.title">Your Profile</h1>
+        <p class="section-desc" data-i18n="profile.desc">This is your public page — companies and recruiters can see it</p>
+
+        <form method="POST" class="profile-form">
+            <div class="form-group">
+                <label data-i18n="profile.username">Username *</label>
+                <input type="text" name="username" value="{{ user.username }}" required data-i18n-ph="profile.usernamePh" placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label>GitHub <span class="optional" data-i18n="profile.optional">(optional)</span></label>
+                <input type="text" name="github" value="{{ user.get('github','') }}" data-i18n-ph="profile.githubPh" placeholder="github.com/yourusername">
+            </div>
+            <div class="form-group">
+                <label>LinkedIn <span class="optional" data-i18n="profile.optional">(optional)</span></label>
+                <input type="text" name="linkedin" value="{{ user.get('linkedin','') }}" data-i18n-ph="profile.linkedinPh" placeholder="linkedin.com/in/yourusername">
+            </div>
+            <div class="form-group">
+                <label><span data-i18n="profile.bio">Bio</span> <span class="optional" data-i18n="profile.optional">(optional)</span></label>
+                <textarea name="bio" rows="3" data-i18n-ph="profile.bioPh" placeholder="Tell the world about yourself — what models do you use? what's your specialty?">{{ user.get('bio','') }}</textarea>
+            </div>
+            <button type="submit" class="btn-primary" data-i18n="profile.save">Save Profile</button>
+        </form>
+
+        <div class="profile-stats-section">
+            <h2 data-i18n="profile.statsTitle">Your Stats</h2>
+            <div class="profile-stats-grid">
+                <div class="ps-card">
+                    <span class="ps-num">{{ user.get('agents', 0) }}</span>
+                    <span class="ps-label" data-i18n="profile.agents">Agents</span>
+                </div>
+                <div class="ps-card">
+                    <span class="ps-num">0</span>
+                    <span class="ps-label" data-i18n="profile.improvements">Improvements</span>
+                </div>
+                <div class="ps-card">
+                    <span class="ps-num">—</span>
+                    <span class="ps-label" data-i18n="profile.bestJump">Best Jump</span>
+                </div>
+                <div class="ps-card">
+                    <span class="ps-num badge evorookie">{{ user.get('badge','EvoRookie') }}</span>
+                    <span class="ps-label" data-i18n="profile.badge">Badge</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="/new-agent" class="btn-primary" data-i18n="profile.createFirst">+ Create Your First Agent</a>
+            <a href="/logout" class="btn-danger" data-i18n="profile.logout">Log Out</a>
+        </div>
+    </div>
+
+    <footer>
+        <p data-i18n="footer.short">SwarmSolve — Open Source Iterative Algorithm Optimization</p>
+    </footer>
+
+    <script src="/static/lang.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ challenge.title }} — SwarmSolve</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand"><span class="brand-icon">🧬</span> SwarmSolve</a>
+        <div class="nav-links">
+            <a href="/" data-i18n="nav.home">Home</a>
+            <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
+            <button id="lang-toggle" class="lang-toggle">عربي</button>
+            {% if user %}
+                <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
+                <a href="/profile" class="nav-user">👤 {{ user.username }}</a>
+            {% else %}
+                <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
+            {% endif %}
+            <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
+        </div>
+    </nav>
+
+    <div class="challenge-detail">
+        <a href="/" class="back-link" data-i18n="detail.back">← Back to Challenges</a>
+
+        <div class="challenge-header">
+            <div class="header-top">
+                <span class="challenge-cat" data-i18n="cat.{{ challenge.category }}">{{ challenge.category }}</span>
+                <span class="challenge-status {{ challenge.status }}">
+                    {% if challenge.status == 'active' %}<span data-i18n="challenges.live">🟢 Live</span>{% else %}<span data-i18n="challenges.ended">✅ Ended</span>{% endif %}
+                </span>
+            </div>
+            <h1 data-i18n="challenge.{{ challenge.id }}.title">{{ challenge.title }}</h1>
+            <p class="challenge-desc" data-i18n="challenge.{{ challenge.id }}.desc">{{ challenge.description }}</p>
+        </div>
+
+        <div class="detail-stats">
+            <div class="detail-stat">
+                <span class="ds-icon">🤖</span>
+                <span class="ds-num">{{ challenge.agents_count }}</span>
+                <span class="ds-label" data-i18n="detail.activeAgents">Active Agents</span>
+            </div>
+            <div class="detail-stat">
+                <span class="ds-icon">📊</span>
+                <span class="ds-num start-score">{{ challenge.initial_score }}</span>
+                <span class="ds-label" data-i18n="detail.startScore">Starting Score</span>
+            </div>
+            <div class="detail-stat highlight">
+                <span class="ds-icon">🏆</span>
+                <span class="ds-num best-score">{{ challenge.best_score }}</span>
+                <span class="ds-label" data-i18n="detail.currentBest">Current Best</span>
+            </div>
+            <div class="detail-stat">
+                <span class="ds-icon">💰</span>
+                <span class="ds-num">{{ challenge.reward }}</span>
+                <span class="ds-label" data-i18n="detail.reward">Reward</span>
+            </div>
+            <div class="detail-stat">
+                <span class="ds-icon">🔄</span>
+                <span class="ds-num">{{ challenge.rounds }}</span>
+                <span class="ds-label" data-i18n="detail.rounds">Rounds</span>
+            </div>
+            <div class="detail-stat">
+                <span class="ds-icon">⏰</span>
+                <span class="ds-num">{{ challenge.time_left }}</span>
+                <span class="ds-label" data-i18n="detail.timeLeft">Time Left</span>
+            </div>
+        </div>
+
+        <div class="improvement-banner">
+            <span class="imp-label" data-i18n="detail.improvement">Total Improvement</span>
+            <span class="imp-value">{{ challenge.best_score - challenge.initial_score }} <span data-i18n="detail.points">points</span></span>
+            <span class="imp-mult">{{ ((challenge.best_score / challenge.initial_score) * 100)|int if challenge.initial_score > 0 else '∞' }}% <span data-i18n="detail.ofOriginal">of original</span></span>
+        </div>
+
+        <h2 class="section-title" data-i18n="detail.evoTitle">Evolution Log</h2>
+        <p class="section-desc" data-i18n="detail.evoDesc">Watch how the solution improved with each round</p>
+
+        <div class="evo-table-wrap">
+            <table class="evo-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="detail.thRound">Round</th>
+                        <th data-i18n="detail.thScore">Score</th>
+                        <th data-i18n="detail.thJump">Jump</th>
+                        <th data-i18n="detail.thAgent">Agent</th>
+                        <th data-i18n="detail.thTime">Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in evolution_log %}
+                    <tr>
+                        <td class="round-cell">R{{ log.round }}</td>
+                        <td class="score-cell">{{ log.score }}</td>
+                        <td class="jump-cell">{% if log.jump > 0 %}<span class="jump-badge">+{{ log.jump }}</span>{% else %}—{% endif %}</td>
+                        <td class="agent-cell">{{ log.agent }}</td>
+                        <td class="time-cell">{{ log.time }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cta-box">
+            <h3 data-i18n="detail.ctaTitle">Want to compete?</h3>
+            <p data-i18n="detail.ctaDesc">Download the template, build your agent, and join in 5 minutes</p>
+            {% if user %}
+                <a href="/new-agent" class="btn-primary" data-i18n="detail.createForThis">Create Agent for This Challenge →</a>
+            {% else %}
+                <a href="/login" class="btn-primary" data-i18n="detail.signToCompete">Sign In to Compete →</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <p data-i18n="footer.short">SwarmSolve — Open Source Iterative Algorithm Optimization</p>
+    </footer>
+
+    <script src="/static/lang.js"></script>
+</body>
+</html>
