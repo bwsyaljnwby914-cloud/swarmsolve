@@ -6,72 +6,42 @@
     <title>Challenges — SwarmSolve</title>
     <link rel="stylesheet" href="/static/style.css?v=9">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
 <style>
+/* ===== Navbar Groups (Desktop) ===== */
+.nav-group-links{display:flex;align-items:center;gap:20px}
+.nav-group-links a{color:#8b949e;font-size:14px;font-weight:500;transition:.2s;white-space:nowrap}
+.nav-group-links a:hover{color:#22d3ee}
+.nav-why-link{opacity:.7;font-size:13px!important}
+.nav-why-link:hover{opacity:1}
+.nav-group-actions{display:flex;align-items:center;gap:12px}
+
+/* ===== MOBILE SIDEBAR ===== */
 @media(max-width:768px){
-.hamburger{display:flex!important;flex-direction:column;justify-content:center;z-index:300;background:none;border:none;cursor:pointer;padding:8px}
+.hamburger{display:flex!important;flex-direction:column;justify-content:center;z-index:400;position:relative;background:none;border:none;cursor:pointer;padding:8px}
 .hamburger span{display:block;width:22px;height:2px;background:#c9d1d9;margin:4px 0;border-radius:2px;transition:.3s}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
-.nav-sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300}
+.nav-sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .nav-sidebar-overlay.active{display:block}
-.nav-links{display:flex;position:fixed!important;top:0!important;right:-280px!important;width:270px!important;height:100vh!important;background:#0d1117!important;border-left:1px solid #161b22!important;flex-direction:column!important;align-items:stretch!important;padding:70px 20px 30px!important;gap:4px!important;z-index:350!important;overflow-y:auto!important;transition:right .3s!important;box-shadow:-4px 0 24px rgba(0,0,0,.4)!important}
+.nav-links{display:flex;position:fixed!important;top:0!important;right:-280px!important;width:270px!important;height:100vh!important;height:100dvh!important;background:#0d1117!important;border-left:1px solid #161b22!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;padding:70px 20px 30px!important;gap:12px!important;z-index:350!important;overflow-y:auto!important;transition:right .3s cubic-bezier(.4,0,.2,1)!important;box-shadow:-4px 0 24px rgba(0,0,0,.4)!important}
 .nav-links.active{right:0!important}
-body.rtl .nav-links{right:auto!important;left:-280px!important;transition:left .3s!important}
+body.rtl .nav-links{right:auto!important;left:-280px!important;border-left:none!important;border-right:1px solid #161b22!important;box-shadow:4px 0 24px rgba(0,0,0,.4)!important;transition:left .3s cubic-bezier(.4,0,.2,1)!important}
 body.rtl .nav-links.active{left:0!important}
-.nav-links a,.nav-links button{font-size:15px!important;padding:13px 16px!important;display:flex!important;align-items:center!important;width:100%!important;border-radius:10px!important;color:#c9d1d9!important;border:none;cursor:pointer;background:transparent}
-.nav-links .btn-google{background:#fff!important;color:#333!important}
+.nav-group-links,.nav-group-actions{flex-direction:column!important;align-items:stretch!important;gap:4px!important}
+.nav-group-links{border-bottom:1px solid #161b22;padding-bottom:12px}
+.nav-group-actions{padding-top:4px}
+.nav-links a,.nav-links button{font-size:15px!important;padding:13px 16px!important;min-height:46px;display:flex!important;align-items:center!important;justify-content:flex-start!important;width:100%!important;border-radius:10px!important;color:#c9d1d9!important;transition:background .15s!important;text-decoration:none!important;border:none;cursor:pointer;background:transparent}
+body.rtl .nav-links a,body.rtl .nav-links button{justify-content:flex-end!important}
+.nav-links a:hover,.nav-links button:hover{background:#161b22!important}
+.nav-links .btn-google{background:#fff!important;color:#333!important;justify-content:center!important;margin-top:4px}
+.nav-links .nav-cta-small{background:#22d3ee15!important;color:#22d3ee!important;border:1px solid #22d3ee30!important;justify-content:center!important;margin-top:4px}
+.nav-links .lang-toggle{justify-content:center!important;width:100%!important;font-size:14px!important;padding:11px 16px!important}
+.nav-why-link{opacity:1!important;font-size:15px!important}
 }
 @media(min-width:769px){.hamburger{display:none!important}.nav-sidebar-overlay{display:none!important}}
-
-/* Challenges page */
-.ch-page{max-width:1100px;margin:0 auto;padding:30px 20px 60px}
-.ch-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.ch-header h1{font-size:clamp(26px,4vw,34px);font-weight:800;color:#f0f6fc}
-.btn-post{background:linear-gradient(135deg,#22d3ee,#06b6d4);color:#060911;padding:12px 24px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn-post:hover{transform:translateY(-1px);box-shadow:0 4px 16px #22d3ee30}
-
-/* Filters */
-.ch-filters{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
-.ch-filter{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid #21262d;background:#161b22;color:#8b949e;text-decoration:none;transition:.2s}
-.ch-filter:hover{border-color:#22d3ee40;color:#c9d1d9}
-.ch-filter.active{background:#22d3ee20;color:#22d3ee;border-color:#22d3ee40}
-
-/* Challenge cards */
-.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-.ch-card{background:#0d1117;border:1px solid #161b22;border-radius:14px;padding:22px;transition:.3s;display:block;text-decoration:none;color:inherit}
-.ch-card:hover{border-color:#22d3ee40;transform:translateY(-2px)}
-.ch-card.completed{opacity:.6}
-.ch-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.ch-cat{background:#22d3ee15;color:#22d3ee;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase}
-.ch-status{font-size:12px;font-weight:600}
-.ch-status.active{color:#34d399}
-.ch-status.completed{color:#6e7681}
-.ch-card h3{color:#f0f6fc;font-size:18px;font-weight:700;margin-bottom:6px}
-.ch-card p{color:#8b949e;font-size:13px;line-height:1.5;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ch-meta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;font-size:12px;color:#6e7681}
-.ch-meta span{display:flex;align-items:center;gap:4px}
-.ch-reward{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;color:#34d399}
-.ch-score-bar{display:flex;align-items:center;gap:8px;margin-top:10px}
-.ch-score-bar .score-start{font-family:'JetBrains Mono',monospace;font-size:12px;color:#6e7681}
-.ch-score-bar .score-end{font-family:'JetBrains Mono',monospace;font-size:13px;color:#22d3ee;font-weight:700}
-.ch-score-bar .bar{flex:1;background:#161b22;border-radius:10px;height:5px;overflow:hidden}
-.ch-score-bar .bar-fill{background:linear-gradient(90deg,#22d3ee,#818cf8);height:100%;border-radius:10px}
-.ch-posted-by{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;color:#6e7681;border-top:1px solid #161b22;padding-top:10px}
-.ch-posted-by img{width:20px;height:20px;border-radius:50%;object-fit:cover}
-
-/* Empty state */
-.ch-empty{text-align:center;padding:60px 20px;color:#6e7681}
-.ch-empty .empty-icon{font-size:48px;margin-bottom:12px}
-.ch-empty p{font-size:16px;margin-bottom:16px}
-
-/* Mobile */
-@media(max-width:768px){
-    .ch-header{flex-direction:column;align-items:stretch;text-align:center}
-    .btn-post{justify-content:center}
-    .ch-grid{grid-template-columns:1fr}
-    .ch-filters{justify-content:center}
-}
 </style>
 </head>
 <body>
@@ -80,19 +50,22 @@ body.rtl .nav-links.active{left:0!important}
         <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
         <div class="nav-sidebar-overlay" id="nav-sidebar-overlay"></div>
         <div class="nav-links" id="nav-links">
-            <a href="/" data-i18n="nav.home">Home</a>
-            <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
-            <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
-            <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
-            <button id="lang-toggle" class="lang-toggle">عربي</button>
-            {% if user %}
-                <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
-                <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
-                <a href="/profile" class="nav-user" title="{{ user.username or user.name }}">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #22d3ee40">{% else %}👤{% endif %}</a>
-            {% else %}
-                <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
-                <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
-            {% endif %}
+            <div class="nav-group-links">
+                <a href="/" data-i18n="nav.home">Home</a>
+                <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
+                <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
+                <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
+                <a href="/why" class="nav-why-link" data-i18n="nav.why">Why Collective Evolution?</a>
+            </div>
+            <div class="nav-group-actions">
+                <button id="lang-toggle" class="lang-toggle">عربي</button>
+                {% if user %}
+                    <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
+                    <a href="/profile" class="nav-user" title="{{ user.username or user.name }}">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #22d3ee40">{% else %}👤{% endif %}</a>
+                {% else %}
+                    <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 

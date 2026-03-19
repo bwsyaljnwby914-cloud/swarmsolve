@@ -6,102 +6,42 @@
     <title>Why Collective Evolution? — SwarmSolve</title>
     <link rel="stylesheet" href="/static/style.css?v=8">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
 <style>
-/* Mobile sidebar */
+/* ===== Navbar Groups (Desktop) ===== */
+.nav-group-links{display:flex;align-items:center;gap:20px}
+.nav-group-links a{color:#8b949e;font-size:14px;font-weight:500;transition:.2s;white-space:nowrap}
+.nav-group-links a:hover{color:#22d3ee}
+.nav-why-link{opacity:.7;font-size:13px!important}
+.nav-why-link:hover{opacity:1}
+.nav-group-actions{display:flex;align-items:center;gap:12px}
+
+/* ===== MOBILE SIDEBAR ===== */
 @media(max-width:768px){
-.hamburger{display:flex!important;flex-direction:column;justify-content:center;z-index:300;background:none;border:none;cursor:pointer;padding:8px}
+.hamburger{display:flex!important;flex-direction:column;justify-content:center;z-index:400;position:relative;background:none;border:none;cursor:pointer;padding:8px}
 .hamburger span{display:block;width:22px;height:2px;background:#c9d1d9;margin:4px 0;border-radius:2px;transition:.3s}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
-.nav-sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300}
+.nav-sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .nav-sidebar-overlay.active{display:block}
-.nav-links{display:flex;position:fixed!important;top:0!important;right:-280px!important;width:270px!important;height:100vh!important;background:#0d1117!important;border-left:1px solid #161b22!important;flex-direction:column!important;align-items:stretch!important;padding:70px 20px 30px!important;gap:4px!important;z-index:350!important;overflow-y:auto!important;transition:right .3s!important;box-shadow:-4px 0 24px rgba(0,0,0,.4)!important}
+.nav-links{display:flex;position:fixed!important;top:0!important;right:-280px!important;width:270px!important;height:100vh!important;height:100dvh!important;background:#0d1117!important;border-left:1px solid #161b22!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;padding:70px 20px 30px!important;gap:12px!important;z-index:350!important;overflow-y:auto!important;transition:right .3s cubic-bezier(.4,0,.2,1)!important;box-shadow:-4px 0 24px rgba(0,0,0,.4)!important}
 .nav-links.active{right:0!important}
-body.rtl .nav-links{right:auto!important;left:-280px!important;transition:left .3s!important}
+body.rtl .nav-links{right:auto!important;left:-280px!important;border-left:none!important;border-right:1px solid #161b22!important;box-shadow:4px 0 24px rgba(0,0,0,.4)!important;transition:left .3s cubic-bezier(.4,0,.2,1)!important}
 body.rtl .nav-links.active{left:0!important}
-.nav-links a,.nav-links button{font-size:15px!important;padding:13px 16px!important;display:flex!important;align-items:center!important;width:100%!important;border-radius:10px!important;color:#c9d1d9!important;border:none;cursor:pointer;background:transparent}
-.nav-links .btn-google{background:#fff!important;color:#333!important}
+.nav-group-links,.nav-group-actions{flex-direction:column!important;align-items:stretch!important;gap:4px!important}
+.nav-group-links{border-bottom:1px solid #161b22;padding-bottom:12px}
+.nav-group-actions{padding-top:4px}
+.nav-links a,.nav-links button{font-size:15px!important;padding:13px 16px!important;min-height:46px;display:flex!important;align-items:center!important;justify-content:flex-start!important;width:100%!important;border-radius:10px!important;color:#c9d1d9!important;transition:background .15s!important;text-decoration:none!important;border:none;cursor:pointer;background:transparent}
+body.rtl .nav-links a,body.rtl .nav-links button{justify-content:flex-end!important}
+.nav-links a:hover,.nav-links button:hover{background:#161b22!important}
+.nav-links .btn-google{background:#fff!important;color:#333!important;justify-content:center!important;margin-top:4px}
+.nav-links .nav-cta-small{background:#22d3ee15!important;color:#22d3ee!important;border:1px solid #22d3ee30!important;justify-content:center!important;margin-top:4px}
+.nav-links .lang-toggle{justify-content:center!important;width:100%!important;font-size:14px!important;padding:11px 16px!important}
+.nav-why-link{opacity:1!important;font-size:15px!important}
 }
 @media(min-width:769px){.hamburger{display:none!important}.nav-sidebar-overlay{display:none!important}}
-
-/* Why page layout */
-.why-container{max-width:800px;margin:0 auto;padding:20px 20px 60px;overflow-x:hidden}
-.why-hero-section{text-align:center;padding:60px 0 40px}
-.why-hero-section h1{font-size:clamp(28px,5vw,42px);font-weight:800;color:#f0f6fc;margin-bottom:16px;letter-spacing:-1px}
-.why-hero-section p{font-size:clamp(15px,2.5vw,18px);color:#8b949e;max-width:600px;margin:0 auto;line-height:1.7}
-
-/* Section */
-.why-section{margin:40px 0;padding:0}
-.why-section h2{font-size:clamp(22px,3.5vw,28px);font-weight:800;color:#f0f6fc;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-.why-section h2 .sec-icon{font-size:28px}
-.why-section p{color:#8b949e;font-size:clamp(14px,2vw,16px);line-height:1.8;margin-bottom:12px}
-
-/* Divider */
-.why-divider{height:1px;background:#161b22;margin:40px 0}
-
-/* Stats grid */
-.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:20px 0}
-.proof-card{background:#0d1117;padding:20px;border-radius:14px;border:1px solid #161b22;text-align:center}
-.proof-card .pc-icon{font-size:28px;margin-bottom:6px}
-.proof-card .pc-stat{font-family:'JetBrains Mono',monospace;font-size:clamp(15px,2.5vw,18px);font-weight:800;color:#22d3ee;margin-bottom:6px}
-.proof-card p{color:#8b949e;font-size:13px;line-height:1.5;margin:0}
-
-/* Comparison table */
-.compare-table{width:100%;border-collapse:collapse;margin:20px 0;background:#0d1117;border-radius:12px;overflow:hidden;border:1px solid #161b22}
-.compare-table th{background:#161b22;padding:12px 16px;text-align:center;color:#8b949e;font-size:13px;font-weight:600}
-.compare-table td{padding:12px 16px;border-bottom:1px solid #161b22;font-size:14px;color:#c9d1d9;text-align:center}
-.compare-table tr td:first-child{color:#6e7681;text-align:left;font-size:13px}
-.compare-table .old{color:#f87171}
-.compare-table .new{color:#34d399;font-weight:600}
-
-/* Equation */
-.equation-box{background:#0d1117;border-radius:16px;border:1px solid #161b22;padding:28px 20px;margin:24px 0;text-align:center}
-.eq-line{margin:10px 0;font-size:15px;color:#8b949e}
-.eq-line strong{color:#f0f6fc}
-.eq-label{font-weight:700;color:#6e7681;margin-right:8px}
-.eq-highlight{font-family:'JetBrains Mono',monospace;background:#22d3ee15;color:#22d3ee;padding:4px 12px;border-radius:6px;border:1px solid #22d3ee30}
-.eq-result{font-size:28px;color:#fbbf24;font-weight:800;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
-
-/* Layers */
-.layer-card{background:#0d1117;border-radius:14px;border:1px solid #161b22;padding:20px;margin:12px 0}
-.layer-card h3{font-size:16px;font-weight:700;color:#22d3ee;margin-bottom:8px}
-.layer-card p{color:#8b949e;font-size:14px;line-height:1.6;margin:0}
-
-/* Flow demo */
-.flow-demo{background:#0d1117;border-radius:14px;border:1px solid #161b22;padding:20px;margin:20px 0;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2.2;color:#8b949e}
-.flow-demo .flow-score{color:#22d3ee;font-weight:700}
-.flow-demo .flow-agent{color:#34d399}
-.flow-demo .flow-arrow{color:#30363d}
-
-/* Score bar */
-.score-bar{display:flex;flex-direction:column;gap:5px;margin:16px 0}
-.sb-row{display:flex;align-items:center;gap:8px}
-.sb-label{font-size:11px;color:#6e7681;width:50px;text-align:right;flex-shrink:0}
-.sb-fill{height:24px;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#060911;transition:width 1s;min-width:30px}
-
-/* Big quote */
-.big-quote{text-align:center;padding:28px 20px;margin:30px 0;border-left:3px solid #818cf8;border-right:3px solid #818cf8;border-radius:12px;background:#0d1117}
-.big-quote p{font-size:clamp(14px,2.5vw,17px);font-weight:600;color:#c9d1d9;line-height:1.7;margin:0 0 8px;font-style:italic}
-.big-quote .bq-highlight{color:#fbbf24;font-weight:700;font-style:normal}
-
-/* CTA */
-.why-cta{text-align:center;padding:40px 0}
-.why-cta h2{font-size:clamp(24px,4vw,30px);font-weight:800;color:#f0f6fc;margin-bottom:12px;justify-content:center}
-.why-cta-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
-
-/* Mobile */
-@media(max-width:768px){
-    .proof-grid{grid-template-columns:1fr}
-    .compare-table{font-size:12px}
-    .compare-table th,.compare-table td{padding:10px 8px}
-    .equation-box{padding:20px 12px}
-    .why-cta-buttons{flex-direction:column;align-items:center}
-    .why-cta-buttons a{width:100%;max-width:300px;text-align:center}
-    .flow-demo{font-size:12px;overflow-x:auto}
-    .layer-card{padding:16px}
-}
 </style>
 </head>
 <body>
@@ -110,18 +50,22 @@ body.rtl .nav-links.active{left:0!important}
         <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
         <div class="nav-sidebar-overlay" id="nav-sidebar-overlay"></div>
         <div class="nav-links" id="nav-links">
-            <a href="/" data-i18n="nav.home">Home</a>
-            <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
-            <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
-            <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
-            <button id="lang-toggle" class="lang-toggle">عربي</button>
-            {% if user %}
-                <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
-                <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
-            {% else %}
-                <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
-            {% endif %}
-            <a href="/profile" class="nav-user" title="{{ user.username or user.name }}">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #22d3ee40">{% else %}👤{% endif %}</a>
+            <div class="nav-group-links">
+                <a href="/" data-i18n="nav.home">Home</a>
+                <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
+                <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
+                <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
+                <a href="/why" class="nav-why-link" data-i18n="nav.why">Why Collective Evolution?</a>
+            </div>
+            <div class="nav-group-actions">
+                <button id="lang-toggle" class="lang-toggle">عربي</button>
+                {% if user %}
+                    <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
+                    <a href="/profile" class="nav-user" title="{{ user.username or user.name }}">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #22d3ee40">{% else %}👤{% endif %}</a>
+                {% else %}
+                    <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 

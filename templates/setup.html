@@ -92,9 +92,9 @@
                 <div class="step-content active" id="step-1">
                     <div class="avatar-pick">
                         {% if user.avatar_url %}
-                            <img src="{{ user.avatar_url }}" class="avatar-pick-img" id="setup-avatar">
+                            <img src="{{ user.avatar_url }}" class="avatar-pick-img" id="setup-avatar-img">
                         {% else %}
-                            <div class="avatar-pick-placeholder" id="setup-avatar">{{ (user.name or 'U')[0] | upper }}</div>
+                            <div class="avatar-pick-placeholder" id="setup-avatar-placeholder">{{ (user.name or 'U')[0] | upper }}</div>
                         {% endif %}
                         <label class="avatar-pick-btn">
                             📷 Choose Photo
@@ -202,14 +202,14 @@
         // Show preview immediately
         var reader = new FileReader();
         reader.onload = function(ev) {
-            var display = document.getElementById("setup-avatar");
+            var display = document.getElementById("setup-avatar-img") || document.getElementById("setup-avatar-placeholder");
             if (display.tagName === "IMG") {
                 display.src = ev.target.result;
             } else {
                 var img = document.createElement("img");
                 img.src = ev.target.result;
                 img.className = "avatar-pick-img";
-                img.id = "setup-avatar";
+                img.id = "setup-avatar-img";
                 display.parentNode.replaceChild(img, display);
             }
         };
