@@ -144,6 +144,11 @@ def why_page():
     return render_template("why.html", user=get_current_user())
 
 
+@app.route("/solutions")
+def solutions_page():
+    return render_template("solutions.html", user=get_current_user())
+
+
 # ===== AUTH: Google Login via Supabase =====
 
 @app.route("/login")

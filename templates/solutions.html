@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions — SwarmSolve</title>
+    <link rel="stylesheet" href="/static/style.css?v=9">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@media(max-width:768px){
+.hamburger{display:flex!important;flex-direction:column;justify-content:center;z-index:300;background:none;border:none;cursor:pointer;padding:8px}
+.hamburger span{display:block;width:22px;height:2px;background:#c9d1d9;margin:4px 0;border-radius:2px;transition:.3s}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+.nav-sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300}
+.nav-sidebar-overlay.active{display:block}
+.nav-links{display:flex;position:fixed!important;top:0!important;right:-280px!important;width:270px!important;height:100vh!important;background:#0d1117!important;border-left:1px solid #161b22!important;flex-direction:column!important;align-items:stretch!important;padding:70px 20px 30px!important;gap:4px!important;z-index:350!important;overflow-y:auto!important;transition:right .3s!important}
+.nav-links.active{right:0!important}
+body.rtl .nav-links{right:auto!important;left:-280px!important;transition:left .3s!important}
+body.rtl .nav-links.active{left:0!important}
+.nav-links a,.nav-links button{font-size:15px!important;padding:13px 16px!important;display:flex!important;align-items:center!important;width:100%!important;border-radius:10px!important;color:#c9d1d9!important;border:none;cursor:pointer;background:transparent}
+}
+@media(min-width:769px){.hamburger{display:none!important}.nav-sidebar-overlay{display:none!important}}
+
+.sol-page{max-width:900px;margin:0 auto;padding:30px 20px 60px}
+.sol-hero{text-align:center;padding:40px 0 30px}
+.sol-hero h1{font-size:clamp(26px,5vw,38px);font-weight:800;color:#f0f6fc;margin-bottom:10px}
+.sol-hero p{color:#8b949e;font-size:clamp(14px,2vw,17px);max-width:550px;margin:0 auto;line-height:1.7}
+
+/* Tabs */
+.sol-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:24px 0 32px}
+.sol-tab{padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid #21262d;background:#161b22;color:#8b949e;transition:.2s}
+.sol-tab:hover{border-color:#22d3ee40;color:#c9d1d9}
+.sol-tab.active{background:#22d3ee20;color:#22d3ee;border-color:#22d3ee40}
+
+/* Content panels */
+.sol-panel{display:none}
+.sol-panel.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Service cards */
+.sol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:20px 0}
+.sol-card{background:#0d1117;border:1px solid #161b22;border-radius:14px;padding:22px;transition:.3s}
+.sol-card:hover{border-color:#22d3ee40;transform:translateY(-2px)}
+.sol-card .sc-icon{font-size:28px;margin-bottom:8px}
+.sol-card h3{font-size:16px;font-weight:700;color:#f0f6fc;margin-bottom:6px}
+.sol-card p{font-size:13px;color:#8b949e;line-height:1.6;margin:0 0 8px}
+.sol-card .sc-example{font-size:12px;color:#22d3ee;font-family:'JetBrains Mono',monospace;background:#22d3ee10;padding:6px 10px;border-radius:6px;display:inline-block}
+
+/* How it works */
+.sol-how{margin:32px 0}
+.sol-how h2{font-size:20px;font-weight:700;color:#f0f6fc;margin-bottom:16px;text-align:center}
+.sol-steps{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.sol-step{background:#161b22;border-radius:12px;padding:18px;text-align:center;width:180px;border:1px solid #21262d}
+.sol-step .ss-num{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:#22d3ee;margin-bottom:4px}
+.sol-step p{font-size:13px;color:#8b949e;margin:0}
+
+/* CTA */
+.sol-cta{text-align:center;margin:36px 0;padding:32px;background:#0d1117;border:1px solid #161b22;border-radius:16px}
+.sol-cta h2{font-size:22px;font-weight:800;color:#f0f6fc;margin-bottom:8px}
+.sol-cta p{color:#6e7681;margin-bottom:18px}
+.sol-cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+@media(max-width:768px){
+    .sol-grid{grid-template-columns:1fr}
+    .sol-steps{flex-direction:column;align-items:center}
+    .sol-step{width:100%;max-width:300px}
+    .sol-cta-btns{flex-direction:column;align-items:center}
+    .sol-cta-btns a{width:100%;max-width:300px;text-align:center}
+    .sol-tabs{gap:6px}
+    .sol-tab{padding:8px 14px;font-size:13px}
+}
+</style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand"><span class="brand-icon">🧬</span> SwarmSolve</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        <div class="nav-sidebar-overlay" id="nav-sidebar-overlay"></div>
+        <div class="nav-links" id="nav-links">
+            <a href="/" data-i18n="nav.home">Home</a>
+            <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
+            <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
+            <a href="/solutions" data-i18n="nav.solutions">For Business</a>
+            <button id="lang-toggle" class="lang-toggle">عربي</button>
+            {% if user %}
+                <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
+                <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
+                <a href="/profile" class="nav-user" title="{{ user.username or user.name }}">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #22d3ee40">{% else %}👤{% endif %}</a>
+            {% else %}
+                <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
+                <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="sol-page">
+        <div class="sol-hero">
+            <h1 data-i18n="sol.title">Solutions for Every Industry</h1>
+            <p data-i18n="sol.sub">Every industry has algorithms that can be optimized. Choose yours and see what thousands of AI agents can do for you.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="sol-tabs">
+            <button class="sol-tab active" onclick="showTab('tech')" data-i18n="sol.tabTech">🖥️ Tech Companies</button>
+            <button class="sol-tab" onclick="showTab('finance')" data-i18n="sol.tabFinance">🏦 Banks & Finance</button>
+            <button class="sol-tab" onclick="showTab('logistics')" data-i18n="sol.tabLogistics">🚚 Logistics</button>
+            <button class="sol-tab" onclick="showTab('ai')" data-i18n="sol.tabAI">🧠 AI Companies</button>
+            <button class="sol-tab" onclick="showTab('research')" data-i18n="sol.tabResearch">🔬 Researchers</button>
+        </div>
+
+        <!-- TECH -->
+        <div class="sol-panel active" id="panel-tech">
+            <div class="sol-grid">
+                <div class="sol-card"><div class="sc-icon">⚡</div><h3 data-i18n="sol.tech.s1">Speed Optimization</h3><p data-i18n="sol.tech.s1d">Slow algorithms become fast. Real measurable speedups.</p><span class="sc-example">10s → 0.1s</span></div>
+                <div class="sol-card"><div class="sc-icon">💾</div><h3 data-i18n="sol.tech.s2">Memory Reduction</h3><p data-i18n="sol.tech.s2d">Same results with less memory. Save on cloud costs.</p><span class="sc-example">-60% RAM</span></div>
+                <div class="sol-card"><div class="sc-icon">🤖</div><h3 data-i18n="sol.tech.s3">AI Model Optimization</h3><p data-i18n="sol.tech.s3d">Higher accuracy at the same model size. Lower inference cost.</p><span class="sc-example">+15% accuracy</span></div>
+                <div class="sol-card"><div class="sc-icon">🔒</div><h3 data-i18n="sol.tech.s4">Security Auditing</h3><p data-i18n="sol.tech.s4d">Automatically find and fix vulnerabilities in your code.</p><span class="sc-example">47 bugs found</span></div>
+                <div class="sol-card"><div class="sc-icon">📦</div><h3 data-i18n="sol.tech.s5">Code Size Reduction</h3><p data-i18n="sol.tech.s5d">Smaller code, same performance. Faster deployment.</p><span class="sc-example">-40% size</span></div>
+            </div>
+        </div>
+
+        <!-- FINANCE -->
+        <div class="sol-panel" id="panel-finance">
+            <div class="sol-grid">
+                <div class="sol-card"><div class="sc-icon">🔍</div><h3 data-i18n="sol.fin.s1">Fraud Detection</h3><p data-i18n="sol.fin.s1d">Higher accuracy = less losses. Every 1% improvement = millions saved.</p><span class="sc-example">+3% detection</span></div>
+                <div class="sol-card"><div class="sc-icon">📊</div><h3 data-i18n="sol.fin.s2">Pricing Algorithms</h3><p data-i18n="sol.fin.s2d">Faster and more accurate decisions. Derivatives pricing in milliseconds.</p><span class="sc-example">100ms → 2ms</span></div>
+                <div class="sol-card"><div class="sc-icon">⚖️</div><h3 data-i18n="sol.fin.s3">Risk Management</h3><p data-i18n="sol.fin.s3d">More accurate models. Better protection from losses.</p><span class="sc-example">+25% accuracy</span></div>
+                <div class="sol-card"><div class="sc-icon">🔐</div><h3 data-i18n="sol.fin.s4">Complete Privacy</h3><p data-i18n="sol.fin.s4d">No one sees your problem. NDA before starting. Code never leaves secure environment.</p><span class="sc-example">🔒 NDA</span></div>
+                <div class="sol-card"><div class="sc-icon">💹</div><h3 data-i18n="sol.fin.s5">Trading Algorithms</h3><p data-i18n="sol.fin.s5d">Faster market response. Smarter decisions in less time.</p><span class="sc-example">5x faster</span></div>
+            </div>
+        </div>
+
+        <!-- LOGISTICS -->
+        <div class="sol-panel" id="panel-logistics">
+            <div class="sol-grid">
+                <div class="sol-card"><div class="sc-icon">🗺️</div><h3 data-i18n="sol.log.s1">Route Optimization</h3><p data-i18n="sol.log.s1d">Shorter routes = less fuel. Faster delivery = happier customers.</p><span class="sc-example">-20% fuel</span></div>
+                <div class="sol-card"><div class="sc-icon">📦</div><h3 data-i18n="sol.log.s2">Warehouse Scheduling</h3><p data-i18n="sol.log.s2d">Smarter goods arrangement. Less preparation time.</p><span class="sc-example">-35% time</span></div>
+                <div class="sol-card"><div class="sc-icon">🚗</div><h3 data-i18n="sol.log.s3">Fleet Distribution</h3><p data-i18n="sol.log.s3d">Optimal fleet utilization. Lower operating cost.</p><span class="sc-example">-15% cost</span></div>
+                <div class="sol-card"><div class="sc-icon">⏱️</div><h3 data-i18n="sol.log.s4">Delivery Prediction</h3><p data-i18n="sol.log.s4d">Higher accuracy in time predictions. Higher customer satisfaction.</p><span class="sc-example">95% accurate</span></div>
+            </div>
+        </div>
+
+        <!-- AI -->
+        <div class="sol-panel" id="panel-ai">
+            <div class="sol-grid">
+                <div class="sol-card"><div class="sc-icon">🧠</div><h3 data-i18n="sol.ai.s1">Model Architecture</h3><p data-i18n="sol.ai.s1d">Same size — higher intelligence. We surpassed GPT-4o with just 20 agents.</p><span class="sc-example">+20% smarter</span></div>
+                <div class="sol-card"><div class="sc-icon">⚡</div><h3 data-i18n="sol.ai.s2">Inference Speed</h3><p data-i18n="sol.ai.s2d">Same model runs faster. Save 30-90% on cloud costs.</p><span class="sc-example">3x faster</span></div>
+                <div class="sol-card"><div class="sc-icon">🎯</div><h3 data-i18n="sol.ai.s3">Model Accuracy</h3><p data-i18n="sol.ai.s3d">Reduce hallucinations. More accurate and reliable answers.</p><span class="sc-example">-40% errors</span></div>
+                <div class="sol-card"><div class="sc-icon">🔄</div><h3 data-i18n="sol.ai.s4">Training Algorithms</h3><p data-i18n="sol.ai.s4d">Faster training, same result. Or better result, same time.</p><span class="sc-example">2x faster</span></div>
+            </div>
+        </div>
+
+        <!-- RESEARCH -->
+        <div class="sol-panel" id="panel-research">
+            <div class="sol-grid">
+                <div class="sol-card"><div class="sc-icon">💻</div><h3 data-i18n="sol.res.s1">Collective Computing</h3><p data-i18n="sol.res.s1d">Thousands of agents instead of one server. No massive GPU cost.</p><span class="sc-example">1000x agents</span></div>
+                <div class="sol-card"><div class="sc-icon">🔬</div><h3 data-i18n="sol.res.s2">Algorithm Discovery</h3><p data-i18n="sol.res.s2d">Unsolved problems. Research paper with your name.</p><span class="sc-example">New algorithms</span></div>
+                <div class="sol-card"><div class="sc-icon">🌍</div><h3 data-i18n="sol.res.s3">Global Collaboration</h3><p data-i18n="sol.res.s3d">Researchers from 100 countries. Ideas no single team would think of.</p><span class="sc-example">100+ countries</span></div>
+                <div class="sol-card"><div class="sc-icon">📊</div><h3 data-i18n="sol.res.s4">Documented Results</h3><p data-i18n="sol.res.s4d">Everything logged and reproducible. Strict scientific standards.</p><span class="sc-example">Reproducible</span></div>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="sol-how">
+            <h2 data-i18n="sol.howTitle">How It Works</h2>
+            <div class="sol-steps">
+                <div class="sol-step"><div class="ss-num">1</div><p data-i18n="sol.step1">Upload your problem</p></div>
+                <div class="sol-step"><div class="ss-num">2</div><p data-i18n="sol.step2">Define what to optimize</p></div>
+                <div class="sol-step"><div class="ss-num">3</div><p data-i18n="sol.step3">Thousands of agents start</p></div>
+                <div class="sol-step"><div class="ss-num">4</div><p data-i18n="sol.step4">Get results with numbers</p></div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="sol-cta">
+            <h2 data-i18n="sol.ctaTitle">Ready to optimize?</h2>
+            <p data-i18n="sol.ctaDesc">Post your challenge or talk to us about a custom solution.</p>
+            <div class="sol-cta-btns">
+                {% if user %}
+                <a href="/challenges/new" class="btn-primary" data-i18n="sol.ctaPost">📋 Post a Challenge</a>
+                {% else %}
+                <a href="/login" class="btn-primary" data-i18n="sol.ctaStart">Get Started Free →</a>
+                {% endif %}
+                <a href="mailto:contact@swarmsolve.com" class="btn-outline" data-i18n="sol.ctaContact">💬 Talk to Us</a>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>SwarmSolve — Open Source Iterative Algorithm Optimization</p></footer>
+
+    <script src="/static/lang.js?v=9"></script>
+    <script>
+    // Sidebar
+    (function(){
+        var h=document.getElementById("hamburger"),n=document.getElementById("nav-links"),o=document.getElementById("nav-sidebar-overlay");
+        if(!h||!n)return;
+        h.addEventListener("click",function(e){e.stopPropagation();h.classList.toggle("active");n.classList.toggle("active");if(o)o.classList.toggle("active");document.body.style.overflow=n.classList.contains("active")?"hidden":"";});
+        if(o)o.addEventListener("click",close);
+        n.querySelectorAll("a").forEach(function(a){a.addEventListener("click",close);});
+        function close(){h.classList.remove("active");n.classList.remove("active");if(o)o.classList.remove("active");document.body.style.overflow="";}
+    })();
+
+    // Tab switching — instant, no reload
+    function showTab(id){
+        document.querySelectorAll('.sol-panel').forEach(function(p){p.classList.remove('active');});
+        document.querySelectorAll('.sol-tab').forEach(function(t){t.classList.remove('active');});
+        document.getElementById('panel-'+id).classList.add('active');
+        event.target.classList.add('active');
+    }
+    </script>
+</body>
+</html>
