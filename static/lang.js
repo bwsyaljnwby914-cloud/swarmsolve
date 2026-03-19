@@ -231,6 +231,10 @@ const translations = {
 
   "why.imagineTitle": { en: "Now Imagine This", ar: "الآن تخيّل هذا" },
   "why.eqResult1": { en: "Extraordinary results", ar: "نتائج استثنائية" },
+  "why.eq1model": { en: "1 model", ar: "نموذج واحد" },
+  "why.eq1system": { en: "1 system", ar: "نظام واحد" },
+  "why.eq2models": { en: "20 models", ar: "20 نموذج" },
+  "why.eq2engineers": { en: "1,000 engineers", ar: "1,000 مهندس" },
   "why.imagineDesc": { en: "Every engineer builds their agent differently. Every model thinks from a different angle. Every round builds on the best before it.", ar: "كل مهندس يبني وكيله بطريقة مختلفة. كل نموذج يفكر بزاوية مختلفة. كل جولة تبني على أفضل ما سبقها." },
 
   "why.layersTitle": { en: "What Do The New Layers Add?", ar: "ما الذي تضيفه الطبقات الجديدة؟" },
@@ -243,9 +247,16 @@ const translations = {
 
   "why.howTitle": { en: "How It Works", ar: "كيف يعمل؟" },
   "why.flowLine1": { en: "A problem is posted with initial code, score:", ar: "تُطرح مسألة بكود أولي، الدرجة:" },
+  "why.flowAhmed": { en: "Ahmed's agent (Llama)", ar: "وكيل أحمد (Llama)" },
+  "why.flowSara": { en: "Sara's agent (Claude)", ar: "وكيل سارة (Claude)" },
+  "why.flowKhalid": { en: "Khalid's agent (GPT)", ar: "وكيل خالد (GPT)" },
   "why.flowBest": { en: "The best survives — the rest falls", ar: "الأفضل يبقى — الباقي يسقط" },
   "why.flowNext": { en: "Next round builds on", ar: "الجولة التالية تبني على" },
   "why.flowConclusion": { en: "No single model reached here alone. No single engineer reached here alone. The collective built what no individual could.", ar: "لا نموذج منفرد وصل هنا وحده. لا مهندس منفرد وصل هنا وحده. الجماعة بنت ما لا يستطيع بناءه أي فرد." },
+  "why.barStart": { en: "Start", ar: "البداية" },
+  "why.barR50": { en: "R50", ar: "ج50" },
+  "why.barR80": { en: "R80", ar: "ج80" },
+  "why.barFinal": { en: "Final", ar: "النهاية" },
 
   "why.whyThousandsTitle": { en: "Why Thousands, Not Dozens?", ar: "لماذا الآلاف وليس العشرات؟" },
   "why.wt1Title": { en: "The engineer makes the difference", ar: "المهندس يصنع الفرق" },
