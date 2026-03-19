@@ -350,7 +350,7 @@ def upload_avatar():
 
 @app.route("/challenges")
 def challenges_page():
-    """List all challenges from Supabase"""
+    """List all challenges from Supabase + fake data"""
     category = request.args.get("category", "all")
     status = request.args.get("status", "all")
 
@@ -366,8 +366,14 @@ def challenges_page():
     r = requests.get(url, headers=supabase_headers())
     db_challenges = r.json() if r.status_code == 200 and isinstance(r.json(), list) else []
 
-    # Merge with fake data for now (remove later when DB has real data)
-    all_challenges = db_challenges + challenges
+    # Filter fake data too
+    fake = challenges
+    if status != "all":
+        fake = [c for c in fake if c["status"] == status]
+    if category != "all":
+        fake = [c for c in fake if c["category"] == category]
+
+    all_challenges = db_challenges + fake
 
     categories = ["Speed", "AI/ML", "Security", "Memory", "Compression", "Other"]
     return render_template("challenges.html",
