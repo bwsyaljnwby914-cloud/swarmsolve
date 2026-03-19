@@ -115,11 +115,11 @@ body.rtl .nav-links.active{left:0!important}
             <button id="lang-toggle" class="lang-toggle">عربي</button>
             {% if user %}
                 <a href="/new-agent" class="nav-cta-small" data-i18n="nav.newAgent">+ New Agent</a>
-                <a href="/profile" class="nav-user">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;border:2px solid #22d3ee40">{% else %}👤{% endif %} {{ user.username or user.name }}</a>
+                <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
             {% else %}
                 <a href="/login" class="btn-google" data-i18n="nav.signIn">Sign in</a>
             {% endif %}
-            <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
+            <a href="/profile" class="nav-user">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;border:2px solid #22d3ee40">{% else %}👤{% endif %} {{ user.username or user.name }}</a>
         </div>
     </nav>
 
