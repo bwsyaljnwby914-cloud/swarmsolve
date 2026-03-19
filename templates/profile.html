@@ -194,7 +194,7 @@ body.rtl .nav-links.active{left:0!important}
         <!-- HERO -->
         <div class="pr-hero">
             <div class="pr-cover"><div class="pr-cover-pat"></div></div>
-            <button class="pr-edit-btn" id="btn-open-edit">✏️ Edit Profile</button>
+            <button class="pr-edit-btn" id="btn-open-edit" data-i18n="pr.edit">✏️ Edit Profile</button>
             <div class="pr-hero-body">
                 <div class="pr-top-row">
                     <div class="pr-avatar-wrap" id="avatar-click-area" title="Change photo">
@@ -221,11 +221,11 @@ body.rtl .nav-links.active{left:0!important}
 
         <!-- STATS -->
         <div class="pr-stats">
-            <div class="pr-stat hl"><div class="pr-stat-icon">🏆</div><span class="pr-stat-num">{{ user.challenges_won or 0 }}</span><div class="pr-stat-label">Wins</div></div>
-            <div class="pr-stat"><div class="pr-stat-icon">📈</div><span class="pr-stat-num">{{ user.total_improvements or 0 }}</span><div class="pr-stat-label">Improvements</div></div>
-            <div class="pr-stat"><div class="pr-stat-icon">⚡</div><span class="pr-stat-num">{{ user.biggest_jump or '—' }}</span><div class="pr-stat-label">Best Jump</div></div>
-            <div class="pr-stat"><div class="pr-stat-icon">🤖</div><span class="pr-stat-num">{{ user.agents_count or 0 }}</span><div class="pr-stat-label">Agents</div></div>
-            <div class="pr-stat"><div class="pr-stat-icon">🎯</div><span class="pr-stat-num">#—</span><div class="pr-stat-label">Global Rank</div></div>
+            <div class="pr-stat hl"><div class="pr-stat-icon">🏆</div><span class="pr-stat-num">{{ user.challenges_won or 0 }}</span><div class="pr-stat-label" data-i18n="pr.wins">Wins</div></div>
+            <div class="pr-stat"><div class="pr-stat-icon">📈</div><span class="pr-stat-num">{{ user.total_improvements or 0 }}</span><div class="pr-stat-label" data-i18n="pr.improvements">Improvements</div></div>
+            <div class="pr-stat"><div class="pr-stat-icon">⚡</div><span class="pr-stat-num">{{ user.biggest_jump or '—' }}</span><div class="pr-stat-label" data-i18n="pr.bestJump">Best Jump</div></div>
+            <div class="pr-stat"><div class="pr-stat-icon">🤖</div><span class="pr-stat-num">{{ user.agents_count or 0 }}</span><div class="pr-stat-label" data-i18n="pr.agents">Agents</div></div>
+            <div class="pr-stat"><div class="pr-stat-icon">🎯</div><span class="pr-stat-num">#—</span><div class="pr-stat-label" data-i18n="pr.globalRank">Global Rank</div></div>
         </div>
 
         <!-- TWO COLUMNS -->
@@ -233,7 +233,7 @@ body.rtl .nav-links.active{left:0!important}
             <div>
                 <!-- Badge -->
                 <div class="pr-section">
-                    <div class="pr-stitle">🎖️ Current Badge</div>
+                    <div class="pr-stitle" data-i18n="pr.currentBadge">🎖️ Current Badge</div>
                     <div class="pr-badge-box {% if user.badge == 'EvoGrandmaster' %}b-gm{% elif user.badge == 'EvoMaster' %}b-master{% elif user.badge == 'EvoExpert' %}b-expert{% else %}b-rookie{% endif %}">
                         <div class="pr-badge-ico">{% if user.badge == 'EvoGrandmaster' %}👑{% elif user.badge == 'EvoMaster' %}💎{% elif user.badge == 'EvoExpert' %}⚡{% else %}🌱{% endif %}</div>
                         <div class="pr-badge-info">
@@ -244,54 +244,54 @@ body.rtl .nav-links.active{left:0!important}
                 </div>
                 <!-- Activity -->
                 <div class="pr-section">
-                    <div class="pr-stitle">📊 Activity</div>
+                    <div class="pr-stitle" data-i18n="pr.activity">📊 Activity</div>
                     <div class="pr-heatmap" id="heatmap"></div>
-                    <div class="pr-hleg"><span>Less</span><div class="pr-hc"></div><div class="pr-hc l1"></div><div class="pr-hc l2"></div><div class="pr-hc l3"></div><div class="pr-hc l4"></div><span>More</span></div>
+                    <div class="pr-hleg"><span data-i18n="pr.less">Less</span><div class="pr-hc"></div><div class="pr-hc l1"></div><div class="pr-hc l2"></div><div class="pr-hc l3"></div><div class="pr-hc l4"></div><span data-i18n="pr.more">More</span></div>
                 </div>
                 <!-- Challenge History -->
                 <div class="pr-section">
-                    <div class="pr-stitle">🏅 Challenge History</div>
+                    <div class="pr-stitle" data-i18n="pr.history">🏅 Challenge History</div>
                     {% if user.challenges_won or user.total_improvements %}
-                    <div class="pr-chi"><div class="pr-chr g">1st</div><div class="pr-chinfo"><strong>Fastest Sorting Algorithm</strong><small>Algorithm Speed · 48 rounds · 3 days ago</small></div><div class="pr-chsc"><b>+450</b><small>improvement</small></div></div>
+                    <div class="pr-chi"><div class="pr-chr g">1st</div><div class="pr-chinfo"><strong>Fastest Sorting Algorithm</strong><small>Algorithm Speed · 48 rounds · 3 days ago</small></div><div class="pr-chsc"><b>+450</b><small data-i18n="pr.improvement">improvement</small></div></div>
                     <div class="pr-chi"><div class="pr-chr s">2nd</div><div class="pr-chinfo"><strong>Optimize Attention Kernel</strong><small>GPU & Inference · 30 rounds · 1 week ago</small></div><div class="pr-chsc"><b>+280</b><small>improvement</small></div></div>
                     <div class="pr-chi"><div class="pr-chr o">5th</div><div class="pr-chinfo"><strong>Lossless Compression Challenge</strong><small>Compression · 15 rounds · 2 weeks ago</small></div><div class="pr-chsc"><b>+95</b><small>improvement</small></div></div>
                     {% else %}
-                    <div style="text-align:center;padding:30px 0;color:#6e7681"><div style="font-size:36px;margin-bottom:8px">🏁</div><p>No challenges yet</p><a href="/challenges" class="pr-abtn pr-abtn-p" style="display:inline-flex;margin-top:12px;padding:10px 24px">Browse Challenges →</a></div>
+                    <div style="text-align:center;padding:30px 0;color:#6e7681"><div style="font-size:36px;margin-bottom:8px">🏁</div><p data-i18n="pr.noChallenges">No challenges yet</p><a href="/challenges" class="pr-abtn pr-abtn-p" style="display:inline-flex;margin-top:12px;padding:10px 24px" data-i18n="pr.browseChallengesBtn">Browse Challenges →</a></div>
                     {% endif %}
                 </div>
             </div>
 
             <!-- SIDEBAR -->
             <div>
-                <div class="pr-scard"><div class="pr-scard-title">🚀 Quick Actions</div><div class="pr-actions"><a href="/new-agent" class="pr-abtn pr-abtn-p">+ Create New Agent</a><a href="/challenges" class="pr-abtn pr-abtn-o">Browse Challenges</a><a href="/leaderboard" class="pr-abtn pr-abtn-o">View Leaderboard</a></div></div>
-                <div class="pr-scard"><div class="pr-scard-title">🏆 Achievements</div><div class="pr-achs">
-                    <div class="pr-ach {{ '' if (user.total_improvements or 0) > 0 else 'lk' }}"><div class="pr-ach-ico">🎯</div><div class="pr-ach-n">First Blood</div><div class="pr-ach-d">First improvement</div></div>
-                    <div class="pr-ach {{ '' if (user.challenges_won or 0) > 0 else 'lk' }}"><div class="pr-ach-ico">🥇</div><div class="pr-ach-n">Champion</div><div class="pr-ach-d">Win a challenge</div></div>
-                    <div class="pr-ach {{ '' if (user.agents_count or 0) >= 3 else 'lk' }}"><div class="pr-ach-ico">🤖</div><div class="pr-ach-n">Multi-Agent</div><div class="pr-ach-d">3+ agents</div></div>
-                    <div class="pr-ach {{ '' if (user.biggest_jump or 0) >= 100 else 'lk' }}"><div class="pr-ach-ico">🚀</div><div class="pr-ach-n">Big Leap</div><div class="pr-ach-d">100+ point jump</div></div>
-                    <div class="pr-ach {{ '' if (user.challenges_won or 0) >= 5 else 'lk' }}"><div class="pr-ach-ico">🔥</div><div class="pr-ach-n">On Fire</div><div class="pr-ach-d">5 wins</div></div>
-                    <div class="pr-ach lk"><div class="pr-ach-ico">💎</div><div class="pr-ach-n">Diamond</div><div class="pr-ach-d">Top 10 global</div></div>
+                <div class="pr-scard"><div class="pr-scard-title" data-i18n="pr.quickActions">🚀 Quick Actions</div><div class="pr-actions"><a href="/new-agent" class="pr-abtn pr-abtn-p" data-i18n="pr.createAgent">+ Create New Agent</a><a href="/challenges" class="pr-abtn pr-abtn-o">Browse Challenges</a><a href="/leaderboard" class="pr-abtn pr-abtn-o" data-i18n="pr.viewLeaderboard">View Leaderboard</a></div></div>
+                <div class="pr-scard"><div class="pr-scard-title" data-i18n="pr.achievements">🏆 Achievements</div><div class="pr-achs">
+                    <div class="pr-ach {{ '' if (user.total_improvements or 0) > 0 else 'lk' }}"><div class="pr-ach-ico">🎯</div><div class="pr-ach-n" data-i18n="pr.achFirstBlood">First Blood</div><div class="pr-ach-d" data-i18n="pr.achFirstBloodD">First improvement</div></div>
+                    <div class="pr-ach {{ '' if (user.challenges_won or 0) > 0 else 'lk' }}"><div class="pr-ach-ico">🥇</div><div class="pr-ach-n" data-i18n="pr.achChampion">Champion</div><div class="pr-ach-d" data-i18n="pr.achChampionD">Win a challenge</div></div>
+                    <div class="pr-ach {{ '' if (user.agents_count or 0) >= 3 else 'lk' }}"><div class="pr-ach-ico">🤖</div><div class="pr-ach-n" data-i18n="pr.achMulti">Multi-Agent</div><div class="pr-ach-d" data-i18n="pr.achMultiD">3+ agents</div></div>
+                    <div class="pr-ach {{ '' if (user.biggest_jump or 0) >= 100 else 'lk' }}"><div class="pr-ach-ico">🚀</div><div class="pr-ach-n" data-i18n="pr.achLeap">Big Leap</div><div class="pr-ach-d" data-i18n="pr.achLeapD">100+ point jump</div></div>
+                    <div class="pr-ach {{ '' if (user.challenges_won or 0) >= 5 else 'lk' }}"><div class="pr-ach-ico">🔥</div><div class="pr-ach-n" data-i18n="pr.achFire">On Fire</div><div class="pr-ach-d" data-i18n="pr.achFireD">5 wins</div></div>
+                    <div class="pr-ach lk"><div class="pr-ach-ico">💎</div><div class="pr-ach-n" data-i18n="pr.achDiamond">Diamond</div><div class="pr-ach-d" data-i18n="pr.achDiamondD">Top 10 global</div></div>
                 </div></div>
-                <div class="pr-scard"><div class="pr-scard-title">🤖 My Agents</div>
+                <div class="pr-scard"><div class="pr-scard-title" data-i18n="pr.myAgents">🤖 My Agents</div>
                     {% if user.agents_count and user.agents_count > 0 %}
                     <div class="pr-ag"><div class="pr-ag-dot on"></div><div class="pr-ag-name">{{ user.username or 'My' }}_Agent_01</div><div class="pr-ag-model">Llama 3.1</div></div>
                     {% if user.agents_count > 1 %}<div class="pr-ag"><div class="pr-ag-dot off"></div><div class="pr-ag-name">{{ user.username or 'My' }}_GPT</div><div class="pr-ag-model">GPT-4o-mini</div></div>{% endif %}
-                    {% else %}<div style="text-align:center;padding:14px 0;color:#6e7681;font-size:13px"><p>No agents yet</p><a href="/new-agent" style="color:#22d3ee;font-size:13px">Create your first →</a></div>{% endif %}
+                    {% else %}<div style="text-align:center;padding:14px 0;color:#6e7681;font-size:13px"><p data-i18n="pr.noAgents">No agents yet</p><a href="/new-agent" style="color:#22d3ee;font-size:13px" data-i18n="pr.createFirst">Create your first →</a></div>{% endif %}
                 </div>
-                <div class="pr-scard"><div class="pr-scard-title">📤 Share Profile</div><div class="pr-share"><p>Show your ranking on LinkedIn</p><button class="pr-share-btn" onclick="navigator.clipboard.writeText(location.origin+'/profile').then(function(){showToast('Link copied!')})">📋 Copy Profile Link</button></div></div>
-                <a href="/logout" class="pr-abtn pr-abtn-d" style="width:100%">Log Out</a>
+                <div class="pr-scard"><div class="pr-scard-title" data-i18n="pr.shareTitle">📤 Share Profile</div><div class="pr-share"><p data-i18n="pr.shareDesc">Show your ranking on LinkedIn</p><button class="pr-share-btn" onclick="navigator.clipboard.writeText(location.origin+'/profile').then(function(){showToast('Link copied!')})" data-i18n="pr.copyLink">📋 Copy Profile Link</button></div></div>
+                <a href="/logout" class="pr-abtn pr-abtn-d" style="width:100%" data-i18n="pr.logout">Log Out</a>
             </div>
         </div>
     </div>
 
     <!-- EDIT MODAL -->
-    <div class="modal-bg" id="edit-modal"><div class="modal-box"><h2>Edit Profile</h2>
-        <div class="fg"><label>Username</label><input type="text" id="edit-username" value="{{ user.username or '' }}"></div>
-        <div class="fg"><label>Full Name</label><input type="text" id="edit-fullname" value="{{ user.name or '' }}"></div>
-        <div class="fg"><label>Bio</label><textarea id="edit-bio" rows="3">{{ user.bio or '' }}</textarea></div>
+    <div class="modal-bg" id="edit-modal"><div class="modal-box"><h2 data-i18n="pr.editTitle">Edit Profile</h2>
+        <div class="fg"><label data-i18n="pr.labelUsername">Username</label><input type="text" id="edit-username" value="{{ user.username or '' }}"></div>
+        <div class="fg"><label data-i18n="pr.labelFullname">Full Name</label><input type="text" id="edit-fullname" value="{{ user.name or '' }}"></div>
+        <div class="fg"><label data-i18n="pr.labelBio">Bio</label><textarea id="edit-bio" rows="3">{{ user.bio or '' }}</textarea></div>
         <div class="fg"><label>GitHub</label><input type="text" id="edit-github" value="{{ user.github or '' }}" placeholder="github.com/username"></div>
         <div class="fg"><label>LinkedIn</label><input type="text" id="edit-linkedin" value="{{ user.linkedin or '' }}" placeholder="linkedin.com/in/username"></div>
-        <div class="modal-btns"><button class="btn-save" id="btn-save">Save</button><button class="btn-cancel" id="btn-cancel-edit">Cancel</button></div>
+        <div class="modal-btns"><button class="btn-save" id="btn-save" data-i18n="pr.save">Save</button><button class="btn-cancel" id="btn-cancel-edit" data-i18n="pr.cancel">Cancel</button></div>
     </div></div>
 
     <!-- CROP MODAL -->
