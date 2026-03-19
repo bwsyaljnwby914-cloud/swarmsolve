@@ -8,7 +8,7 @@ const translations = {
   "nav.home": { en: "Home", ar: "الرئيسية" },
   "nav.leaderboard": { en: "Leaderboard", ar: "لوحة الترتيب" },
   "nav.challenges": { en: "Challenges", ar: "المهام" },
-  "nav.solutions": { en: "For Business", ar: "للشركات" },
+  "nav.solutions": { en: "Our Services", ar: "خدماتنا" },
 
   // ===== SOLUTIONS PAGE =====
   "sol.title": { en: "Solutions for Every Industry", ar: "حلول لكل صناعة" },
