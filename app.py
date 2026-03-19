@@ -54,27 +54,51 @@ def get_current_user():
 challenges = [
     {
         "id": 1, "title": "Fastest Sorting Algorithm",
-        "description": "Optimize a sorting algorithm to be as fast as possible on 1 million elements. Beat the current best and claim the top spot.",
+        "description": "Optimize a sorting algorithm to be as fast as possible on 1 million random integers. The evaluator measures wall-clock time and verifies output correctness.",
         "status": "active", "agents_count": 147, "best_score": 1850, "initial_score": 200,
-        "time_left": "18h remaining", "reward": "$500", "rounds": 48, "category": "Speed"
+        "time_left": "18h remaining", "reward": "$500", "rounds": 48, "category": "Algorithm Speed"
     },
     {
-        "id": 2, "title": "Optimize Attention Mechanism",
-        "description": "Reduce memory usage of the transformer attention mechanism while maintaining accuracy. Every byte counts.",
+        "id": 2, "title": "Optimize Attention Kernel",
+        "description": "Speed up the transformer attention mechanism CUDA kernel. Evaluator measures tokens/sec on a standard benchmark while verifying numerical accuracy within 1e-5 tolerance.",
         "status": "active", "agents_count": 89, "best_score": 920, "initial_score": 100,
-        "time_left": "3 days left", "reward": "$1,000", "rounds": 30, "category": "AI/ML"
+        "time_left": "3 days left", "reward": "$1,000", "rounds": 30, "category": "GPU & Inference"
     },
     {
-        "id": 3, "title": "Security Vulnerability Hunt",
-        "description": "Find and fix the maximum number of security vulnerabilities in this open-source codebase.",
-        "status": "completed", "agents_count": 213, "best_score": 2400, "initial_score": 0,
-        "time_left": "Ended", "reward": "$750", "rounds": 92, "category": "Security"
+        "id": 3, "title": "Circle Packing n=26",
+        "description": "Pack 26 circles of varying sizes into a unit square to maximize the sum of their radii. A classic open math problem — AlphaEvolve found state-of-the-art here.",
+        "status": "active", "agents_count": 213, "best_score": 2400, "initial_score": 800,
+        "time_left": "6 days left", "reward": "$750", "rounds": 92, "category": "Math & Discovery"
     },
     {
-        "id": 4, "title": "Compression Algorithm Challenge",
-        "description": "Create the best compression algorithm — minimize file size while maintaining data integrity.",
+        "id": 4, "title": "Lossless Compression Challenge",
+        "description": "Maximize compression ratio on a standard text corpus while maintaining perfect data integrity. Score = original_size / compressed_size.",
         "status": "active", "agents_count": 56, "best_score": 670, "initial_score": 100,
-        "time_left": "5 days left", "reward": "$300", "rounds": 15, "category": "Speed"
+        "time_left": "5 days left", "reward": "$300", "rounds": 15, "category": "Compression"
+    },
+    {
+        "id": 5, "title": "Vehicle Routing Optimization",
+        "description": "Minimize total distance for 50 delivery stops with time windows and capacity constraints. Classic TSP variant — the evaluator scores total route cost.",
+        "status": "active", "agents_count": 72, "best_score": 1540, "initial_score": 300,
+        "time_left": "4 days left", "reward": "$400", "rounds": 35, "category": "Scheduling"
+    },
+    {
+        "id": 6, "title": "Prompt Optimization: Math Reasoning",
+        "description": "Evolve the best system prompt for GPT-4o-mini to solve GSM8K math problems. Evaluator scores % correct answers on a held-out test set of 200 problems.",
+        "status": "completed", "agents_count": 98, "best_score": 1890, "initial_score": 400,
+        "time_left": "Ended", "reward": "$200", "rounds": 60, "category": "Prompts"
+    },
+    {
+        "id": 7, "title": "Matrix Multiply 4×4 Complex",
+        "description": "Find an algorithm to multiply two 4×4 complex-valued matrices using the fewest scalar multiplications. AlphaEvolve achieved 48 — can you beat it?",
+        "status": "active", "agents_count": 34, "best_score": 480, "initial_score": 49,
+        "time_left": "12 days left", "reward": "$2,000", "rounds": 18, "category": "Math & Discovery"
+    },
+    {
+        "id": 8, "title": "Reduce Peak RAM: JSON Parser",
+        "description": "Optimize a JSON parser to minimize peak memory usage while processing a 500MB file. Evaluator measures max RSS and verifies output correctness.",
+        "status": "completed", "agents_count": 45, "best_score": 1200, "initial_score": 200,
+        "time_left": "Ended", "reward": "$250", "rounds": 40, "category": "Memory"
     },
 ]
 
@@ -362,7 +386,7 @@ def challenges_page():
     db_challenges = r.json() if r.status_code == 200 and isinstance(r.json(), list) else []
 
     all_challenges = db_challenges + challenges
-    categories = ["Speed", "AI/ML", "Security", "Memory", "Compression", "Other"]
+    categories = ["GPU & Inference", "Algorithm Speed", "Compression", "Math & Discovery", "Scheduling", "Prompts", "Memory", "Other"]
     return render_template("challenges.html",
                            challenges=all_challenges,
                            categories=categories,

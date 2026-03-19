@@ -240,13 +240,21 @@ const translations = {
 
   // Challenge titles & descriptions
   "challenge.1.title": { en: "Fastest Sorting Algorithm", ar: "أسرع خوارزمية ترتيب" },
-  "challenge.1.desc": { en: "Optimize a sorting algorithm to be as fast as possible on 1 million elements. Beat the current best and claim the top spot.", ar: "حسّن خوارزمية ترتيب لتكون أسرع ما يمكن على مليون عنصر. تغلّب على الأفضل الحالي واحتل المركز الأول." },
-  "challenge.2.title": { en: "Optimize Attention Mechanism", ar: "تحسين آلية الانتباه" },
-  "challenge.2.desc": { en: "Reduce memory usage of the transformer attention mechanism while maintaining accuracy. Every byte counts.", ar: "قلّل استخدام الذاكرة في آلية الانتباه للمحوّل مع الحفاظ على الدقة. كل بايت مهم." },
-  "challenge.3.title": { en: "Security Vulnerability Hunt", ar: "صيد الثغرات الأمنية" },
-  "challenge.3.desc": { en: "Find and fix the maximum number of security vulnerabilities in this open-source codebase.", ar: "اعثر وأصلح أكبر عدد من الثغرات الأمنية في هذا الكود مفتوح المصدر." },
-  "challenge.4.title": { en: "Compression Algorithm Challenge", ar: "تحدي خوارزمية الضغط" },
-  "challenge.4.desc": { en: "Create the best compression algorithm — minimize file size while maintaining data integrity.", ar: "أنشئ أفضل خوارزمية ضغط — قلّل حجم الملف مع الحفاظ على سلامة البيانات." },
+  "challenge.1.desc": { en: "Optimize a sorting algorithm to be as fast as possible on 1 million random integers. The evaluator measures wall-clock time and verifies output correctness.", ar: "حسّن خوارزمية ترتيب لتكون أسرع ما يمكن على مليون عدد صحيح عشوائي. المُقيِّم يقيس وقت التنفيذ ويتحقق من صحة المخرجات." },
+  "challenge.2.title": { en: "Optimize Attention Kernel", ar: "تحسين نواة الانتباه" },
+  "challenge.2.desc": { en: "Speed up the transformer attention mechanism CUDA kernel. Evaluator measures tokens/sec on a standard benchmark while verifying numerical accuracy within 1e-5 tolerance.", ar: "سرّع نواة CUDA لآلية الانتباه في المحوّل. المُقيِّم يقيس الرموز/ثانية على معيار قياسي مع التحقق من الدقة العددية ضمن تفاوت 1e-5." },
+  "challenge.3.title": { en: "Circle Packing n=26", ar: "تعبئة الدوائر n=26" },
+  "challenge.3.desc": { en: "Pack 26 circles of varying sizes into a unit square to maximize the sum of their radii. A classic open math problem — AlphaEvolve found state-of-the-art here.", ar: "عبّئ 26 دائرة بأحجام متفاوتة في مربع وحدة لتعظيم مجموع أنصاف أقطارها. مسألة رياضية مفتوحة كلاسيكية — AlphaEvolve وصلت لأحدث النتائج هنا." },
+  "challenge.4.title": { en: "Lossless Compression Challenge", ar: "تحدي الضغط بدون فقدان" },
+  "challenge.4.desc": { en: "Maximize compression ratio on a standard text corpus while maintaining perfect data integrity. Score = original_size / compressed_size.", ar: "أقصى نسبة ضغط على مجموعة نصوص قياسية مع الحفاظ على سلامة البيانات تماماً. الدرجة = الحجم_الأصلي / الحجم_المضغوط." },
+  "challenge.5.title": { en: "Vehicle Routing Optimization", ar: "تحسين مسارات المركبات" },
+  "challenge.5.desc": { en: "Minimize total distance for 50 delivery stops with time windows and capacity constraints. Classic TSP variant.", ar: "قلّل المسافة الكلية لـ 50 نقطة توصيل مع نوافذ زمنية وقيود سعة. نسخة كلاسيكية من مسألة البائع المتجوّل." },
+  "challenge.6.title": { en: "Prompt Optimization: Math Reasoning", ar: "تحسين الأوامر: الاستدلال الرياضي" },
+  "challenge.6.desc": { en: "Evolve the best system prompt for GPT-4o-mini to solve GSM8K math problems. Evaluator scores % correct answers on a held-out test set.", ar: "طوّر أفضل أمر نظام لـ GPT-4o-mini لحل مسائل GSM8K الرياضية. المُقيِّم يقيّم % الإجابات الصحيحة على مجموعة اختبار محجوزة." },
+  "challenge.7.title": { en: "Matrix Multiply 4×4 Complex", ar: "ضرب مصفوفات 4×4 مركّبة" },
+  "challenge.7.desc": { en: "Find an algorithm to multiply two 4×4 complex-valued matrices using the fewest scalar multiplications. AlphaEvolve achieved 48 — can you beat it?", ar: "اعثر على خوارزمية لضرب مصفوفتين 4×4 بقيم مركّبة بأقل عدد عمليات ضرب عددي. AlphaEvolve حققت 48 — هل تقدر تتفوّق؟" },
+  "challenge.8.title": { en: "Reduce Peak RAM: JSON Parser", ar: "تقليل ذروة RAM: محلل JSON" },
+  "challenge.8.desc": { en: "Optimize a JSON parser to minimize peak memory usage while processing a 500MB file. Evaluator measures max RSS and verifies correctness.", ar: "حسّن محلل JSON لتقليل ذروة استخدام الذاكرة أثناء معالجة ملف 500 ميغا. المُقيِّم يقيس أقصى RSS ويتحقق من الصحة." },
 
   // Time left
   "time.18h": { en: "18h remaining", ar: "18 ساعة متبقية" },
@@ -255,9 +263,14 @@ const translations = {
   "time.5d": { en: "5 days left", ar: "5 أيام متبقية" },
 
   // Categories
-  "cat.Speed": { en: "Speed", ar: "السرعة" },
-  "cat.AI/ML": { en: "AI/ML", ar: "ذكاء اصطناعي" },
-  "cat.Security": { en: "Security", ar: "الأمان" },
+  "cat.GPU & Inference": { en: "GPU & Inference", ar: "GPU والاستدلال" },
+  "cat.Algorithm Speed": { en: "Algorithm Speed", ar: "سرعة الخوارزميات" },
+  "cat.Compression": { en: "Compression", ar: "الضغط" },
+  "cat.Math & Discovery": { en: "Math & Discovery", ar: "رياضيات واكتشاف" },
+  "cat.Scheduling": { en: "Scheduling", ar: "الجدولة والمسارات" },
+  "cat.Prompts": { en: "Prompts", ar: "تحسين الأوامر" },
+  "cat.Memory": { en: "Memory", ar: "الذاكرة" },
+  "cat.Other": { en: "Other", ar: "أخرى" },
 
   // ===== TOP BUILDERS =====
   "top.title": { en: "Top Builders", ar: "أفضل المطورين" },
