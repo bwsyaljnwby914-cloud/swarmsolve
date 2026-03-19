@@ -143,7 +143,7 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
             <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
             <button id="lang-toggle" class="lang-toggle">عربي</button>
             <a href="/why" class="nav-why-btn" data-i18n="nav.why">Why Collective Evolution?</a>
-            <a href="/profile" class="nav-user">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;border:2px solid #22d3ee40">{% else %}👤{% endif %} {{ user.username or user.name }}</a>
+            <a href="/profile" class="nav-user" title="{{ user.username or user.name }}">{% if user.avatar_url %}<img src="{{ user.avatar_url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #22d3ee40">{% else %}👤{% endif %}</a>
         </div>
     </nav>
 
