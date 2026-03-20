@@ -460,6 +460,213 @@ def create_challenge():
     return render_template("create_challenge.html", user=user)
 
 
+# ===== EVOLUTION API — The Real Engine =====
+# هذه نقاط الوصول التي يتصل بها الوكلاء
+
+from engine import challenge_manager
+
+# سجّل تحدي تجريبي عند بدء التشغيل
+def setup_demo_challenges():
+    """تحديات تجريبية مع مُقيِّمات حقيقية"""
+
+    # تحدي 1: أسرع ترتيب
+    challenge_manager.register_challenge(
+        challenge_id="sort-speed",
+        title="Fastest Sorting Algorithm",
+        initial_code='''
+def solve(data):
+    """Sort the list — make this as fast as possible"""
+    return sorted(data)
+''',
+        evaluator_code='''
+import time
+import random
+
+def evaluate(solution_path):
+    """Score = how many elements sorted per second (higher = better)"""
+    # Load the solution
+    with open(solution_path) as f:
+        code = f.read()
+
+    # Create the solve function
+    namespace = {}
+    exec(code, namespace)
+    solve_fn = namespace.get("solve")
+    if not solve_fn:
+        return 0
+
+    # Generate test data
+    random.seed(42)
+    test_data = [random.randint(0, 1000000) for _ in range(100000)]
+    expected = sorted(test_data)
+
+    # Measure speed
+    start = time.perf_counter()
+    result = solve_fn(test_data.copy())
+    elapsed = time.perf_counter() - start
+
+    # Verify correctness
+    if list(result) != expected:
+        return 0  # Wrong answer = zero score
+
+    # Score = elements per second (higher is better)
+    score = len(test_data) / max(elapsed, 0.0001)
+    return round(score, 2)
+''',
+        initial_score=100000
+    )
+
+    # تحدي 2: أفضل ضغط
+    challenge_manager.register_challenge(
+        challenge_id="compression",
+        title="Lossless Compression Challenge",
+        initial_code='''
+import zlib
+
+def compress(data):
+    """Compress the bytes — make the output as small as possible"""
+    return zlib.compress(data)
+
+def decompress(compressed):
+    """Decompress back to original"""
+    return zlib.decompress(compressed)
+''',
+        evaluator_code='''
+def evaluate(solution_path):
+    """Score = compression ratio (higher = better compression)"""
+    with open(solution_path) as f:
+        code = f.read()
+
+    namespace = {}
+    exec(code, namespace)
+    compress_fn = namespace.get("compress")
+    decompress_fn = namespace.get("decompress")
+
+    if not compress_fn or not decompress_fn:
+        return 0
+
+    # Test data
+    test_data = b"Hello World! " * 10000 + b"SwarmSolve " * 5000 + bytes(range(256)) * 100
+
+    try:
+        compressed = compress_fn(test_data)
+        decompressed = decompress_fn(compressed)
+
+        # Must be lossless
+        if decompressed != test_data:
+            return 0
+
+        # Score = original / compressed (higher = better)
+        ratio = len(test_data) / max(len(compressed), 1)
+        return round(ratio, 4)
+    except:
+        return 0
+''',
+        initial_score=1.0
+    )
+
+setup_demo_challenges()
+
+
+@app.route("/api/challenge/<challenge_id>", methods=["GET"])
+def api_get_challenge(challenge_id):
+    """
+    GET /api/challenge/sort-speed?agent_name=MyAgent
+    If agent_name is provided, shows best solution from THEIR island (not global)
+    """
+    agent_name = request.args.get("agent_name", None)
+    data = challenge_manager.get_challenge_for_agent(challenge_id, agent_name=agent_name)
+    if not data:
+        return jsonify({"error": "Challenge not found"}), 404
+    return jsonify(data)
+
+
+@app.route("/api/submit", methods=["POST"])
+def api_submit_solution():
+    """
+    نقطة الوصول الثانية — الوكيل يرسل حل جديد
+    POST /api/submit
+    Body: {"challenge_id": "sort-speed", "code": "...", "agent_name": "MyAgent"}
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    challenge_id = data.get("challenge_id")
+    code = data.get("code", "")
+    agent_name = data.get("agent_name", "Anonymous")
+
+    if not challenge_id or not code:
+        return jsonify({"error": "challenge_id and code are required"}), 400
+
+    if len(code) > 50000:
+        return jsonify({"error": "Code too long (max 50000 characters)"}), 400
+
+    # حاول معرفة المستخدم من الجلسة
+    user = get_current_user()
+    user_id = user["id"] if user else None
+
+    result = challenge_manager.submit_solution(
+        challenge_id=challenge_id,
+        code=code,
+        agent_name=agent_name,
+        user_id=user_id,
+    )
+
+    return jsonify(result)
+
+
+@app.route("/api/leaderboard/<challenge_id>", methods=["GET"])
+def api_leaderboard(challenge_id):
+    """
+    نقطة الوصول الثالثة — ترتيب التحدي
+    GET /api/leaderboard/sort-speed
+    """
+    board = challenge_manager.get_leaderboard(challenge_id)
+    stats = challenge_manager.store.get_stats(challenge_id)
+    return jsonify({"leaderboard": board, "stats": stats})
+
+
+@app.route("/api/evolution/<challenge_id>", methods=["GET"])
+def api_evolution_log(challenge_id):
+    """سجل التطوّر — كل تحسين حصل"""
+    log = challenge_manager.get_evolution_log(challenge_id)
+    return jsonify({"log": log})
+
+
+@app.route("/api/challenges", methods=["GET"])
+def api_list_challenges():
+    """قائمة التحديات المتاحة"""
+    result = []
+    for cid, ch in challenge_manager.challenges.items():
+        stats = challenge_manager.store.get_stats(cid)
+        result.append({
+            "id": cid,
+            "title": ch["title"],
+            "initial_score": ch["initial_score"],
+            "best_score": stats["best_score"] if stats["best_score"] > 0 else ch["initial_score"],
+            "total_submissions": stats["total_submissions"],
+            "unique_agents": stats["unique_agents"],
+        })
+    return jsonify({"challenges": result})
+
+
+@app.route("/api/islands/<challenge_id>", methods=["GET"])
+def api_island_status(challenge_id):
+    """Island system status — how many islands, agents, migrations"""
+    status = challenge_manager.get_island_status(challenge_id)
+    if not status:
+        return jsonify({"error": "Challenge not found"}), 404
+    return jsonify(status)
+
+
+@app.route("/api/migrations/<challenge_id>", methods=["GET"])
+def api_migration_history(challenge_id):
+    """Migration history — every ring migration that happened"""
+    history = challenge_manager.get_migration_history(challenge_id)
+    return jsonify({"migrations": history})
+
+
 # ===== OTHER PAGES =====
 
 @app.route("/new-agent")
