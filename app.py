@@ -143,41 +143,137 @@ leaderboard_data = [
 
 @app.route("/")
 def home():
-    active = [c for c in challenges if c["status"] == "active"]
+    # Mix fake challenges with real engine challenges
+    engine_challenges = []
+    for cid, ch in challenge_manager.challenges.items():
+        stats = challenge_manager.store.get_stats(cid)
+        island_status = challenge_manager.get_island_status(cid)
+        engine_challenges.append({
+            "id": cid,
+            "title": ch["title"],
+            "description": f"Live challenge — {stats['unique_agents']} agents competing",
+            "status": "stopped" if (island_status and island_status["is_stopped"]) else "active",
+            "agents_count": stats["unique_agents"],
+            "best_score": stats["best_score"] if stats["best_score"] > 0 else ch["initial_score"],
+            "initial_score": ch["initial_score"],
+            "time_left": "Ended" if (island_status and island_status["is_stopped"]) else "Live now",
+            "reward": "—",
+            "rounds": stats["total_submissions"],
+            "category": "Algorithm Speed",
+        })
+
+    all_challenges = engine_challenges + challenges
+
+    # Build leaderboard from real engine data (across all challenges)
+    real_leaderboard = []
+    agent_scores = {}
+    for cid in challenge_manager.challenges:
+        board = challenge_manager.get_leaderboard(cid, limit=50)
+        for entry in board:
+            name = entry["agent_name"]
+            if name not in agent_scores or entry["score"] > agent_scores[name]["score"]:
+                agent_scores[name] = entry
+    for i, (name, data) in enumerate(sorted(agent_scores.items(), key=lambda x: x[1]["score"], reverse=True)):
+        real_leaderboard.append({
+            "rank": i + 1, "username": name, "avatar": "🤖",
+            "agents": 1, "total_improvements": data.get("round", 0),
+            "biggest_jump": int(data["score"]), "badge": "EvoRookie",
+            "challenges_won": 0, "github": "", "country": "🌍",
+        })
+
+    display_leaderboard = real_leaderboard[:3] if real_leaderboard else leaderboard_data[:3]
+
     stats = {
-        "total_agents": sum(c["agents_count"] for c in challenges),
-        "active_challenges": len(active),
-        "total_improvements": sum(u["total_improvements"] for u in leaderboard_data),
-        "total_users": len(leaderboard_data)
+        "total_agents": sum(c.get("agents_count", 0) for c in all_challenges),
+        "active_challenges": len([c for c in all_challenges if c.get("status") == "active"]),
+        "total_improvements": sum(
+            challenge_manager.store.get_stats(cid)["total_submissions"]
+            for cid in challenge_manager.challenges
+        ),
+        "total_users": len(agent_scores) if agent_scores else len(leaderboard_data),
     }
-    return render_template("index.html", challenges=challenges, leaderboard=leaderboard_data[:3], stats=stats,
+
+    return render_template("index.html", challenges=all_challenges,
+                           leaderboard=display_leaderboard, stats=stats,
                            user=get_current_user())
 
 
-@app.route("/challenge/<int:cid>")
+@app.route("/challenge/<cid>")
 def challenge_detail(cid):
-    ch = next((c for c in challenges if c["id"] == cid), None)
+    # Try engine challenge first
+    str_cid = str(cid)
+    if str_cid in challenge_manager.challenges:
+        ch_data = challenge_manager.challenges[str_cid]
+        stats = challenge_manager.store.get_stats(str_cid)
+        island_status = challenge_manager.get_island_status(str_cid)
+        ch = {
+            "id": str_cid,
+            "title": ch_data["title"],
+            "description": f"Live challenge with real evaluator",
+            "status": "stopped" if (island_status and island_status["is_stopped"]) else "active",
+            "agents_count": stats["unique_agents"],
+            "best_score": stats["best_score"] if stats["best_score"] > 0 else ch_data["initial_score"],
+            "initial_score": ch_data["initial_score"],
+            "time_left": "Ended" if (island_status and island_status["is_stopped"]) else "Live now",
+            "reward": "—",
+            "rounds": stats["total_submissions"],
+            "category": "Algorithm Speed",
+        }
+        evo = challenge_manager.get_evolution_log(str_cid)
+        # Format for template
+        evo_formatted = []
+        for e in evo:
+            evo_formatted.append({
+                "round": e["round"],
+                "score": e["score"],
+                "agent": e["agent"],
+                "jump": e["jump"],
+                "time": e["time"][:5] if e["time"] else "—",
+            })
+        if not evo_formatted:
+            evo_formatted = [{"round": 0, "score": ch_data["initial_score"], "agent": "—", "jump": 0, "time": "—"}]
+
+        return render_template("challenge.html", challenge=ch, evolution_log=evo_formatted,
+                               island_status=island_status, user=get_current_user())
+
+    # Fallback to fake data
+    try:
+        int_cid = int(cid)
+    except ValueError:
+        return "Challenge not found", 404
+    ch = next((c for c in challenges if c["id"] == int_cid), None)
     if not ch:
         return "Challenge not found", 404
     evo = [
         {"round": 1, "score": ch["initial_score"], "agent": "—", "jump": 0, "time": "00:00"},
-        {"round": 5, "score": int(ch["initial_score"] + (ch["best_score"] - ch["initial_score"]) * 0.2),
-         "agent": "Ahmed_AI", "jump": int((ch["best_score"] - ch["initial_score"]) * 0.2), "time": "00:08"},
-        {"round": 12, "score": int(ch["initial_score"] + (ch["best_score"] - ch["initial_score"]) * 0.45),
-         "agent": "Sara_ML", "jump": int((ch["best_score"] - ch["initial_score"]) * 0.25), "time": "00:32"},
-        {"round": 24, "score": int(ch["initial_score"] + (ch["best_score"] - ch["initial_score"]) * 0.7),
-         "agent": "Khalid_Dev", "jump": int((ch["best_score"] - ch["initial_score"]) * 0.25), "time": "01:45"},
-        {"round": 36, "score": int(ch["initial_score"] + (ch["best_score"] - ch["initial_score"]) * 0.9),
-         "agent": "Nora_Code", "jump": int((ch["best_score"] - ch["initial_score"]) * 0.2), "time": "03:20"},
-        {"round": ch["rounds"], "score": ch["best_score"], "agent": "Ahmed_AI",
-         "jump": int((ch["best_score"] - ch["initial_score"]) * 0.1), "time": "05:33"},
+        {"round": ch["rounds"], "score": ch["best_score"], "agent": "Demo",
+         "jump": ch["best_score"] - ch["initial_score"], "time": "—"},
     ]
     return render_template("challenge.html", challenge=ch, evolution_log=evo, user=get_current_user())
 
 
 @app.route("/leaderboard")
 def leaderboard_page():
-    return render_template("leaderboard.html", leaderboard=leaderboard_data, user=get_current_user())
+    # Build real leaderboard from engine
+    real_leaderboard = []
+    agent_scores = {}
+    for cid in challenge_manager.challenges:
+        board = challenge_manager.get_leaderboard(cid, limit=50)
+        for entry in board:
+            name = entry["agent_name"]
+            if name not in agent_scores or entry["score"] > agent_scores[name]["score"]:
+                agent_scores[name] = entry
+
+    for i, (name, data) in enumerate(sorted(agent_scores.items(), key=lambda x: x[1]["score"], reverse=True)):
+        real_leaderboard.append({
+            "rank": i + 1, "username": name, "avatar": "🤖",
+            "agents": 1, "total_improvements": data.get("round", 0),
+            "biggest_jump": int(data["score"]), "badge": "EvoRookie",
+            "challenges_won": 0, "github": "", "country": "🌍",
+        })
+
+    display_leaderboard = real_leaderboard if real_leaderboard else leaderboard_data
+    return render_template("leaderboard.html", leaderboard=display_leaderboard, user=get_current_user())
 
 
 @app.route("/why")
@@ -397,13 +493,32 @@ def upload_avatar():
 
 @app.route("/challenges")
 def challenges_page():
-    """List all challenges from Supabase + fake data"""
-    # Fetch all from Supabase
+    """List all challenges — engine + Supabase + demo"""
+    # Engine challenges (real, with evaluators)
+    engine_challenges = []
+    for cid, ch in challenge_manager.challenges.items():
+        stats = challenge_manager.store.get_stats(cid)
+        island_status = challenge_manager.get_island_status(cid)
+        engine_challenges.append({
+            "id": cid,
+            "title": ch["title"],
+            "description": f"Live challenge — submit solutions via API",
+            "status": "stopped" if (island_status and island_status["is_stopped"]) else "active",
+            "agents_count": stats["unique_agents"],
+            "best_score": stats["best_score"] if stats["best_score"] > 0 else ch["initial_score"],
+            "initial_score": ch["initial_score"],
+            "time_left": "Ended" if (island_status and island_status["is_stopped"]) else "Live now",
+            "reward": "—",
+            "rounds": stats["total_submissions"],
+            "category": "Algorithm Speed",
+        })
+
+    # Supabase challenges
     url = f"{SUPABASE_URL}/rest/v1/challenges?select=*,profiles(username,avatar_url)&order=created_at.desc"
     r = requests.get(url, headers=supabase_headers())
     db_challenges = r.json() if r.status_code == 200 and isinstance(r.json(), list) else []
 
-    all_challenges = db_challenges + challenges
+    all_challenges = engine_challenges + db_challenges + challenges
     categories = ["GPU & Inference", "Algorithm Speed", "Compression", "Math & Discovery", "Scheduling", "Prompts", "Memory", "Other"]
     return render_template("challenges.html",
                            challenges=all_challenges,
