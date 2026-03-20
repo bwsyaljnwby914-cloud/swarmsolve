@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How It Works — SwarmSolve</title>
+    <style>html.i18n-loading body{opacity:0}html:not(.i18n-loading) body{transition:opacity .08s ease}</style>
     <link rel="stylesheet" href="/static/style.css?v=9">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="/static/lang.js?v=12"></script>
 <style>
 /* Mobile sidebar */
 @media(max-width:768px){
@@ -26,6 +28,14 @@ body.rtl .nav-links.active{left:0!important}
 .nav-group-actions{display:flex;flex-direction:column!important;align-items:stretch!important;gap:4px!important;padding-top:4px}
 }
 @media(min-width:769px){.hamburger{display:none!important}.nav-sidebar-overlay{display:none!important}}
+
+/* Navbar groups (desktop) */
+.nav-group-links{display:flex;align-items:center;gap:20px}
+.nav-group-links a{color:#8b949e;font-size:14px;font-weight:500;transition:.2s;white-space:nowrap}
+.nav-group-links a:hover{color:#22d3ee}
+.nav-group-actions{display:flex;align-items:center;gap:12px}
+.nav-why-link{opacity:.7;font-size:13px!important}
+.nav-why-link:hover{opacity:1}
 
 /* How It Works page */
 .hiw{max-width:820px;margin:0 auto;padding:20px 20px 80px;overflow-x:hidden}
@@ -542,7 +552,6 @@ body.rtl .tl-item::before{left:auto;right:-24px}
 
     </div>
 
-    <script src="/static/lang.js"></script>
     <script>
     (function(){var h=document.getElementById("hamburger"),n=document.getElementById("nav-links"),o=document.getElementById("nav-sidebar-overlay");if(!h||!n)return;h.addEventListener("click",function(e){e.stopPropagation();h.classList.toggle("active");n.classList.toggle("active");if(o)o.classList.toggle("active");document.body.style.overflow=n.classList.contains("active")?"hidden":"";});if(o)o.addEventListener("click",c);n.querySelectorAll("a").forEach(function(a){a.addEventListener("click",c);});function c(){h.classList.remove("active");n.classList.remove("active");if(o)o.classList.remove("active");document.body.style.overflow="";}})();
     </script>
