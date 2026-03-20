@@ -109,30 +109,55 @@ with open(r"{result_safe}", "w", encoding="utf-8") as f:
 # ============================================================
 
 class IslandManager:
+    """
+    Fair Island System:
+    - Auto-scales islands based on agent count
+    - Migration triggers when 70% of agents in an island have submitted since last migration
+    - Each island migrates independently (fast island doesn't wait for slow island)
+    - Safety timeout: if 70% not reached, migrate after max_wait seconds
+    - Ring topology: island i sends to island (i+1) % n only
+    - Auto-stop when no global improvement for stagnation_limit rounds
+    """
 
     SCALE_RULES = [
         (0, 1),      # < 10 agents = 1 island
-        (10, 3),     # 10-49 = 3 islands
-        (50, 5),     # 50-199 = 5 islands
-        (200, 10),   # 200+ = 10 islands
+        (10, 3),     # 10-49 = 3 islands (each ~7-16 agents)
+        (50, 5),     # 50-199 = 5 islands (each ~10-40 agents)
+        (200, 10),   # 200+ = 10 islands (each ~20+ agents)
     ]
 
-    def __init__(self, challenge_id, migration_interval=20, migration_rate=0.1,
+    def __init__(self, challenge_id, migration_rate=0.1,
+                 participation_threshold=0.7, max_wait_seconds=600,
                  stagnation_limit=50):
         self.challenge_id = challenge_id
-        self.migration_interval = migration_interval
-        self.migration_rate = migration_rate
-        self.stagnation_limit = stagnation_limit
+        self.migration_rate = migration_rate          # fraction of top solutions to migrate
+        self.participation_threshold = participation_threshold  # 70% of agents must submit
+        self.max_wait_seconds = max_wait_seconds      # safety timeout (default 10 min)
+        self.stagnation_limit = stagnation_limit      # rounds without improvement = auto-stop
 
+        # Island data
         self.num_islands = 1
-        self.islands = {0: []}
-        self.agent_island_map = {}
+        self.islands = {0: []}          # island_id -> [solutions]
+        self.agent_island_map = {}      # agent_name -> island_id
 
+        # Per-island migration tracking
+        self.island_participants = {}   # island_id -> set of agent_names who submitted since last migration
+        self.island_last_migration = {} # island_id -> datetime of last migration
+        self.island_migration_count = {}# island_id -> number of migrations completed
+
+        # Global counters
         self.round_counter = 0
         self.rounds_since_improvement = 0
         self.global_best_score = float("-inf")
         self.migration_history = []
         self.is_stopped = False
+
+    def _init_island_tracking(self, island_id):
+        """Initialize tracking for a new island"""
+        if island_id not in self.island_participants:
+            self.island_participants[island_id] = set()
+            self.island_last_migration[island_id] = datetime.now()
+            self.island_migration_count[island_id] = 0
 
     def _calculate_num_islands(self):
         num_agents = len(self.agent_island_map)
@@ -145,17 +170,22 @@ class IslandManager:
     def _maybe_rescale(self):
         needed = self._calculate_num_islands()
         if needed > self.num_islands:
-            # Create new islands
             for i in range(self.num_islands, needed):
                 self.islands[i] = []
+                self._init_island_tracking(i)
             old_count = self.num_islands
             self.num_islands = needed
 
-            # Redistribute ALL existing agents evenly across new island count
+            # Redistribute all existing agents evenly
             all_agents = list(self.agent_island_map.keys())
             self.agent_island_map.clear()
             for idx, agent in enumerate(all_agents):
                 self.agent_island_map[agent] = idx % self.num_islands
+
+            # Reset participation tracking for all islands
+            for i in range(self.num_islands):
+                self.island_participants[i] = set()
+                self.island_last_migration[i] = datetime.now()
 
     def assign_agent_to_island(self, agent_name):
         if agent_name in self.agent_island_map:
@@ -171,7 +201,39 @@ class IslandManager:
 
         target = min(island_counts, key=island_counts.get)
         self.agent_island_map[agent_name] = target
+        self._init_island_tracking(target)
         return target
+
+    def _agents_in_island(self, island_id):
+        """Count how many agents are assigned to this island"""
+        return sum(1 for iid in self.agent_island_map.values() if iid == island_id)
+
+    def _check_island_migration(self, island_id):
+        """Check if this specific island should migrate now"""
+        if self.num_islands <= 1:
+            return False
+
+        self._init_island_tracking(island_id)
+
+        total_agents = self._agents_in_island(island_id)
+        if total_agents == 0:
+            return False
+
+        participated = len(self.island_participants.get(island_id, set()))
+        threshold = int(total_agents * self.participation_threshold)
+        threshold = max(threshold, 1)  # at least 1 agent must participate
+
+        # Condition 1: enough agents participated
+        if participated >= threshold:
+            return True
+
+        # Condition 2: safety timeout exceeded
+        last_time = self.island_last_migration.get(island_id, datetime.now())
+        elapsed = (datetime.now() - last_time).total_seconds()
+        if elapsed >= self.max_wait_seconds and participated > 0:
+            return True
+
+        return False
 
     def add_solution(self, island_id, solution):
         if island_id not in self.islands:
@@ -180,61 +242,69 @@ class IslandManager:
 
         self.round_counter += 1
 
+        # Track global improvement
         if solution["score"] > self.global_best_score:
             self.global_best_score = solution["score"]
             self.rounds_since_improvement = 0
         else:
             self.rounds_since_improvement += 1
 
+        # Auto-stop check
         if self.rounds_since_improvement >= self.stagnation_limit:
             self.is_stopped = True
 
-        if self.num_islands > 1 and self.round_counter % self.migration_interval == 0:
-            self._do_migration()
+        # Track participation: this agent submitted in this island since last migration
+        agent_name = solution.get("agent_name", "")
+        self._init_island_tracking(island_id)
+        self.island_participants[island_id].add(agent_name)
 
-    def _do_migration(self):
-        """Ring migration: island i sends top solutions to island (i+1) % n"""
-        if self.num_islands <= 1:
+        # Check if THIS island should migrate (independent of other islands)
+        if self._check_island_migration(island_id):
+            self._do_island_migration(island_id)
+
+    def _do_island_migration(self, source_island):
+        """Migrate top solutions from one island to its ring neighbor"""
+        target_island = (source_island + 1) % self.num_islands
+
+        source_sols = self.islands.get(source_island, [])
+        if not source_sols:
             return
 
-        record = {
-            "round": self.round_counter,
-            "time": datetime.now().isoformat(),
-            "transfers": [],
-        }
+        sorted_sols = sorted(source_sols, key=lambda s: s["score"], reverse=True)
+        num_migrate = max(1, int(len(sorted_sols) * self.migration_rate))
+        migrants = sorted_sols[:num_migrate]
 
-        for i in range(self.num_islands):
-            source = i
-            target = (i + 1) % self.num_islands
+        target_codes = set(s["code"] for s in self.islands.get(target_island, []))
+        added = 0
+        for m in migrants:
+            if m["code"] not in target_codes:
+                mcopy = dict(m)
+                mcopy["migrated_from"] = source_island
+                mcopy["migration_round"] = self.round_counter
+                if target_island not in self.islands:
+                    self.islands[target_island] = []
+                self.islands[target_island].append(mcopy)
+                added += 1
 
-            source_sols = self.islands.get(source, [])
-            if not source_sols:
-                continue
-
-            sorted_sols = sorted(source_sols, key=lambda s: s["score"], reverse=True)
-            num_migrate = max(1, int(len(sorted_sols) * self.migration_rate))
-            migrants = sorted_sols[:num_migrate]
-
-            target_codes = set(s["code"] for s in self.islands.get(target, []))
-            added = 0
-            for m in migrants:
-                if m["code"] not in target_codes:
-                    mcopy = dict(m)
-                    mcopy["migrated_from"] = source
-                    mcopy["migration_round"] = self.round_counter
-                    if target not in self.islands:
-                        self.islands[target] = []
-                    self.islands[target].append(mcopy)
-                    added += 1
-
-            if added > 0:
-                record["transfers"].append({
-                    "from": source, "to": target,
-                    "count": added, "best_score": migrants[0]["score"],
-                })
-
-        if record["transfers"]:
+        # Record migration
+        if added > 0:
+            record = {
+                "round": self.round_counter,
+                "time": datetime.now().isoformat(),
+                "from": source_island,
+                "to": target_island,
+                "count": added,
+                "best_score": migrants[0]["score"],
+                "trigger": "participation" if len(self.island_participants.get(source_island, set())) >= int(self._agents_in_island(source_island) * self.participation_threshold) else "timeout",
+                "participants": len(self.island_participants.get(source_island, set())),
+                "total_agents": self._agents_in_island(source_island),
+            }
             self.migration_history.append(record)
+
+        # Reset participation tracking for this island
+        self.island_participants[source_island] = set()
+        self.island_last_migration[source_island] = datetime.now()
+        self.island_migration_count[source_island] = self.island_migration_count.get(source_island, 0) + 1
 
     def get_best_for_island(self, island_id):
         sols = self.islands.get(island_id, [])
@@ -256,12 +326,18 @@ class IslandManager:
             sols = self.islands.get(i, [])
             agents = [n for n, iid in self.agent_island_map.items() if iid == i]
             best = max(sols, key=lambda s: s["score"]) if sols else None
+            participated = len(self.island_participants.get(i, set()))
+            total = len(agents)
+            threshold = max(int(total * self.participation_threshold), 1) if total > 0 else 1
             stats.append({
                 "island_id": i,
-                "num_agents": len(agents),
+                "num_agents": total,
                 "num_solutions": len(sols),
                 "best_score": best["score"] if best else 0,
                 "best_agent": best["agent_name"] if best else None,
+                "migrations_completed": self.island_migration_count.get(i, 0),
+                "participation": f"{participated}/{threshold}",
+                "ready_to_migrate": participated >= threshold,
             })
         return stats
 
@@ -274,6 +350,8 @@ class IslandManager:
             "rounds_since_improvement": self.rounds_since_improvement,
             "is_stopped": self.is_stopped,
             "migrations_completed": len(self.migration_history),
+            "participation_threshold": f"{int(self.participation_threshold * 100)}%",
+            "max_wait_seconds": self.max_wait_seconds,
             "island_stats": self.get_island_stats(),
         }
 
@@ -357,7 +435,8 @@ class ChallengeManager:
         self.island_managers = {}
 
     def register_challenge(self, challenge_id, title, initial_code, evaluator_code,
-                           initial_score=0, migration_interval=20, stagnation_limit=50):
+                           initial_score=0, participation_threshold=0.7,
+                           max_wait_seconds=600, stagnation_limit=50):
         self.challenges[challenge_id] = {
             "id": challenge_id, "title": title,
             "initial_code": initial_code, "evaluator_code": evaluator_code,
@@ -366,7 +445,8 @@ class ChallengeManager:
         }
         self.island_managers[challenge_id] = IslandManager(
             challenge_id=challenge_id,
-            migration_interval=migration_interval,
+            participation_threshold=participation_threshold,
+            max_wait_seconds=max_wait_seconds,
             stagnation_limit=stagnation_limit,
         )
 
