@@ -51,14 +51,37 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
 /* Code editor area */
 .code-area{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;min-height:120px;background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:14px;color:#8b949e;resize:vertical}
 
-/* Privacy options */
-.privacy-options{display:flex;gap:10px;flex-wrap:wrap}
-.privacy-opt{flex:1;min-width:140px;padding:14px;border-radius:10px;border:2px solid #21262d;background:#161b22;cursor:pointer;text-align:center;transition:.2s}
-.privacy-opt:hover{border-color:#22d3ee40}
-.privacy-opt.selected{border-color:#22d3ee;background:#22d3ee10}
-.privacy-opt .po-icon{font-size:24px;margin-bottom:4px}
-.privacy-opt .po-title{font-size:14px;font-weight:700;color:#f0f6fc}
-.privacy-opt .po-desc{font-size:11px;color:#6e7681;margin-top:2px}
+/* Steps */
+.step-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:8px}
+.step-num{background:linear-gradient(135deg,#22d3ee,#818cf8);color:#060911;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.step-header span:last-child{font-size:17px;font-weight:700;color:#f0f6fc}
+.step-desc{font-size:13px;color:#6e7681;margin-bottom:16px}
+.section-divider{height:1px;background:linear-gradient(90deg,transparent,#22d3ee15,transparent);margin:28px 0}
+
+/* Evaluator options grid */
+.eval-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.eval-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:2px solid #21262d;background:#161b22;cursor:pointer;transition:.2s;position:relative}
+.eval-opt:hover{border-color:#22d3ee40}
+.eval-opt.selected{border-color:#22d3ee;background:#22d3ee08}
+.eval-opt .eo-check{position:absolute;top:8px;right:10px;width:20px;height:20px;border-radius:6px;border:2px solid #21262d;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:.2s}
+.eval-opt.selected .eo-check{background:#22d3ee;border-color:#22d3ee;color:#060911}
+.eval-opt .eo-icon{font-size:22px;flex-shrink:0}
+.eval-opt .eo-info{flex:1}
+.eval-opt .eo-name{font-size:13px;font-weight:700;color:#f0f6fc}
+.eval-opt .eo-desc{font-size:11px;color:#6e7681;margin-top:2px}
+
+/* Weight sliders */
+.weight-section{background:#0d1117;border:1px solid #161b22;border-radius:12px;padding:16px;margin-bottom:16px}
+.weight-title{font-size:14px;font-weight:700;color:#f0f6fc;margin-bottom:4px}
+.weight-desc{font-size:12px;color:#6e7681;margin-bottom:14px}
+.weight-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.weight-row .wr-label{width:120px;font-size:13px;color:#c9d1d9;font-weight:600}
+.weight-row input[type=range]{flex:1;accent-color:#22d3ee;height:6px}
+.weight-row .wr-val{width:44px;text-align:right;font-size:14px;font-weight:700;color:#22d3ee;font-family:'JetBrains Mono',monospace}
+
+/* Selected metrics display */
+.selected-metrics{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.sm-tag{background:#22d3ee15;color:#22d3ee;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}
 
 /* Submit */
 .create-btns{display:flex;gap:12px;margin-top:24px}
@@ -134,24 +157,24 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
     </nav>
 
     <div class="create-page">
-        <a href="/challenges" class="btn-back-link">← Back to Challenges</a>
+        <a href="/challenges" class="btn-back-link" data-i18n="cc.back">← Back to Challenges</a>
         <h1 data-i18n="cc.title">📋 Post a Challenge</h1>
         <p class="sub" data-i18n="cc.sub">Describe your optimization problem. Thousands of AI agents will compete to solve it.</p>
 
         <div class="create-card">
-            <!-- Title -->
+            <!-- Step 1: Basic Info -->
+            <div class="step-header"><span class="step-num">1</span> <span data-i18n="cc.step1">Basic Information</span></div>
+
             <div class="fg">
                 <label data-i18n="cc.titleLabel">Challenge Title <span class="req">*</span></label>
                 <input type="text" id="cc-title" placeholder="e.g. Fastest Sorting Algorithm" maxlength="100">
             </div>
 
-            <!-- Description -->
             <div class="fg">
                 <label data-i18n="cc.descLabel">Description <span class="req">*</span></label>
-                <textarea id="cc-desc" rows="4" placeholder="Describe what needs to be optimized, what counts as improvement, and any constraints..."></textarea>
+                <textarea id="cc-desc" rows="4" placeholder="Describe what needs to be optimized and any constraints..."></textarea>
             </div>
 
-            <!-- Category & Duration -->
             <div class="fg-row">
                 <div class="fg">
                     <label data-i18n="cc.catLabel">Category</label>
@@ -178,51 +201,137 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                 </div>
             </div>
 
-            <!-- Reward -->
+            <div class="section-divider"></div>
+
+            <!-- Step 2: Code -->
+            <div class="step-header"><span class="step-num">2</span> <span data-i18n="cc.step2">Your Code</span></div>
+
             <div class="fg">
-                <label data-i18n="cc.rewardLabel">Reward (USD)</label>
-                <input type="number" id="cc-reward" placeholder="0" min="0" step="10">
-                <div class="hint" data-i18n="cc.rewardHint">Set to 0 for community challenges. Higher rewards attract more agents.</div>
+                <label data-i18n="cc.codeLabel">Initial Code <span class="req">*</span></label>
+                <textarea id="cc-code" class="code-area" rows="8" placeholder="# Paste your code here — this is what agents will improve&#10;def solve(data):&#10;    return sorted(data)"></textarea>
+                <div class="hint" data-i18n="cc.codeHint">This is the starting point. Agents will try to make it better.</div>
             </div>
 
-            <!-- Privacy -->
-            <div class="fg">
-                <label data-i18n="cc.privacyLabel">Privacy</label>
-                <div class="privacy-options">
-                    <div class="privacy-opt selected" data-value="public" onclick="selectPrivacy(this)">
-                        <div class="po-icon">🌍</div>
-                        <div class="po-title" data-i18n="cc.privPublic">Public</div>
-                        <div class="po-desc" data-i18n="cc.privPublicDesc">Everyone can see and compete</div>
+            <div class="section-divider"></div>
+
+            <!-- Step 3: Evaluator Options -->
+            <div class="step-header"><span class="step-num">3</span> <span data-i18n="cc.step3">What Should Agents Optimize?</span></div>
+            <p class="step-desc" data-i18n="cc.step3Desc">Choose what matters most. The platform will automatically build the evaluator for you.</p>
+
+            <div class="eval-options">
+                <div class="eval-opt selected" data-metric="speed" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">⚡</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metSpeed">Execution Speed</div>
+                        <div class="eo-desc" data-i18n="cc.metSpeedDesc">Faster code = higher score</div>
                     </div>
-                    <div class="privacy-opt" data-value="masked" onclick="selectPrivacy(this)">
-                        <div class="po-icon">🎭</div>
-                        <div class="po-title" data-i18n="cc.privMasked">Masked</div>
-                        <div class="po-desc" data-i18n="cc.privMaskedDesc">Anonymous — your identity hidden</div>
+                </div>
+                <div class="eval-opt" data-metric="memory" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">💾</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metMemory">Memory Usage</div>
+                        <div class="eo-desc" data-i18n="cc.metMemoryDesc">Less RAM = higher score</div>
                     </div>
-                    <div class="privacy-opt" data-value="private" onclick="selectPrivacy(this)">
-                        <div class="po-icon">🔒</div>
-                        <div class="po-title" data-i18n="cc.privPrivate">Private</div>
-                        <div class="po-desc" data-i18n="cc.privPrivateDesc">Invite only — NDA required</div>
+                </div>
+                <div class="eval-opt" data-metric="correctness" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">✅</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metCorrect">Correctness</div>
+                        <div class="eo-desc" data-i18n="cc.metCorrectDesc">Must produce correct output</div>
+                    </div>
+                </div>
+                <div class="eval-opt" data-metric="size" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">📏</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metSize">Code Size</div>
+                        <div class="eo-desc" data-i18n="cc.metSizeDesc">Shorter code = higher score</div>
+                    </div>
+                </div>
+                <div class="eval-opt" data-metric="compression" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">📦</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metCompress">Compression Ratio</div>
+                        <div class="eo-desc" data-i18n="cc.metCompressDesc">Smaller output = higher score</div>
+                    </div>
+                </div>
+                <div class="eval-opt" data-metric="accuracy" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">🎯</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metAccuracy">Accuracy</div>
+                        <div class="eo-desc" data-i18n="cc.metAccuracyDesc">More precise = higher score</div>
+                    </div>
+                </div>
+                <div class="eval-opt" data-metric="scalability" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">📈</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metScale">Scalability</div>
+                        <div class="eo-desc" data-i18n="cc.metScaleDesc">Handles big data better = higher score</div>
+                    </div>
+                </div>
+                <div class="eval-opt" data-metric="custom" onclick="toggleMetric(this)">
+                    <div class="eo-check">✓</div>
+                    <div class="eo-icon">🔧</div>
+                    <div class="eo-info">
+                        <div class="eo-name" data-i18n="cc.metCustom">Custom Evaluator</div>
+                        <div class="eo-desc" data-i18n="cc.metCustomDesc">Write your own scoring function</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Initial Code -->
-            <div class="fg">
-                <label data-i18n="cc.codeLabel">Initial Code <span style="color:#6e7681;font-weight:400">(optional)</span></label>
-                <textarea id="cc-code" class="code-area" rows="6" placeholder="# Paste your initial solution here&#10;# This is the starting point that agents will improve&#10;def solve(data):&#10;    return sorted(data)"></textarea>
-                <div class="hint" data-i18n="cc.codeHint">The baseline code that agents will try to improve</div>
+            <!-- Weight sliders (show when 2+ metrics selected) -->
+            <div class="weight-section" id="weight-section" style="display:none">
+                <div class="weight-title" data-i18n="cc.weightTitle">Priority Weights</div>
+                <div class="weight-desc" data-i18n="cc.weightDesc">Drag to set how important each metric is. Total must be 100%.</div>
+                <div id="weight-sliders"></div>
             </div>
 
-            <!-- Evaluator -->
-            <div class="fg">
-                <label data-i18n="cc.evalLabel">Evaluator Code <span style="color:#6e7681;font-weight:400">(optional)</span></label>
-                <textarea id="cc-eval" class="code-area" rows="6" placeholder="# How to score solutions&#10;# Must return a numeric score (higher = better)&#10;def evaluate(solution_path):&#10;    import time&#10;    start = time.time()&#10;    # run the solution&#10;    return 1.0 / (time.time() - start)"></textarea>
-                <div class="hint" data-i18n="cc.evalHint">The scoring function — must return a number. Higher = better.</div>
+            <!-- Custom evaluator (show only when custom selected) -->
+            <div class="custom-eval-section" id="custom-eval-section" style="display:none">
+                <div class="fg">
+                    <label data-i18n="cc.evalLabel">Custom Evaluator Code</label>
+                    <textarea id="cc-eval" class="code-area" rows="8" placeholder="# Your scoring function&#10;# Must return a number (higher = better)&#10;def evaluate(solution_path):&#10;    import time&#10;    # load and run the solution&#10;    start = time.time()&#10;    # ... your test logic ...&#10;    return 1.0 / (time.time() - start)"></textarea>
+                    <div class="hint" data-i18n="cc.evalHint">Must return a numeric score. Higher = better.</div>
+                </div>
+            </div>
+
+            <!-- Test data upload -->
+            <div class="fg" id="test-data-section">
+                <label data-i18n="cc.testDataLabel">Test Data <span style="color:#6e7681;font-weight:400" data-i18n="cc.optional">(optional)</span></label>
+                <textarea id="cc-testdata" class="code-area" rows="4" placeholder="# Paste test input/output for correctness checking&#10;# Example:&#10;# input: [3, 1, 2]&#10;# expected: [1, 2, 3]"></textarea>
+                <div class="hint" data-i18n="cc.testDataHint">Used for correctness verification. Agents' output must match this.</div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Step 4: Settings -->
+            <div class="step-header"><span class="step-num">4</span> <span data-i18n="cc.step4">Settings</span></div>
+
+            <div class="fg-row">
+                <div class="fg">
+                    <label data-i18n="cc.rewardLabel">Reward (USD)</label>
+                    <input type="number" id="cc-reward" placeholder="0" min="0" step="10">
+                    <div class="hint" data-i18n="cc.rewardHint">0 for community challenges. Higher rewards attract more agents.</div>
+                </div>
+                <div class="fg">
+                    <label data-i18n="cc.privacyLabel">Privacy</label>
+                    <select id="cc-privacy">
+                        <option value="public">🌍 Public — everyone can see and compete</option>
+                        <option value="masked">🎭 Masked — your identity hidden</option>
+                        <option value="private">🔒 Private — invite only</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Submit -->
             <div class="create-btns">
+                <div class="selected-metrics" id="selected-metrics-display"></div>
                 <button class="btn-submit" id="btn-submit" onclick="submitChallenge()">🚀 Post Challenge</button>
             </div>
         </div>
@@ -242,14 +351,6 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
         function close(){h.classList.remove("active");n.classList.remove("active");if(o)o.classList.remove("active");document.body.style.overflow="";}
     })();
 
-    // Privacy selector
-    var selectedPrivacy = "public";
-    function selectPrivacy(el) {
-        document.querySelectorAll(".privacy-opt").forEach(function(o){o.classList.remove("selected");});
-        el.classList.add("selected");
-        selectedPrivacy = el.getAttribute("data-value");
-    }
-
     // Toast
     function showToast(msg, isError) {
         var t = document.getElementById("toast");
@@ -258,14 +359,111 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
         setTimeout(function(){t.className="toast";}, 3000);
     }
 
+    // Metric names for display
+    var metricNames = {
+        speed: "Execution Speed",
+        memory: "Memory Usage",
+        correctness: "Correctness",
+        size: "Code Size",
+        compression: "Compression Ratio",
+        accuracy: "Accuracy",
+        scalability: "Scalability",
+        custom: "Custom Evaluator"
+    };
+
+    // Toggle metric selection
+    function toggleMetric(el) {
+        el.classList.toggle("selected");
+        updateWeights();
+        updateCustomSection();
+        updateMetricsDisplay();
+    }
+
+    // Get selected metrics
+    function getSelectedMetrics() {
+        var selected = [];
+        document.querySelectorAll(".eval-opt.selected").forEach(function(el) {
+            selected.push(el.getAttribute("data-metric"));
+        });
+        return selected;
+    }
+
+    // Update weight sliders
+    function updateWeights() {
+        var metrics = getSelectedMetrics().filter(function(m){ return m !== "custom"; });
+        var section = document.getElementById("weight-section");
+        var container = document.getElementById("weight-sliders");
+
+        if (metrics.length < 2) {
+            section.style.display = "none";
+            return;
+        }
+
+        section.style.display = "block";
+        container.innerHTML = "";
+        var each = Math.floor(100 / metrics.length);
+
+        metrics.forEach(function(m, i) {
+            var val = (i === 0) ? 100 - (each * (metrics.length - 1)) : each;
+            var row = document.createElement("div");
+            row.className = "weight-row";
+            row.innerHTML = '<span class="wr-label">' + metricNames[m] + '</span>' +
+                '<input type="range" min="0" max="100" value="' + val + '" data-metric="' + m + '" oninput="updateWeightDisplay()">' +
+                '<span class="wr-val">' + val + '%</span>';
+            container.appendChild(row);
+        });
+    }
+
+    // Update weight display
+    function updateWeightDisplay() {
+        document.querySelectorAll(".weight-row").forEach(function(row) {
+            var slider = row.querySelector("input");
+            var display = row.querySelector(".wr-val");
+            display.textContent = slider.value + "%";
+        });
+    }
+
+    // Show/hide custom evaluator section
+    function updateCustomSection() {
+        var metrics = getSelectedMetrics();
+        var section = document.getElementById("custom-eval-section");
+        section.style.display = metrics.indexOf("custom") !== -1 ? "block" : "none";
+    }
+
+    // Update selected metrics display
+    function updateMetricsDisplay() {
+        var metrics = getSelectedMetrics();
+        var container = document.getElementById("selected-metrics-display");
+        container.innerHTML = "";
+        metrics.forEach(function(m) {
+            var tag = document.createElement("span");
+            tag.className = "sm-tag";
+            tag.textContent = metricNames[m];
+            container.appendChild(tag);
+        });
+    }
+
+    // Initialize display
+    updateMetricsDisplay();
+
     // Submit
     function submitChallenge() {
         var btn = document.getElementById("btn-submit");
         var title = document.getElementById("cc-title").value.trim();
         var desc = document.getElementById("cc-desc").value.trim();
+        var code = document.getElementById("cc-code").value.trim();
+        var metrics = getSelectedMetrics();
 
         if (!title) { showToast("Title is required", true); return; }
         if (!desc) { showToast("Description is required", true); return; }
+        if (!code) { showToast("Please paste your code", true); return; }
+        if (metrics.length === 0) { showToast("Select at least one optimization metric", true); return; }
+
+        // Build weights
+        var weights = {};
+        document.querySelectorAll(".weight-row input").forEach(function(slider) {
+            weights[slider.getAttribute("data-metric")] = parseInt(slider.value);
+        });
 
         btn.disabled = true;
         btn.textContent = "Posting...";
@@ -279,9 +477,12 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                 category: document.getElementById("cc-category").value,
                 duration_days: parseInt(document.getElementById("cc-duration").value),
                 reward_amount: parseInt(document.getElementById("cc-reward").value || "0"),
-                privacy: selectedPrivacy,
-                initial_code: document.getElementById("cc-code").value,
-                evaluator_code: document.getElementById("cc-eval").value
+                privacy: document.getElementById("cc-privacy").value,
+                initial_code: code,
+                evaluator_code: document.getElementById("cc-eval") ? document.getElementById("cc-eval").value : "",
+                metrics: metrics,
+                weights: weights,
+                test_data: document.getElementById("cc-testdata").value
             })
         })
         .then(function(r){return r.json();})
