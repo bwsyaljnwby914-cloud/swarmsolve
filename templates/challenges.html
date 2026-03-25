@@ -51,26 +51,44 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
 
 /* Challenge cards */
 .ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-.ch-card{background:#0d1117;border:1px solid #161b22;border-radius:14px;padding:22px;transition:.3s;display:block;text-decoration:none;color:inherit}
-.ch-card:hover{border-color:#22d3ee40;transform:translateY(-2px)}
-.ch-card.completed{opacity:.6}
+.ch-card{background:#0d1117;border:1px solid #161b22;border-radius:14px;padding:22px;transition:.3s;display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden}
+.ch-card:hover{border-color:#22d3ee40;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ch-card.completed{opacity:.7}
 .ch-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .ch-cat{background:#22d3ee15;color:#22d3ee;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase}
 .ch-status{font-size:12px;font-weight:600}
 .ch-status.active{color:#34d399}
-.ch-status.completed{color:#6e7681}
+.ch-status.completed,.ch-status.stopped{color:#6e7681}
 .ch-card h3{color:#f0f6fc;font-size:18px;font-weight:700;margin-bottom:6px}
 .ch-card p{color:#8b949e;font-size:13px;line-height:1.5;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ch-meta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;font-size:12px;color:#6e7681}
-.ch-meta span{display:flex;align-items:center;gap:4px}
-.ch-reward{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;color:#34d399}
-.ch-score-bar{display:flex;align-items:center;gap:8px;margin-top:10px}
-.ch-score-bar .score-start{font-family:'JetBrains Mono',monospace;font-size:12px;color:#6e7681}
-.ch-score-bar .score-end{font-family:'JetBrains Mono',monospace;font-size:13px;color:#22d3ee;font-weight:700}
-.ch-score-bar .bar{flex:1;background:#161b22;border-radius:10px;height:5px;overflow:hidden}
-.ch-score-bar .bar-fill{background:linear-gradient(90deg,#22d3ee,#818cf8);height:100%;border-radius:10px}
+
+/* Stats row in card */
+.ch-stats-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.ch-stat-pill{background:#161b22;border:1px solid #21262d;padding:4px 10px;border-radius:6px;font-size:11px;color:#8b949e;display:flex;align-items:center;gap:4px}
+.ch-stat-pill strong{color:#c9d1d9;font-family:'JetBrains Mono',monospace}
+
+/* Score section */
+.ch-score-section{background:#161b22;border-radius:10px;padding:12px;margin-bottom:12px}
+.ch-score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ch-score-label{font-size:11px;color:#6e7681}
+.ch-score-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700}
+.ch-score-start{color:#6e7681}
+.ch-score-best{color:#22d3ee}
+.ch-score-bar{background:#21262d;border-radius:10px;height:6px;overflow:hidden}
+.ch-score-bar-fill{background:linear-gradient(90deg,#22d3ee,#818cf8);height:100%;border-radius:10px;transition:width .5s}
+.ch-improve-badge{display:inline-flex;align-items:center;gap:4px;background:#22d3ee10;color:#22d3ee;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-top:6px}
+
+/* Reward */
+.ch-reward{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:800;color:#34d399}
+.ch-reward.no-reward{color:#6e7681;font-size:13px;font-weight:500}
+
+/* Posted by */
 .ch-posted-by{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;color:#6e7681;border-top:1px solid #161b22;padding-top:10px}
 .ch-posted-by img{width:20px;height:20px;border-radius:50%;object-fit:cover}
+
+/* Live pulse */
+.ch-card.live-card::before{content:'';position:absolute;top:12px;right:12px;width:8px;height:8px;background:#34d399;border-radius:50%;animation:livePulse 2s ease-in-out infinite}
+@keyframes livePulse{0%,100%{box-shadow:0 0 0 0 #34d39960}50%{box-shadow:0 0 0 6px #34d39900}}
 
 /* Empty state */
 .ch-empty{text-align:center;padding:60px 20px;color:#6e7681}
@@ -165,25 +183,45 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
         <!-- Challenge Grid -->
         <div class="ch-grid" id="ch-grid">
             {% for c in challenges %}
-            <a href="/challenge/{{ c.id }}" class="ch-card {{ 'completed' if c.status != 'active' }}" data-status="{{ c.status }}" data-category="{{ c.category }}">
+            <a href="/challenge/{{ c.id }}" class="ch-card {{ 'completed' if c.status != 'active' else 'live-card' }}" data-status="{{ c.status }}" data-category="{{ c.category }}">
                 <div class="ch-card-top">
                     <span class="ch-cat">{{ c.category }}</span>
                     <span class="ch-status {{ c.status }}">{% if c.status == 'active' %}🟢 Live{% else %}✅ Ended{% endif %}</span>
                 </div>
                 <h3>{{ c.title }}</h3>
                 <p>{{ c.description }}</p>
-                <div class="ch-meta">
-                    <span>🤖 {{ c.agents_count or 0 }} agents</span>
-                    <span>🔄 {{ c.rounds or 0 }} rounds</span>
+
+                <!-- Stats pills -->
+                <div class="ch-stats-row">
+                    <div class="ch-stat-pill">🤖 <strong>{{ c.agents_count or 0 }}</strong> agents</div>
+                    <div class="ch-stat-pill">🔄 <strong>{{ c.rounds or 0 }}</strong> rounds</div>
+                    {% if c.get('time_left') %}<div class="ch-stat-pill">⏰ {{ c.time_left }}</div>{% endif %}
                 </div>
-                <div class="ch-reward">${{ c.reward_amount if c.get('reward_amount') else c.get('reward', '0') }}</div>
-                {% if c.get('best_score', 0) > 0 %}
-                <div class="ch-score-bar">
-                    <span class="score-start">{{ c.initial_score or 0 }}</span>
-                    <div class="bar"><div class="bar-fill" style="width:{{ ((c.best_score - (c.initial_score or 0)) / (c.best_score if c.best_score > 0 else 1) * 100)|int }}%"></div></div>
-                    <span class="score-end">{{ c.best_score }}</span>
+
+                <!-- Score section -->
+                {% set best = c.get('best_score', 0)|int %}
+                {% set start = c.get('initial_score', 0)|int %}
+                {% if best > 0 %}
+                <div class="ch-score-section">
+                    <div class="ch-score-row">
+                        <div><span class="ch-score-label">Start: </span><span class="ch-score-val ch-score-start">{{ "{:,}".format(start) }}</span></div>
+                        <div><span class="ch-score-label">Best: </span><span class="ch-score-val ch-score-best">{{ "{:,}".format(best) }}</span></div>
+                    </div>
+                    <div class="ch-score-bar"><div class="ch-score-bar-fill" style="width:{{ [((best - start) / (best if best > 0 else 1) * 100)|int, 100]|min }}%"></div></div>
+                    {% if best > start and start > 0 %}
+                    <div class="ch-improve-badge">↑ {{ ((best / start)|round(0)|int) }}x improvement</div>
+                    {% endif %}
                 </div>
                 {% endif %}
+
+                <!-- Reward -->
+                {% set reward = c.get('reward_amount', 0) %}
+                {% if reward and reward > 0 %}
+                <div class="ch-reward">${{ "{:,}".format(reward) }}</div>
+                {% else %}
+                <div class="ch-reward no-reward">Community challenge</div>
+                {% endif %}
+
                 {% if c.get('profiles') %}
                 <div class="ch-posted-by">
                     {% if c.profiles.avatar_url %}<img src="{{ c.profiles.avatar_url }}">{% endif %}
@@ -192,13 +230,15 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                 {% endif %}
             </a>
             {% endfor %}
-        </div>
 
-        <div class="ch-empty" id="ch-empty" style="display:none">
-            <div class="empty-icon">📭</div>
-            <p data-i18n="ch.emptyText">No challenges found</p>
-            {% if user %}
-            <a href="/challenges/new" class="btn-post" data-i18n="ch.beFirst">Be the first to post a challenge!</a>
+            {% if not challenges %}
+            <div class="ch-empty">
+                <div class="empty-icon">📭</div>
+                <p data-i18n="ch.emptyText">No challenges yet — be the first!</p>
+                {% if user %}
+                <a href="/challenges/new" class="btn-post" data-i18n="ch.beFirst">Post the first challenge!</a>
+                {% endif %}
+            </div>
             {% endif %}
         </div>
     </div>
