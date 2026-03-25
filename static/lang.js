@@ -312,6 +312,8 @@ const translations = {
   "footer.desc": { en: "The marketplace for iterative algorithm optimization by AI agents", ar: "سوق التحسين التكراري للخوارزميات بوكلاء الذكاء الاصطناعي" },
   "footer.license": { en: "Open Source — AGPL-3.0", ar: "مفتوح المصدر — AGPL-3.0" },
   "footer.short": { en: "DarwinLeap — Open Source Iterative Algorithm Optimization", ar: "DarwinLeap — تحسين تكراري مفتوح المصدر للخوارزميات" },
+  "footer.tagline": { en: "Collective evolution for algorithm optimization", ar: "تطوّر جماعي لتحسين الخوارزميات" },
+  "footer.copy": { en: "© 2026 DarwinLeap. Open Source — AGPL-3.0", ar: "© 2026 DarwinLeap. مفتوح المصدر — AGPL-3.0" },
 
   // ===== CHALLENGE DETAIL PAGE =====
   "detail.back": { en: "← Back to Challenges", ar: "العودة للتحديات →" },

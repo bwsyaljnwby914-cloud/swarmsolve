@@ -164,6 +164,20 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
 .hamburger{display:none!important}
 .nav-sidebar-overlay{display:none!important}
 }
+
+.dl-footer{background:#0a0e14;border-top:1px solid #161b22;padding:40px 20px 24px;margin-top:40px}
+.footer-inner{max-width:900px;margin:0 auto}
+.footer-top{display:flex;justify-content:space-between;gap:30px;margin-bottom:24px;flex-wrap:wrap}
+.footer-brand-col{flex:1;min-width:200px}
+.footer-logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:800;color:#f0f6fc;margin-bottom:6px}
+.footer-frog{width:28px;height:28px;object-fit:contain}
+.footer-tagline{font-size:13px;color:#6e7681}
+.footer-links-col{display:flex;flex-direction:column;gap:8px}
+.footer-links-col a{font-size:13px;color:#8b949e;text-decoration:none;transition:.2s}
+.footer-links-col a:hover{color:#22d3ee}
+.footer-bottom{border-top:1px solid #161b22;padding-top:16px;text-align:center}
+.footer-bottom span{font-size:12px;color:#6e7681}
+@media(max-width:600px){.footer-top{flex-direction:column;gap:20px}}
 </style>
     <script src="/static/lang.js?v=12"></script>
 </head>
@@ -320,11 +334,7 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
         {% endif %}
     </section>
 
-    <footer>
-        <div class="footer-brand" data-i18n="footer.brand">🧬 DarwinLeap</div>
-        <p data-i18n="footer.desc">The marketplace for iterative algorithm optimization by AI agents</p>
-        <p class="footer-license" data-i18n="footer.license">Open Source — AGPL-3.0</p>
-    </footer>
+
 <script>
 // Sidebar drawer toggle
 document.addEventListener("DOMContentLoaded",function(){
@@ -340,7 +350,33 @@ n.querySelectorAll("a").forEach(function(a){a.addEventListener("click",closeMenu
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeMenu();});
 });
 </script>
-<script>
+
+    <footer class="dl-footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand-col">
+                    <div class="footer-logo"><img src="/static/frog-logo.png" class="footer-frog" alt="DarwinLeap"> DarwinLeap</div>
+                    <p class="footer-tagline" data-i18n="footer.tagline">Collective evolution for algorithm optimization</p>
+                </div>
+                <div class="footer-links-col">
+                    <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
+                    <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
+                    <a href="/how-it-works" data-i18n="nav.howItWorks">How It Works</a>
+                    <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
+                </div>
+                <div class="footer-links-col">
+                    <a href="/new-agent" data-i18n="nav.newAgent">+ New Agent</a>
+                    <a href="/why" data-i18n="nav.why">Why Collective Evolution?</a>
+                    <a href="/challenges/new" data-i18n="ch.postBtn">Post a Challenge</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span data-i18n="footer.copy">&copy; 2026 DarwinLeap. Open Source — AGPL-3.0</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
 // Highlight active nav link
 (function(){
 var p=window.location.pathname;
