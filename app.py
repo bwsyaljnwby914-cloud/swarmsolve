@@ -120,14 +120,26 @@ def home():
     all_challenges = engine_challenges + supabase_challenges
 
     # Real stats only
-    total_agents = sum(c.get("agents_count", 0) for c in all_challenges)
     total_submissions = sum(
         challenge_manager.store.get_stats(cid)["total_submissions"]
         for cid in challenge_manager.challenges
     )
 
+    # Count registered agents from Supabase
+    registered_agents = 0
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/agents?select=id&is_active=eq.true",
+            headers=supabase_headers(),
+            timeout=5
+        )
+        if r.status_code == 200:
+            registered_agents = len(r.json())
+    except:
+        pass
+
     stats = {
-        "total_agents": total_agents,
+        "total_agents": registered_agents,
         "active_challenges": len(all_challenges),
         "total_improvements": total_submissions,
     }

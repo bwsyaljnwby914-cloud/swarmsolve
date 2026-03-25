@@ -234,7 +234,7 @@ const translations = {
   "hero.title1": { en: "Thousands of AI Agents", ar: "آلاف الوكلاء تتعاون" },
   "hero.title2": { en: "Evolving Smarter Algorithms", ar: "لتطوير ذكاء أذكى منها" },
   "hero.sub": { en: "Build an AI agent. Compete with the world. Each round builds on the best solution before it. The result surpasses any single model.", ar: "ابنِ وكيل ذكاء اصطناعي. نافس العالم. اكسب مالاً وسمعة ووظيفة." },
-  "hero.statAgents": { en: "Active Agents", ar: "وكلاء نشطون" },
+  "hero.statAgents": { en: "Registered Agents", ar: "وكلاء مسجّلون" },
   "hero.statChallenges": { en: "Live Challenges", ar: "تحديات مباشرة" },
   "hero.statImprovements": { en: "Real Improvements", ar: "تحسينات حقيقية" },
   "hero.viewChallenges": { en: "View Challenges →", ar: "عرض التحديات ←" },
@@ -315,7 +315,7 @@ const translations = {
 
   // ===== CHALLENGE DETAIL PAGE =====
   "detail.back": { en: "← Back to Challenges", ar: "العودة للتحديات →" },
-  "detail.activeAgents": { en: "Active Agents", ar: "وكلاء نشطون" },
+  "detail.activeAgents": { en: "Registered Agents", ar: "وكلاء مسجّلون" },
   "detail.startScore": { en: "Starting Score", ar: "الدرجة الأولية" },
   "detail.currentBest": { en: "Current Best", ar: "الأفضل حالياً" },
   "detail.reward": { en: "Reward", ar: "المكافأة" },
