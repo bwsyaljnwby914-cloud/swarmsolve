@@ -2,166 +2,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <style>
-.brand-logo{width:32px;height:32px;object-fit:contain;border-radius:6px}html.i18n-loading body{opacity:0}html:not(.i18n-loading) body{transition:opacity .08s ease}</style>
+    <style>.brand-logo{width:32px;height:32px;object-fit:contain;border-radius:6px}
+html.i18n-loading body{opacity:0}html:not(.i18n-loading) body{transition:opacity .08s ease}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ challenge.title }} — DarwinLeap</title>
-    <link rel="stylesheet" href="/static/style.css?v=7">
+    <link rel="stylesheet" href="/static/style.css?v=9">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-
-@media(max-width:768px){
-.hamburger{display:flex!important;flex-direction:column;justify-content:center;z-index:300;position:relative}
-.hamburger span{display:block;width:24px;height:2.5px;background:#c9d1d9;margin:5px 0;border-radius:2px;transition:all .3s ease}
-.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
-.hamburger.active span:nth-child(2){opacity:0}
-.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
-.nav-links{display:none!important;position:fixed;top:0;left:0;right:0;bottom:0;background:#060911f7;flex-direction:column;justify-content:center;align-items:center;gap:10px;z-index:250;padding:80px 24px 40px;overflow-y:auto}
-.nav-links.active{display:flex!important}
-.nav-links a,.nav-links button{font-size:19px!important;padding:15px 32px!important;min-height:52px;display:flex!important;align-items:center;justify-content:center;width:100%;max-width:300px;border-radius:12px}
-.nav-links .btn-google{font-size:17px!important;padding:14px 28px!important;border-radius:12px;justify-content:center;width:100%;max-width:300px}
-.nav-links .nav-why-btn{font-size:15px!important;padding:12px 24px!important;margin-top:6px}
-.nav-links .nav-cta-small{font-size:17px!important;padding:14px 24px!important;border-radius:12px;width:100%;max-width:300px}
-.nav-links .lang-toggle{font-size:16px!important;padding:12px 28px!important;margin-top:4px;width:100%;max-width:300px}
-}
-
-/* Navbar groups */
-.nav-group-links{display:flex;align-items:center;gap:20px}
-.nav-group-links a{color:#8b949e;font-size:14px;font-weight:500;transition:.2s;white-space:nowrap}
-.nav-group-links a:hover{color:#22d3ee}
-.nav-why-link{opacity:.7;font-size:13px!important}
-.nav-why-link:hover{opacity:1}
-.nav-group-actions{display:flex;align-items:center;gap:12px}
-@media(max-width:768px){
-.nav-group-links,.nav-group-actions{flex-direction:column!important;align-items:stretch!important;gap:4px!important;width:100%}
-.nav-group-links{border-bottom:1px solid #161b22;padding-bottom:12px;margin-bottom:4px}
-.nav-group-actions{padding-top:4px}
-.nav-why-link{opacity:1!important;font-size:15px!important}
-.nav-links .nav-cta-small{justify-content:center!important}
-.nav-links .btn-google{justify-content:center!important}
-.nav-links .lang-toggle{justify-content:center!important;width:100%!important}
-}
-@media(min-width:769px){.hamburger{display:none!important}.nav-sidebar-overlay{display:none!important}}
-/* Active nav link */
-.nav-group-links a.nav-active{color:#22d3ee!important;font-weight:600!important;position:relative}
-.nav-group-links a.nav-active::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:#22d3ee;border-radius:2px}
-@media(max-width:768px){
-.nav-group-links a.nav-active{background:#22d3ee12!important;border-left:3px solid #22d3ee}
-body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #22d3ee}
-.nav-group-links a.nav-active::after{display:none}
-}
-
-</style>
-<style>
-
-/* ===== MOBILE SIDEBAR DRAWER ===== */
 @media(max-width:768px){
 .hamburger{display:flex!important;flex-direction:column;justify-content:center;z-index:400;position:relative;background:none;border:none;cursor:pointer;padding:8px}
 .hamburger span{display:block;width:22px;height:2px;background:#c9d1d9;margin:4px 0;border-radius:2px;transition:.3s}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
-
-/* Overlay behind sidebar */
-.nav-sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.nav-sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300;backdrop-filter:blur(4px)}
 .nav-sidebar-overlay.active{display:block}
-
-/* Sidebar panel */
-.nav-links{
-display:flex;
-position:fixed!important;
-top:0!important;
-right:-280px!important;
-width:270px!important;
-height:100vh!important;
-height:100dvh!important;
-background:#0d1117!important;
-border-left:1px solid #161b22!important;
-flex-direction:column!important;
-align-items:stretch!important;
-justify-content:flex-start!important;
-padding:70px 20px 30px!important;
-gap:4px!important;
-z-index:350!important;
-overflow-y:auto!important;
-transition:right .3s cubic-bezier(.4,0,.2,1)!important;
-box-shadow:-4px 0 24px rgba(0,0,0,.4)!important;
-}
+.nav-links{display:flex;position:fixed!important;top:0!important;right:-280px!important;width:270px!important;height:100vh!important;background:#0d1117!important;border-left:1px solid #161b22!important;flex-direction:column!important;align-items:stretch!important;padding:70px 20px 30px!important;gap:4px!important;z-index:350!important;overflow-y:auto!important;transition:right .3s!important;box-shadow:-4px 0 24px rgba(0,0,0,.4)!important}
 .nav-links.active{right:0!important}
-
-/* RTL: slide from left */
-body.rtl .nav-links{right:auto!important;left:-280px!important;border-left:none!important;border-right:1px solid #161b22!important;box-shadow:4px 0 24px rgba(0,0,0,.4)!important;transition:left .3s cubic-bezier(.4,0,.2,1)!important}
+body.rtl .nav-links{right:auto!important;left:-280px!important;transition:left .3s!important}
 body.rtl .nav-links.active{left:0!important}
+.nav-links a,.nav-links button{font-size:15px!important;padding:13px 16px!important;display:flex!important;align-items:center!important;width:100%!important;border-radius:10px!important;color:#c9d1d9!important;border:none;cursor:pointer;background:transparent}
+.nav-links .btn-google{background:#fff!important;color:#333!important}
+.nav-group-links{display:flex;flex-direction:column!important;align-items:stretch!important;gap:4px!important;width:100%;border-bottom:1px solid #161b22;padding-bottom:12px;margin-bottom:4px}
+.nav-group-actions{display:flex;flex-direction:column!important;align-items:stretch!important;gap:4px!important;padding-top:4px}
+}
+@media(min-width:769px){.hamburger{display:none!important}.nav-sidebar-overlay{display:none!important}}
+.nav-group-links{display:flex;align-items:center;gap:20px}
+.nav-group-links a{color:#8b949e;font-size:14px;font-weight:500;transition:.2s;white-space:nowrap}
+.nav-group-links a:hover{color:#22d3ee}
+.nav-group-actions{display:flex;align-items:center;gap:12px}
+.nav-why-link{opacity:.7;font-size:13px!important}
+.nav-why-link:hover{opacity:1}
+.nav-group-links a.nav-active{color:#22d3ee!important;font-weight:600!important;position:relative}
+.nav-group-links a.nav-active::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:#22d3ee;border-radius:2px}
+@media(max-width:768px){.nav-group-links a.nav-active{background:#22d3ee12!important;border-left:3px solid #22d3ee}body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #22d3ee}.nav-group-links a.nav-active::after{display:none}}
 
-/* Menu items */
-.nav-links a,.nav-links button{
-font-size:15px!important;
-padding:13px 16px!important;
-min-height:46px;
-display:flex!important;
-align-items:center!important;
-justify-content:flex-start!important;
-width:100%!important;
-border-radius:10px!important;
-color:#c9d1d9!important;
-transition:background .15s!important;
-text-decoration:none!important;
-border:none;
-cursor:pointer;
-background:transparent;
-}
-body.rtl .nav-links a,body.rtl .nav-links button{justify-content:flex-end!important}
-.nav-links a:hover,.nav-links button:hover{background:#161b22!important}
-.nav-links .btn-google{
-font-size:14px!important;
-padding:12px 16px!important;
-border-radius:10px!important;
-justify-content:center!important;
-background:#fff!important;
-color:#333!important;
-margin-top:4px;
-}
-.nav-links .nav-why-btn{font-size:13px!important;padding:11px 16px!important;margin-top:8px;opacity:.8}
-.nav-links .nav-cta-small{
-font-size:14px!important;
-padding:12px 16px!important;
-border-radius:10px!important;
-background:#22d3ee15!important;
-color:#22d3ee!important;
-border:1px solid #22d3ee30!important;
-justify-content:center!important;
-margin-top:4px;
-}
-.nav-links .lang-toggle{
-font-size:14px!important;
-padding:11px 16px!important;
-margin-top:8px;
-width:100%!important;
-text-align:center!important;
-justify-content:center!important;
-}
+/* Challenge detail */
+.cd-page{max-width:900px;margin:0 auto;padding:20px 20px 60px}
+.cd-back{display:inline-flex;align-items:center;color:#22d3ee;font-size:14px;margin-bottom:16px;text-decoration:none}
+.cd-header{margin-bottom:24px}
+.cd-header-top{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.cd-cat{background:#161b22;color:#8b949e;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600}
+.cd-status{font-size:13px;font-weight:600}
+.cd-status.active{color:#34d399}
+.cd-status.stopped{color:#f87171}
+.cd-header h1{font-size:clamp(22px,4vw,30px);font-weight:800;color:#f0f6fc;margin-bottom:6px}
+.cd-desc{color:#8b949e;font-size:14px;line-height:1.6}
 
-/* Sidebar brand label at top */
-.nav-links::before{
-content:"☰ Menu";
-display:block;
-font-size:13px;
-font-weight:700;
-color:#6e7681;
-text-transform:uppercase;
-letter-spacing:1px;
-padding:0 16px 12px;
-border-bottom:1px solid #161b22;
-margin-bottom:8px;
-}
-body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
-}
+/* Stats grid */
+.cd-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:24px}
+.cd-stat{background:#0d1117;border:1px solid #161b22;border-radius:12px;padding:16px;text-align:center}
+.cd-stat.hl{border-color:#22d3ee30;background:#22d3ee05}
+.cd-stat-icon{font-size:20px;margin-bottom:4px}
+.cd-stat-val{font-size:22px;font-weight:800;color:#f0f6fc;font-family:'JetBrains Mono',monospace}
+.cd-stat.hl .cd-stat-val{color:#22d3ee}
+.cd-stat-label{font-size:11px;color:#6e7681;margin-top:2px}
 
-/* Desktop: hide hamburger and overlay */
-@media(min-width:769px){
-.hamburger{display:none!important}
-.nav-sidebar-overlay{display:none!important}
-}
+/* Improvement banner */
+.cd-improve{background:linear-gradient(135deg,#22d3ee10,#818cf810);border:1px solid #22d3ee20;border-radius:12px;padding:16px;text-align:center;margin-bottom:28px}
+.cd-improve-val{font-size:28px;font-weight:800;color:#22d3ee;font-family:'JetBrains Mono',monospace}
+.cd-improve-label{font-size:13px;color:#8b949e;margin-top:4px}
+
+/* Island Map */
+.cd-map{background:#0a0e14;border:1px solid #161b22;border-radius:16px;padding:20px;margin-bottom:28px;overflow:hidden}
+.cd-map-title{font-size:16px;font-weight:700;color:#f0f6fc;margin-bottom:4px}
+.cd-map-sub{font-size:12px;color:#6e7681;margin-bottom:16px}
+#island-canvas{width:100%;border-radius:10px;background:#060911;display:block}
+
+/* Section titles */
+.cd-stitle{font-size:18px;font-weight:700;color:#f0f6fc;margin-bottom:6px}
+.cd-sdesc{font-size:13px;color:#6e7681;margin-bottom:14px}
+
+/* Island status cards */
+.cd-islands{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:28px}
+.cd-island{background:#0d1117;border:1px solid #161b22;border-radius:10px;padding:14px;text-align:center}
+.cd-island-name{font-size:12px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.cd-island-score{font-size:20px;font-weight:800;color:#22d3ee;font-family:'JetBrains Mono',monospace}
+.cd-island-agents{font-size:12px;color:#6e7681;margin-top:4px}
+.cd-island-mig{font-size:11px;color:#818cf8;margin-top:2px}
+
+/* Evolution table */
+.cd-evo{background:#0d1117;border:1px solid #161b22;border-radius:12px;overflow:hidden;margin-bottom:28px}
+.cd-evo table{width:100%;border-collapse:collapse}
+.cd-evo th{background:#161b22;color:#8b949e;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:10px 14px;text-align:left}
+.cd-evo td{padding:10px 14px;border-bottom:1px solid #161b2240;color:#c9d1d9;font-size:13px}
+.cd-evo .score-c{font-family:'JetBrains Mono',monospace;font-weight:700;color:#f0f6fc}
+.cd-evo .jump-c{color:#34d399;font-weight:700}
+.cd-evo .agent-c{color:#22d3ee}
+
+/* CTA */
+.cd-cta{background:#0d1117;border:1px solid #161b22;border-radius:14px;padding:24px;text-align:center}
+.cd-cta h3{font-size:18px;font-weight:700;color:#f0f6fc;margin-bottom:6px}
+.cd-cta p{color:#6e7681;font-size:13px;margin-bottom:14px}
+.cd-cta .btn-p{display:inline-flex;background:linear-gradient(135deg,#22d3ee,#818cf8);color:#060911;padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none}
+
+@media(max-width:600px){.cd-stats{grid-template-columns:repeat(3,1fr)}.cd-islands{grid-template-columns:repeat(2,1fr)}}
 </style>
     <script src="/static/lang.js?v=12"></script>
 </head>
@@ -191,129 +126,360 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
         </div>
     </nav>
 
-    <div class="challenge-detail">
-        <a href="/challenges" class="back-link" data-i18n="detail.back">← Back to Challenges</a>
+    <div class="cd-page">
+        <a href="/challenges" class="cd-back" data-i18n="detail.back">← Back to Challenges</a>
 
-        <div class="challenge-header">
-            <div class="header-top">
-                <span class="challenge-cat" data-i18n="cat.{{ challenge.category }}">{{ challenge.category }}</span>
-                <span class="challenge-status {{ challenge.status }}">
-                    {% if challenge.status == 'active' %}<span data-i18n="challenges.live">🟢 Live</span>{% else %}<span data-i18n="challenges.ended">✅ Ended</span>{% endif %}
+        <div class="cd-header">
+            <div class="cd-header-top">
+                <span class="cd-cat">{{ challenge.category }}</span>
+                <span class="cd-status {{ challenge.status }}">
+                    {% if challenge.status == 'active' %}🟢 Live{% else %}🔴 Ended{% endif %}
                 </span>
             </div>
-            <h1 data-i18n="challenge.{{ challenge.id }}.title">{{ challenge.title }}</h1>
-            <p class="challenge-desc" data-i18n="challenge.{{ challenge.id }}.desc">{{ challenge.description }}</p>
+            <h1>{{ challenge.title }}</h1>
+            <p class="cd-desc">{{ challenge.description }}</p>
         </div>
 
-        <div class="detail-stats">
-            <div class="detail-stat">
-                <span class="ds-icon">🤖</span>
-                <span class="ds-num">{{ challenge.agents_count }}</span>
-                <span class="ds-label" data-i18n="detail.activeAgents">Active Agents</span>
+        <!-- Stats -->
+        <div class="cd-stats">
+            <div class="cd-stat">
+                <div class="cd-stat-icon">🤖</div>
+                <div class="cd-stat-val">{{ challenge.agents_count }}</div>
+                <div class="cd-stat-label" data-i18n="detail.agents">Agents</div>
             </div>
-            <div class="detail-stat">
-                <span class="ds-icon">📊</span>
-                <span class="ds-num start-score">{{ challenge.initial_score }}</span>
-                <span class="ds-label" data-i18n="detail.startScore">Starting Score</span>
+            <div class="cd-stat">
+                <div class="cd-stat-icon">🏝️</div>
+                <div class="cd-stat-val">{{ island_status.num_islands if island_status else 1 }}</div>
+                <div class="cd-stat-label" data-i18n="detail.islands">Islands</div>
             </div>
-            <div class="detail-stat highlight">
-                <span class="ds-icon">🏆</span>
-                <span class="ds-num best-score">{{ challenge.best_score }}</span>
-                <span class="ds-label" data-i18n="detail.currentBest">Current Best</span>
+            <div class="cd-stat">
+                <div class="cd-stat-icon">🔄</div>
+                <div class="cd-stat-val">{{ challenge.rounds }}</div>
+                <div class="cd-stat-label" data-i18n="detail.rounds">Rounds</div>
             </div>
-            <div class="detail-stat">
-                <span class="ds-icon">💰</span>
-                <span class="ds-num">{{ challenge.reward }}</span>
-                <span class="ds-label" data-i18n="detail.reward">Reward</span>
+            <div class="cd-stat">
+                <div class="cd-stat-icon">🚢</div>
+                <div class="cd-stat-val">{{ island_status.migrations_completed if island_status else 0 }}</div>
+                <div class="cd-stat-label" data-i18n="detail.migrations">Migrations</div>
             </div>
-            <div class="detail-stat">
-                <span class="ds-icon">🔄</span>
-                <span class="ds-num">{{ challenge.rounds }}</span>
-                <span class="ds-label" data-i18n="detail.rounds">Rounds</span>
+            <div class="cd-stat hl">
+                <div class="cd-stat-icon">🏆</div>
+                <div class="cd-stat-val">{{ "{:,}".format(challenge.best_score|int) }}</div>
+                <div class="cd-stat-label" data-i18n="detail.currentBest">Best Score</div>
             </div>
-            <div class="detail-stat">
-                <span class="ds-icon">⏰</span>
-                <span class="ds-num">{{ challenge.time_left }}</span>
-                <span class="ds-label" data-i18n="detail.timeLeft">Time Left</span>
+            <div class="cd-stat">
+                <div class="cd-stat-icon">📊</div>
+                <div class="cd-stat-val">{{ "{:,}".format(challenge.initial_score|int) }}</div>
+                <div class="cd-stat-label" data-i18n="detail.startScore">Start Score</div>
             </div>
         </div>
 
-        <div class="improvement-banner">
-            <span class="imp-label" data-i18n="detail.improvement">Total Improvement</span>
-            <span class="imp-value">{{ challenge.best_score - challenge.initial_score }} <span data-i18n="detail.points">points</span></span>
-            <span class="imp-mult">{{ ((challenge.best_score / challenge.initial_score) * 100)|int if challenge.initial_score > 0 else '∞' }}% <span data-i18n="detail.ofOriginal">of original</span></span>
+        <!-- Improvement -->
+        {% if challenge.best_score > challenge.initial_score %}
+        <div class="cd-improve">
+            <div class="cd-improve-val">{{ ((challenge.best_score / challenge.initial_score)|round(0)|int) if challenge.initial_score > 0 else '∞' }}x</div>
+            <div class="cd-improve-label" data-i18n="detail.improvement">improvement from starting score</div>
+        </div>
+        {% endif %}
+
+        <!-- Live Island Map -->
+        <div class="cd-map">
+            <div class="cd-map-title" data-i18n="detail.mapTitle">🗺️ Live Island Map</div>
+            <div class="cd-map-sub" data-i18n="detail.mapSub">Watch agents evolve solutions across islands in real-time</div>
+            <canvas id="island-canvas" width="800" height="400"></canvas>
         </div>
 
-        <h2 class="section-title" data-i18n="detail.evoTitle">Evolution Log</h2>
-        <p class="section-desc" data-i18n="detail.evoDesc">Watch how the solution improved with each round</p>
+        <!-- Island Status -->
+        {% if island_status and island_status.island_stats %}
+        <div class="cd-stitle" data-i18n="detail.islandStatus">Island Status</div>
+        <div class="cd-sdesc" data-i18n="detail.islandDesc">Each island evolves independently. Solutions migrate via ring topology.</div>
+        <div class="cd-islands">
+            {% for s in island_status.island_stats %}
+            <div class="cd-island">
+                <div class="cd-island-name">Island {{ s.island_id }}</div>
+                <div class="cd-island-score">{{ "{:,}".format(s.best_score|int) }}</div>
+                <div class="cd-island-agents">{{ s.num_agents }} agents · {{ s.num_solutions }} solutions</div>
+                <div class="cd-island-mig">{{ s.migrations_completed }} migrations</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-        <div class="evo-table-wrap">
-            <table class="evo-table">
+        <!-- Evolution Log -->
+        <div class="cd-stitle" data-i18n="detail.evoTitle">Evolution Log</div>
+        <div class="cd-sdesc" data-i18n="detail.evoDesc">Every improvement that happened during this challenge</div>
+        <div class="cd-evo">
+            <table>
                 <thead>
                     <tr>
                         <th data-i18n="detail.thRound">Round</th>
                         <th data-i18n="detail.thScore">Score</th>
                         <th data-i18n="detail.thJump">Jump</th>
                         <th data-i18n="detail.thAgent">Agent</th>
-                        <th data-i18n="detail.thTime">Time</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for log in evolution_log %}
                     <tr>
-                        <td class="round-cell">R{{ log.round }}</td>
-                        <td class="score-cell">{{ log.score }}</td>
-                        <td class="jump-cell">{% if log.jump > 0 %}<span class="jump-badge">+{{ log.jump }}</span>{% else %}—{% endif %}</td>
-                        <td class="agent-cell">{{ log.agent }}</td>
-                        <td class="time-cell">{{ log.time }}</td>
+                        <td>R{{ log.round }}</td>
+                        <td class="score-c">{{ "{:,}".format(log.score|int) }}</td>
+                        <td class="jump-c">{% if log.jump > 0 %}+{{ "{:,}".format(log.jump|int) }}{% else %}—{% endif %}</td>
+                        <td class="agent-c">{{ log.agent }}</td>
                     </tr>
                     {% endfor %}
+                    {% if not evolution_log %}
+                    <tr><td colspan="4" style="text-align:center;color:#6e7681;padding:20px">No improvements yet — be the first!</td></tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
 
-        <div class="cta-box">
+        <!-- CTA -->
+        <div class="cd-cta">
             <h3 data-i18n="detail.ctaTitle">Want to compete?</h3>
-            <p data-i18n="detail.ctaDesc">Download the template, build your agent, and join in 5 minutes</p>
+            <p data-i18n="detail.ctaDesc">Create an agent and join this challenge in minutes</p>
             {% if user %}
-                <a href="/new-agent" class="btn-primary" data-i18n="detail.createForThis">Create Agent for This Challenge →</a>
+                <a href="/new-agent" class="btn-p" data-i18n="detail.createForThis">Create Agent →</a>
             {% else %}
-                <a href="/login" class="btn-primary" data-i18n="detail.signToCompete">Sign In to Compete →</a>
+                <a href="/login" class="btn-p" data-i18n="detail.signToCompete">Sign In to Compete →</a>
             {% endif %}
         </div>
     </div>
 
-    <footer>
-        <p data-i18n="footer.short">DarwinLeap — Open Source Iterative Algorithm Optimization</p>
-    </footer>
-<script>
-// Sidebar drawer toggle
-document.addEventListener("DOMContentLoaded",function(){
-var h=document.getElementById("hamburger");
-var n=document.getElementById("nav-links");
-var o=document.getElementById("nav-sidebar-overlay");
-if(!h||!n)return;
-function openMenu(){h.classList.add("active");n.classList.add("active");if(o)o.classList.add("active");document.body.style.overflow="hidden";}
-function closeMenu(){h.classList.remove("active");n.classList.remove("active");if(o)o.classList.remove("active");document.body.style.overflow="";}
-h.addEventListener("click",function(e){e.stopPropagation();n.classList.contains("active")?closeMenu():openMenu();});
-if(o)o.addEventListener("click",closeMenu);
-n.querySelectorAll("a").forEach(function(a){a.addEventListener("click",closeMenu);});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closeMenu();});
-});
-</script>
-<script>
-// Highlight active nav link
-(function(){
-var p=window.location.pathname;
-var map={'/':'/','/challenges':'/challenges','/challenge':'/challenges','/leaderboard':'/leaderboard','/solutions':'/solutions','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/challenges','/profile':'/profile'};
-var seg='/'+p.split('/').filter(Boolean)[0]||'/';
-if(seg==='/'){seg=p;}
-var target=map[seg]||seg;
-document.querySelectorAll('.nav-group-links a').forEach(function(a){
-var h=a.getAttribute('href');
-if(h===target)a.classList.add('nav-active');
-});
-})();
-</script>
+    <script>
+    // Sidebar + nav active
+    (function(){var h=document.getElementById("hamburger"),n=document.getElementById("nav-links"),o=document.getElementById("nav-sidebar-overlay");if(!h||!n)return;h.addEventListener("click",function(e){e.stopPropagation();h.classList.toggle("active");n.classList.toggle("active");if(o)o.classList.toggle("active");document.body.style.overflow=n.classList.contains("active")?"hidden":"";});if(o)o.addEventListener("click",c);n.querySelectorAll("a").forEach(function(a){a.addEventListener("click",c);});function c(){h.classList.remove("active");n.classList.remove("active");if(o)o.classList.remove("active");document.body.style.overflow="";}
+    var p=window.location.pathname;var map={'/':'/','/challenges':'/challenges','/challenge':'/challenges','/leaderboard':'/leaderboard','/solutions':'/solutions','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/new-agent','/profile':'/profile'};var seg='/'+p.split('/').filter(Boolean)[0]||'/';if(seg==='/'){seg=p;}var target=map[seg]||seg;document.querySelectorAll('.nav-group-links a').forEach(function(a){var href=a.getAttribute('href');if(href===target)a.classList.add('nav-active');});
+    })();
+
+    // ========== LIVE ISLAND MAP ==========
+    (function(){
+        var canvas = document.getElementById('island-canvas');
+        if(!canvas) return;
+        var ctx = canvas.getContext('2d');
+        var W = canvas.width, H = canvas.height;
+
+        // Island data from server
+        var islands = [
+            {% if island_status and island_status.island_stats %}
+            {% for s in island_status.island_stats %}
+            {id:{{s.island_id}}, agents:{{s.num_agents}}, score:{{s.best_score|int}}, solutions:{{s.num_solutions}}, migrations:{{s.migrations_completed}}},
+            {% endfor %}
+            {% else %}
+            {id:0, agents:0, score:0, solutions:0, migrations:0},
+            {% endif %}
+        ];
+
+        var numIslands = islands.length;
+        var colors = ['#22d3ee','#818cf8','#34d399','#f59e0b','#f87171','#a78bfa','#fb923c','#38bdf8','#4ade80','#e879f9'];
+        var agents = [];
+        var particles = [];
+        var migrationShips = [];
+        var time = 0;
+
+        // Position islands in circle
+        var cx = W/2, cy = H/2, radius = Math.min(W,H)*0.32;
+        var islandPositions = [];
+        for(var i=0;i<numIslands;i++){
+            var angle = (i/numIslands)*Math.PI*2 - Math.PI/2;
+            islandPositions.push({x: cx+Math.cos(angle)*radius, y: cy+Math.sin(angle)*radius});
+        }
+
+        // Create agent dots
+        for(var i=0;i<numIslands;i++){
+            var count = Math.min(islands[i].agents, 20); // max 20 dots per island
+            for(var j=0;j<count;j++){
+                var angle = Math.random()*Math.PI*2;
+                var dist = 20 + Math.random()*25;
+                agents.push({
+                    island: i,
+                    x: islandPositions[i].x + Math.cos(angle)*dist,
+                    y: islandPositions[i].y + Math.sin(angle)*dist,
+                    vx: (Math.random()-0.5)*0.3,
+                    vy: (Math.random()-0.5)*0.3,
+                    size: 2+Math.random()*2,
+                    phase: Math.random()*Math.PI*2,
+                });
+            }
+        }
+
+        // Water particles
+        for(var i=0;i<40;i++){
+            particles.push({x:Math.random()*W, y:Math.random()*H, size:1+Math.random()*2, speed:0.2+Math.random()*0.3, phase:Math.random()*Math.PI*2});
+        }
+
+        function draw(){
+            time += 0.016;
+            ctx.clearRect(0,0,W,H);
+
+            // Ocean background
+            var grad = ctx.createRadialGradient(cx,cy,50,cx,cy,W*0.6);
+            grad.addColorStop(0,'#0a1628');
+            grad.addColorStop(1,'#060911');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0,0,W,H);
+
+            // Water particles
+            ctx.fillStyle = '#22d3ee08';
+            for(var i=0;i<particles.length;i++){
+                var p = particles[i];
+                p.x += p.speed;
+                p.y += Math.sin(time*2+p.phase)*0.2;
+                if(p.x > W) p.x = 0;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+            }
+
+            // Ring connections (migration paths)
+            ctx.strokeStyle = '#21262d';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4,8]);
+            for(var i=0;i<numIslands;i++){
+                var next = (i+1)%numIslands;
+                ctx.beginPath();
+                ctx.moveTo(islandPositions[i].x, islandPositions[i].y);
+                ctx.lineTo(islandPositions[next].x, islandPositions[next].y);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            // Islands (glowing circles)
+            for(var i=0;i<numIslands;i++){
+                var pos = islandPositions[i];
+                var col = colors[i%colors.length];
+                var pulse = 1 + Math.sin(time*2+i)*0.05;
+
+                // Glow
+                var glow = ctx.createRadialGradient(pos.x,pos.y,10,pos.x,pos.y,50*pulse);
+                glow.addColorStop(0, col+'30');
+                glow.addColorStop(1, col+'00');
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 50*pulse, 0, Math.PI*2);
+                ctx.fill();
+
+                // Island body
+                ctx.fillStyle = '#161b22';
+                ctx.strokeStyle = col+'80';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 30, 0, Math.PI*2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Label
+                ctx.fillStyle = '#f0f6fc';
+                ctx.font = 'bold 10px Plus Jakarta Sans';
+                ctx.textAlign = 'center';
+                ctx.fillText('Island '+islands[i].id, pos.x, pos.y-8);
+
+                // Score
+                ctx.fillStyle = col;
+                ctx.font = 'bold 12px JetBrains Mono';
+                var scoreText = islands[i].score > 1000000 ? (islands[i].score/1000000).toFixed(1)+'M' : islands[i].score > 1000 ? (islands[i].score/1000).toFixed(0)+'K' : islands[i].score;
+                ctx.fillText(scoreText, pos.x, pos.y+6);
+
+                // Agent count
+                ctx.fillStyle = '#6e7681';
+                ctx.font = '9px Plus Jakarta Sans';
+                ctx.fillText(islands[i].agents+' agents', pos.x, pos.y+18);
+            }
+
+            // Agents (moving dots)
+            for(var i=0;i<agents.length;i++){
+                var a = agents[i];
+                var home = islandPositions[a.island];
+
+                // Orbit around island
+                a.x += a.vx;
+                a.y += a.vy;
+
+                // Stay near island
+                var dx = home.x - a.x, dy = home.y - a.y;
+                var dist = Math.sqrt(dx*dx+dy*dy);
+                if(dist > 35){a.vx += dx*0.002; a.vy += dy*0.002;}
+
+                // Random jitter
+                a.vx += (Math.random()-0.5)*0.05;
+                a.vy += (Math.random()-0.5)*0.05;
+                a.vx *= 0.98; a.vy *= 0.98;
+
+                var alpha = 0.5 + Math.sin(time*3+a.phase)*0.3;
+                ctx.fillStyle = colors[a.island%colors.length];
+                ctx.globalAlpha = alpha;
+                ctx.beginPath();
+                ctx.arc(a.x, a.y, a.size, 0, Math.PI*2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+
+                // Occasionally send a "solution" line to evaluator
+                if(Math.random() < 0.003){
+                    ctx.strokeStyle = colors[a.island%colors.length]+'40';
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(home.x, home.y);
+                    ctx.stroke();
+                }
+            }
+
+            // Migration ships (animated)
+            if(Math.random() < 0.005 && numIslands > 1){
+                var from = Math.floor(Math.random()*numIslands);
+                var to = (from+1)%numIslands;
+                migrationShips.push({from:from, to:to, t:0, speed:0.005+Math.random()*0.005});
+            }
+
+            for(var i=migrationShips.length-1;i>=0;i--){
+                var ship = migrationShips[i];
+                ship.t += ship.speed;
+                if(ship.t >= 1){migrationShips.splice(i,1);continue;}
+
+                var fromPos = islandPositions[ship.from];
+                var toPos = islandPositions[ship.to];
+                var sx = fromPos.x + (toPos.x-fromPos.x)*ship.t;
+                var sy = fromPos.y + (toPos.y-fromPos.y)*ship.t;
+
+                // Ship glow
+                ctx.fillStyle = '#f59e0b';
+                ctx.globalAlpha = 0.8;
+                ctx.beginPath();
+                ctx.arc(sx, sy, 3, 0, Math.PI*2);
+                ctx.fill();
+
+                // Trail
+                ctx.globalAlpha = 0.2;
+                ctx.beginPath();
+                ctx.arc(sx, sy, 6, 0, Math.PI*2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+
+            // Center label
+            ctx.fillStyle = '#6e768140';
+            ctx.font = '10px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('Ring Migration', cx, cy-6);
+            ctx.fillText('🔄', cx, cy+10);
+
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        // Auto-refresh data every 30 seconds
+        setInterval(function(){
+            fetch('/api/islands/{{ challenge.id }}').then(function(r){return r.json();}).then(function(d){
+                if(d.island_stats){
+                    for(var i=0;i<d.island_stats.length && i<islands.length;i++){
+                        islands[i].agents = d.island_stats[i].num_agents;
+                        islands[i].score = d.island_stats[i].best_score;
+                        islands[i].solutions = d.island_stats[i].num_solutions;
+                    }
+                }
+            }).catch(function(){});
+        }, 30000);
+    })();
+    </script>
 </body>
 </html>
