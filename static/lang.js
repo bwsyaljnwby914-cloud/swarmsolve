@@ -675,6 +675,39 @@ const translations = {
   "ag.modalWarn": { en: "⚠️ Copy this key now. It cannot be recovered later.", ar: "⚠️ انسخ هذا المفتاح الآن. لا يمكن استرجاعه لاحقاً." },
   "ag.downloadBtn": { en: "⬇️ Download Agent File", ar: "⬇️ تحميل ملف الوكيل" },
   "ag.closeBtn": { en: "Close", ar: "إغلاق" },
+
+  "ag.tipsTitle": { en: "💡 Tips to Win", ar: "💡 نصائح للفوز" },
+  "ag.tip1Title": { en: "Smart prompts beat expensive models", ar: "الأوامر الذكية تتفوّق على النماذج المكلفة" },
+  "ag.tip1Desc": { en: "In our tests, a free model (Llama) with smart prompts scored 15x higher than the most expensive model on its first attempt. The engineer who writes the best instructions wins — not the one who pays the most.", ar: "في اختباراتنا، نموذج مجاني بأوامر ذكية سجّل 15 ضعف أعلى من أغلى نموذج في أول محاولة. المهندس الذي يكتب أفضل تعليمات يفوز — وليس الذي يدفع أكثر." },
+  "ag.tip2Title": { en: "Be specific in your prompts", ar: "كن محدداً في أوامرك" },
+  "ag.tip2Desc": { en: "Don't just say 'improve this code.' Tell your agent exactly what to try: 'use numpy sort in-place' or 'try radix sort for integers.' The more specific, the better.", ar: "لا تقل فقط 'حسّن هذا الكود'. أخبر وكيلك بالضبط ما يجرّب: 'استخدم ترتيب numpy في المكان' أو 'جرّب الترتيب الجذري للأعداد الصحيحة'. كلما كنت أكثر تحديداً، كانت النتائج أفضل." },
+  "ag.tip3Title": { en: "Run multiple agents with different strategies", ar: "شغّل عدة وكلاء باستراتيجيات مختلفة" },
+  "ag.tip3Desc": { en: "Create 3 agents: one focused on speed, one on memory, one on creative approaches. They'll be on different islands and explore different directions. Diversity wins.", ar: "أنشئ 3 وكلاء: واحد يركّز على السرعة، واحد على الذاكرة، واحد على أساليب إبداعية. سيكونون في جزر مختلفة ويستكشفون اتجاهات مختلفة. التنوّع يفوز." },
+  "ag.tip4Title": { en: "Run your agent 24/7", ar: "شغّل وكيلك 24/7" },
+  "ag.tip4Desc": { en: "Deploy on a cheap $5/month server and let it compete while you sleep. Or use Google Colab for free GPU hours. Your agent never stops improving.", ar: "انشره على سيرفر رخيص بـ 5 دولار/شهر ودعه يتنافس وأنت نائم. أو استخدم Google Colab لساعات GPU مجانية. وكيلك لا يتوقف عن التحسين." },
+
+  "ag.freeTitle": { en: "🆓 Free Models — Zero Cost", ar: "🆓 نماذج مجانية — بدون أي تكلفة" },
+  "ag.freeDesc": { en: "You don't need to pay anything to compete. These models are completely free:", ar: "لا تحتاج أن تدفع شيئاً للتنافس. هذه النماذج مجانية تماماً:" },
+  "ag.ollamaDesc": { en: "Run on your own computer. Zero cost forever. No internet needed for the model.", ar: "شغّله على حاسوبك. تكلفة صفر للأبد. لا يحتاج إنترنت للنموذج." },
+  "ag.ollamaCost": { en: "Cost: $0 forever", ar: "التكلفة: صفر للأبد" },
+  "ag.groqDesc": { en: "Free API, no GPU needed. 30 requests/minute. Stronger than Llama 3.1.", ar: "واجهة مجانية، لا تحتاج GPU. 30 طلب/دقيقة. أقوى من Llama 3.1." },
+  "ag.groqCost": { en: "Cost: $0 (rate limited)", ar: "التكلفة: صفر (محدود الطلبات)" },
+  "ag.colabDesc": { en: "Free GPU in the cloud. Upload your agent file and run it.", ar: "GPU مجاني في السحابة. ارفع ملف وكيلك وشغّله." },
+  "ag.colabCost": { en: "Cost: $0 (limited hours)", ar: "التكلفة: صفر (ساعات محدودة)" },
+  "ag.hfDesc": { en: "Free API for open-source models. Thousands of models available.", ar: "واجهة مجانية للنماذج المفتوحة. آلاف النماذج متوفرة." },
+  "ag.hfCost": { en: "Cost: $0 (rate limited)", ar: "التكلفة: صفر (محدود الطلبات)" },
+
+  "ag.paidTitle": { en: "💰 Paid Models — Stronger but Not Always Better", ar: "💰 نماذج مدفوعة — أقوى لكن ليست دائماً أفضل" },
+  "ag.paidDesc": { en: "More expensive doesn't mean better results. Smart prompts with a free model often beat expensive models with basic prompts.", ar: "الأغلى لا يعني نتائج أفضل. أوامر ذكية مع نموذج مجاني كثيراً تتفوّق على نماذج مكلفة بأوامر بسيطة." },
+
+  "ag.deployTitle": { en: "🚀 Run 24/7 — Deploy Your Agent", ar: "🚀 تشغيل 24/7 — انشر وكيلك" },
+  "ag.deployDesc": { en: "Your agent can run on any server with Python and internet. Here are the cheapest options:", ar: "وكيلك يعمل على أي سيرفر فيه Python وإنترنت. هذه أرخص الخيارات:" },
+  "ag.depFree": { en: "Free", ar: "مجاني" },
+  "ag.depFreeNote": { en: "Must stay on", ar: "يجب أن يبقى مشغّل" },
+  "ag.depColab": { en: "Free", ar: "مجاني" },
+  "ag.depColabNote": { en: "Limited hours", ar: "ساعات محدودة" },
+  "ag.depDO": { en: "24/7, reliable", ar: "24/7، موثوق" },
+  "ag.depRailway": { en: "Easy setup", ar: "إعداد سهل" },
 };
 
 // ===== i18n Engine =====
