@@ -984,12 +984,120 @@ def new_agent():
     return render_template("new_agent.html", user=get_current_user())
 
 
+@app.route("/api/agents", methods=["GET"])
+def api_list_user_agents():
+    """List current user's agents"""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/agents?user_id=eq.{user['id']}&select=*&order=created_at.desc",
+            headers=supabase_headers(),
+            timeout=10
+        )
+        agents = r.json() if r.status_code == 200 else []
+        return jsonify({"agents": agents, "max_agents": 10})
+    except:
+        return jsonify({"agents": [], "max_agents": 10})
+
+
+@app.route("/api/agents", methods=["POST"])
+def api_create_agent():
+    """Create a new agent for the current user"""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    data = request.get_json()
+    name = data.get("name", "").strip()
+    model = data.get("model", "ollama/llama3.1")
+
+    if not name:
+        return jsonify({"error": "Agent name is required"}), 400
+    if len(name) > 30:
+        return jsonify({"error": "Name too long (max 30 chars)"}), 400
+
+    # Check agent limit (max 10)
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/agents?user_id=eq.{user['id']}&select=id",
+            headers=supabase_headers(),
+            timeout=10
+        )
+        existing = r.json() if r.status_code == 200 else []
+        if len(existing) >= 10:
+            return jsonify({"error": "Maximum 10 agents allowed"}), 400
+    except:
+        pass
+
+    # Generate API key
+    import hashlib, secrets
+    api_key = "dl_" + secrets.token_hex(24)
+
+    try:
+        r = requests.post(
+            f"{SUPABASE_URL}/rest/v1/agents",
+            headers={**supabase_headers(), "Prefer": "return=representation"},
+            json={
+                "name": name,
+                "user_id": user["id"],
+                "model": model,
+                "description": api_key,  # Store API key in description field
+                "is_active": True,
+                "total_submissions": 0,
+                "best_score": 0,
+            },
+            timeout=10
+        )
+        if r.status_code in [200, 201]:
+            agent = r.json()
+            if isinstance(agent, list):
+                agent = agent[0]
+            return jsonify({
+                "ok": True,
+                "agent": {
+                    "id": agent.get("id"),
+                    "name": name,
+                    "model": model,
+                    "api_key": api_key,
+                }
+            })
+        else:
+            detail = r.text
+            if "duplicate" in detail.lower() or "unique" in detail.lower():
+                return jsonify({"error": "Agent name already exists"}), 400
+            return jsonify({"error": "Failed to create agent"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/agents/<int:agent_id>", methods=["DELETE"])
+def api_delete_agent(agent_id):
+    """Delete an agent"""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+    try:
+        requests.delete(
+            f"{SUPABASE_URL}/rest/v1/agents?id=eq.{agent_id}&user_id=eq.{user['id']}",
+            headers=supabase_headers(),
+            timeout=10
+        )
+        return jsonify({"ok": True})
+    except:
+        return jsonify({"error": "Failed to delete"}), 500
+
+
 @app.route("/download-template")
 def download_template():
-    template_code = '''#!/usr/bin/env python3
+    agent_name = request.args.get("agent", "MyAgent_01")
+    api_key = request.args.get("key", "")
+
+    template_code = f'''#!/usr/bin/env python3
 """
 ==========================================================
-  DarwinLeap Agent Template v2.0
+  DarwinLeap Agent Template v3.0
 ==========================================================
   Your AI agent that competes with the world!
 
@@ -1001,11 +1109,11 @@ def download_template():
   5. Platform evaluates and scores it
   6. Repeat!
 
-  QUICK START:
-  1. Choose your LLM provider below
-  2. Set your API key
-  3. Set your agent name (unique!)
-  4. Run: python swarmsolve_agent.py
+  TO CUSTOMIZE:
+  1. Change LLM_PROVIDER and LLM_MODEL below
+  2. Add your LLM API key (if using paid model)
+  3. Edit the PROMPT to guide your agent's strategy
+  4. Run: python darwinleap_agent.py
 ==========================================================
 """
 
@@ -1015,36 +1123,32 @@ import re
 import sys
 
 # ==========================================================
-# CONFIGURATION — Edit these settings
+# YOUR AGENT (auto-configured — do NOT change these)
 # ==========================================================
 
-# DarwinLeap Platform URL (do NOT change)
-SWARMSOLVE_URL = "https://web-production-ed55.up.railway.app"
-
-# Your agent name — make it unique!
-AGENT_NAME = "MyAgent_01"
-
-# Challenge to compete in
-# Options: "sort-speed", "compression"
-CHALLENGE_ID = "sort-speed"
-
-# How many attempts before stopping
-MAX_ATTEMPTS = 50
-
-# Seconds to wait between attempts
-WAIT_SECONDS = 30
+PLATFORM_URL = "https://web-production-ed55.up.railway.app"
+AGENT_NAME = "{agent_name}"
+API_KEY = "{api_key}"
 
 # ==========================================================
-# LLM CONFIGURATION — Choose your model
+# CHALLENGE — which challenge to compete in
 # ==========================================================
 
-# Provider: "ollama", "openai", "anthropic", "google"
+CHALLENGE_ID = "sort-speed"   # Options: "sort-speed", "compression"
+MAX_ATTEMPTS = 50             # Stop after this many attempts
+WAIT_SECONDS = 30             # Wait between attempts
+
+# ==========================================================
+# LLM — Choose your model (THIS IS WHAT YOU CUSTOMIZE)
+# ==========================================================
+
+# Provider: "ollama", "openai", "anthropic", "google", "groq"
 LLM_PROVIDER = "ollama"
 
 # Model name
 LLM_MODEL = "llama3.1"
 
-# API Key (not needed for Ollama)
+# API Key for your LLM (not needed for Ollama)
 LLM_API_KEY = ""
 
 # API URL (only change for Ollama if not default)
@@ -1146,7 +1250,7 @@ def run_agent():
     print(f"  Agent:     {AGENT_NAME}")
     print(f"  Challenge: {CHALLENGE_ID}")
     print(f"  LLM:       {LLM_PROVIDER} / {LLM_MODEL}")
-    print(f"  Platform:  {SWARMSOLVE_URL}")
+    print(f"  Platform:  {PLATFORM_URL}")
     print("=" * 50)
     print()
 
@@ -1155,7 +1259,7 @@ def run_agent():
             # Step 1: Get challenge + best solution from YOUR island
             print(f"  [{attempt}/{MAX_ATTEMPTS}] Fetching challenge...")
             resp = requests.get(
-                f"{SWARMSOLVE_URL}/api/challenge/{CHALLENGE_ID}",
+                f"{PLATFORM_URL}/api/challenge/{CHALLENGE_ID}",
                 params={"agent_name": AGENT_NAME},
                 timeout=30)
 
@@ -1206,7 +1310,7 @@ Your task: Improve this code to get a HIGHER score.
             # Step 3: Submit improved solution
             print(f"  Submitting solution...")
             result = requests.post(
-                f"{SWARMSOLVE_URL}/api/submit",
+                f"{PLATFORM_URL}/api/submit",
                 json={
                     "challenge_id": CHALLENGE_ID,
                     "code": improved_code,
@@ -1241,7 +1345,7 @@ Your task: Improve this code to get a HIGHER score.
 
     print()
     print("  Agent finished. Check the leaderboard!")
-    print(f"  {SWARMSOLVE_URL}/leaderboard")
+    print(f"  {PLATFORM_URL}/leaderboard")
     print()
 
 
@@ -1250,7 +1354,7 @@ if __name__ == "__main__":
 '''
     buffer = io.BytesIO(template_code.encode('utf-8'))
     buffer.seek(0)
-    return send_file(buffer, as_attachment=True, download_name="swarmsolve_agent.py", mimetype="text/plain")
+    return send_file(buffer, as_attachment=True, download_name="darwinleap_agent.py", mimetype="text/plain")
 
 
 if __name__ == "__main__":
