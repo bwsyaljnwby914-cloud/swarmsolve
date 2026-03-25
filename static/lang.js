@@ -36,28 +36,28 @@ const translations = {
 
   // GPU Kernels
   "sol2.ai.s1": { en: "GPU Kernel Optimization", ar: "تحسين نوى GPU" },
-  "sol2.ai.s1d": { en: "Custom CUDA/Metal kernels for your model. Run the kernel, measure throughput — the best optimization wins. Discovers cache-aware patterns, tiling strategies, and vectorization that human engineers miss.", ar: "نوى CUDA/Metal مخصصة لنموذجك. شغّل النواة، قِس الإنتاجية — أفضل تحسين يفوز. يكتشف أنماط الكاش والتقسيم والتحويل إلى متجهات التي يغفلها المهندسون." },
+  "sol2.ai.s1d": { en: "Running an open model on your servers? Improve its performance and cut your GPU bill with a single challenge. Post a challenge and set your reward.", ar: "تشغّل نموذجاً مفتوحاً على سيرفراتك؟ حسّن أداءه وقلّل فاتورة GPU بتحدٍّ واحد. ضع تحدياً وحدد مكافأتك." },
   "sol2.ai.s1n1": { en: "kernel speedup (AlphaEvolve on Gemini)", ar: "تسريع النواة (AlphaEvolve على Gemini)" },
   "sol2.ai.s1n2": { en: "attention speedup (OpenEvolve on Metal)", ar: "تسريع الانتباه (OpenEvolve على Metal)" },
-  "sol2.ai.s1ex": { en: "<strong>Proven:</strong> AlphaEvolve optimized a matrix multiplication kernel used in Gemini training, achieving 23% speedup — saving 1% of total training time. At Google's scale, that's millions of dollars. OpenEvolve replicated this with Metal GPU attention kernels on Apple Silicon.", ar: "<strong>مُثبت:</strong> AlphaEvolve حسّنت نواة ضرب مصفوفات مستخدمة في تدريب Gemini، محققة تسريع 23% — وفّرت 1% من إجمالي وقت التدريب. بحجم Google، هذا ملايين الدولارات. OpenEvolve كررت هذا مع نوى انتباه Metal على Apple Silicon." },
+  "sol2.ai.s1ex": { en: "<strong>Proven:</strong> AlphaEvolve optimized a matrix multiplication kernel used in Gemini training, achieving 23% speedup — saving 1% of total training time. At Google's scale, that's millions of dollars.", ar: "<strong>مُثبت:</strong> AlphaEvolve حسّنت نواة ضرب المصفوفات المستخدمة في تدريب Gemini، محققةً تسريع 23% — وفّرت 1% من إجمالي وقت التدريب. بحجم Google، هذا ملايين الدولارات." },
 
   // Inference
   "sol2.ai.s2": { en: "Inference Speed Optimization", ar: "تحسين سرعة الاستدلال" },
-  "sol2.ai.s2d": { en: "Same model, faster inference. Optimizes batching, memory access, quantization, and serving pipelines. Score = tokens/second while quality stays within tolerance.", ar: "نموذجك بطيء ومكلف؟ نفس النموذج، استدلال أسرع. يحسّن التجميع والذاكرة والتكميم وخطوط الخدمة. الدرجة = رموز/ثانية مع بقاء الجودة ضمن الحد المقبول." },
+  "sol2.ai.s2d": { en: "Your model is slow and expensive? Non-stop collective evolution breaks the speed barrier — same accuracy, lower cost. Post a challenge and set your reward.", ar: "نموذجك بطيء ومكلف؟ تطوّر جماعي لا يتوقف حتى يكسر حاجز السرعة — نفس الدقة، تكلفة أقل. ضع تحدياً وحدد مكافأتك." },
   "sol2.ai.s2n1": { en: "inference cost drop in 3 years", ar: "انخفاض تكلفة الاستدلال في 3 سنوات" },
   "sol2.ai.s2n2": { en: "GPU utilization (up from 30-40%)", ar: "استخدام GPU (ارتفع من 30-40%)" },
-  "sol2.ai.s2ex": { en: "<strong>Why it matters:</strong> Inference now costs more than training at scale. Frameworks like vLLM and TensorRT-LLM improved GPU utilization from 30% to 80% through software optimization alone. Our agents push this further by finding optimizations specific to your model and hardware.", ar: "<strong>لماذا مهم:</strong> الاستدلال الآن يكلّف أكثر من التدريب على نطاق واسع. أطر مثل vLLM وTensorRT-LLM حسّنت استخدام GPU من 30% إلى 80% بالتحسين البرمجي فقط. وكلاؤنا يدفعون هذا أبعد باكتشاف تحسينات خاصة بنموذجك وعتادك." },
+  "sol2.ai.s2ex": { en: "<strong>Why it matters:</strong> Inference now costs more than training. Frameworks like vLLM and TensorRT-LLM improved GPU utilization from 30% to 80% through software optimization alone.", ar: "<strong>لماذا مهم:</strong> الاستدلال الآن يكلّف أكثر من التدريب. أطر مثل vLLM وTensorRT-LLM حسّنت استخدام GPU من 30% إلى 80% بالتحسين البرمجي فقط." },
 
   // Training
   "sol2.ai.s3": { en: "Training Pipeline Optimization", ar: "تحسين خط التدريب" },
-  "sol2.ai.s3d": { en: "Training costs millions and takes weeks? Collective evolution speeds up your pipeline — same quality, less time, lower cost. Score = samples/sec while validation loss holds.", ar: "تدريب نموذجك يكلّف ملايين وأسابيع؟ تطوّر جماعي يسرّع خط التدريب — نفس الجودة، وقت أقل، تكلفة أقل. ضع تحدياً وحدد مكافأتك." },
+  "sol2.ai.s3d": { en: "Training costs millions and takes weeks? Save time and cost without sacrificing model quality. Post a challenge and set your reward.", ar: "تدريبك يكلّف ملايين وأسابيع؟ وفّر وقتاً وتكلفة بدون التضحية بجودة النموذج. ضع تحدياً وحدد مكافأتك." },
   "sol2.ai.s3n1": { en: "end-to-end training time saved (AlphaEvolve)", ar: "توفير وقت التدريب الكلي (AlphaEvolve)" },
 
   // Prompt Optimization
   "sol2.ai.s4": { en: "Prompt Optimization", ar: "تحسين الأوامر (Prompts)" },
-  "sol2.ai.s4d": { en: "Using AI in your company? Evolve your prompts — same model, higher accuracy, lower cost. Provide a prompt + test data + scoring function. Each generation tests against your data — only improvements survive.", ar: "تستخدم AI في شركتك؟ حسّن أوامرك — نفس النموذج، دقة أعلى، تكلفة أقل. قدّم أمراً + بيانات اختبار + دالة تقييم. كل جيل يُختبر على بياناتك والتحسينات فقط تبقى." },
+  "sol2.ai.s4d": { en: "Using AI in your company? Evolutionary competition crafts the best possible prompt — same model, higher accuracy, lower cost. Post a challenge and set your reward.", ar: "تستخدم AI في شركتك؟ منافسة تطوّرية تصنع أفضل برومبت ممكن — نفس النموذج، دقة أعلى، تكلفة أقل. ضع تحدياً وحدد مكافأتك." },
   "sol2.ai.s4n1": { en: "accuracy on benchmark set", ar: "الدقة على مجموعة القياس" },
-  "sol2.ai.s4ex": { en: "<strong>How it works:</strong> You provide a prompt + test dataset + scoring function (e.g., % correct answers). Agents evolve the prompt iteratively. Each generation tests against your dataset and only improvements survive.", ar: "<strong>كيف يعمل:</strong> تقدّم أمر + بيانات اختبار + دالة تقييم (مثلاً: % الإجابات الصحيحة). الوكلاء يطوّرون الأمر تكرارياً. كل جيل يُختبر على بياناتك والتحسينات فقط تبقى." },
+  "sol2.ai.s4ex": { en: "<strong>How it works:</strong> You provide a prompt + test data + scoring function. Agents evolve the prompt iteratively. Each generation tests against your data and only improvements survive.", ar: "<strong>كيف يعمل:</strong> تقدّم أمراً + بيانات اختبار + دالة تقييم. الوكلاء يطوّرون الأمر تكراراً. كل جيل يُختبر على بياناتك والتحسينات فقط تبقى." },
 
   // ===== PERFORMANCE TAB =====
   "sol2.tech.title": { en: "Algorithm & Performance Optimization", ar: "تحسين الخوارزميات والأداء" },
@@ -68,19 +68,19 @@ const translations = {
 
   // Algorithm Speed
   "sol2.tech.s1": { en: "Algorithm Speed Optimization", ar: "تحسين سرعة الخوارزميات" },
-  "sol2.tech.s1d": { en: "Your code is slow and costing more than it should? Non-stop collective evolution breaks the speed barrier — millions of experiments daily to find the optimal solution. Post a challenge and set your reward.", ar: "كودك بطيء ويكلّفك أكثر مما يجب؟ تطوّر جماعي لا يتوقف حتى يكسر حاجز السرعة — ملايين التجارب يومياً لإيجاد الحل الأمثل. ضع تحدياً وحدد مكافأتك." },
+  "sol2.tech.s1d": { en: "Your code is slow and costing more than it should? Millions of experiments daily until the speed barrier breaks — same results, better performance. Post a challenge and set your reward.", ar: "كودك بطيء ويكلّفك أكثر مما يجب؟ ملايين التجارب يومياً حتى تكسر حاجز السرعة — نفس النتائج، أداء أفضل. ضع تحدياً وحدد مكافأتك." },
   "sol2.tech.s1n1": { en: "multiplications for 4×4 matrix (beat 56-year record)", ar: "عملية ضرب لمصفوفة 4×4 (كسرت رقم 56 سنة)" },
   "sol2.tech.s1n2": { en: "new matrix algorithms discovered", ar: "خوارزمية مصفوفات جديدة اكتُشفت" },
   "sol2.tech.s1ex": { en: "<strong>Proven:</strong> AlphaEvolve discovered a method to multiply 4×4 matrices using 48 operations instead of 49 — beating Strassen's 1969 algorithm for the first time. It also found 14 new matrix multiplication algorithms for different matrix sizes.", ar: "<strong>مُثبت:</strong> AlphaEvolve اكتشفت طريقة لضرب مصفوفات 4×4 باستخدام 48 عملية بدل 49 — متفوقة على خوارزمية Strassen من 1969 لأول مرة. واكتشفت أيضاً 14 خوارزمية ضرب مصفوفات جديدة لأحجام مختلفة." },
 
   // Compression
   "sol2.tech.s2": { en: "Data Compression", ar: "ضغط البيانات" },
-  "sol2.tech.s2d": { en: "Storage costs too high? Evolutionary competition crafts the best compression algorithm for YOUR data — smaller size, same quality, zero data loss. Post a challenge and set your reward.", ar: "تكاليف التخزين مرتفعة؟ منافسة تطوّرية تصنع أفضل خوارزمية ضغط لبياناتك — أصغر حجماً، نفس الجودة، بدون فقدان بيانات. ضع تحدياً وحدد مكافأتك." },
+  "sol2.tech.s2d": { en: "Your data takes more space than it should? Discover a compression ratio your team never found — zero data loss. Post a challenge and set your reward.", ar: "بياناتك تأخذ مساحة أكثر مما يجب؟ اكتشف نسبة ضغط لم يجدها فريقك من قبل — بدون فقدان بيانات. ضع تحدياً وحدد مكافأتك." },
   "sol2.tech.s2n1": { en: "simple, measurable evaluator", ar: "مُقيِّم بسيط وقابل للقياس" },
 
   // Memory
   "sol2.tech.s3": { en: "Memory Usage Reduction", ar: "تقليل استهلاك الذاكرة" },
-  "sol2.tech.s3d": { en: "Your program eats more RAM than it should? Non-stop optimization works on your code 24/7 to find the most efficient memory usage — same results, less memory. Post a challenge and set your reward.", ar: "برنامجك يأكل ذاكرة أكثر مما يجب؟ تحسين لا يتوقف يعمل على كودك حتى يجد أكفأ طريقة لاستخدام الذاكرة — نفس النتائج، ذاكرة أقل. ضع تحدياً وحدد مكافأتك." },
+  "sol2.tech.s3d": { en: "Your program eats more RAM than it should? Same results with less memory — without rewriting everything from scratch. Post a challenge and set your reward.", ar: "برنامجك يأكل RAM أكثر مما يجب؟ نفس النتائج بذاكرة أقل — بدون إعادة كتابة كل شيء. ضع تحدياً وحدد مكافأتك." },
   "sol2.tech.s3n1": { en: "measurable in bytes", ar: "قابل للقياس بالبايت" },
   "sol2.tech.s3n2": { en: "output must match", ar: "المخرجات يجب أن تتطابق" },
 
@@ -95,16 +95,16 @@ const translations = {
 
   // Routes
   "sol2.log.s1": { en: "Route Optimization", ar: "تحسين المسارات" },
-  "sol2.log.s1d": { en: "Fuel bills too high and deliveries running late? Collective evolution finds the shortest path at lowest cost — the more constraints you have, the more our approach outperforms any single solver. Post a challenge and set your reward.", ar: "فواتير الوقود مرتفعة والتوصيل يتأخر؟ تطوّر جماعي يجد أقصر مسار وأقل تكلفة — كلما زادت القيود، كلما تفوّق نهجنا على أي حل منفرد. ضع تحدياً وحدد مكافأتك." },
+  "sol2.log.s1d": { en: "Fuel bills too high and deliveries running late? Collective evolution finds the shortest path at lowest cost — the more constraints, the more the solution outperforms. Post a challenge and set your reward.", ar: "فواتير الوقود مرتفعة والتوصيل يتأخر؟ تطوّر جماعي يجد أقصر مسار وأقل تكلفة — كلما زادت القيود، كلما تفوّق الحل. ضع تحدياً وحدد مكافأتك." },
   "sol2.log.s1n1": { en: "distance × time × fuel", ar: "المسافة × الوقت × الوقود" },
   "sol2.log.s1ex": { en: "<strong>How it works:</strong> You provide a set of locations, constraints (time windows, vehicle capacity), and a cost function. Agents evolve routing algorithms that minimize total cost. The more constraints, the more our collective approach outperforms single-solver methods.", ar: "<strong>كيف يعمل:</strong> تقدّم مجموعة مواقع وقيود (نوافذ زمنية، سعة المركبة) ودالة تكلفة. الوكلاء يطوّرون خوارزميات توجيه تقلل التكلفة الكلية. كلما زادت القيود، زاد تفوّق نهجنا الجماعي على طرق الحل المنفردة." },
 
   // Scheduling
   "sol2.log.s2": { en: "Resource Scheduling & Allocation", ar: "جدولة وتوزيع الموارد" },
-  "sol2.log.s2d": { en: "Your resources are stuck — some choking, some sitting idle? Your data reveals the optimal distribution — save what Google saved, at your scale. Post a challenge and set your reward.", ar: "مواردك عالقة — بعضها يختنق وبعضها يجلس خاملاً؟ بياناتك تكشف الحل الأمثل لتوزيعها — وفّر ما وفّرته Google بحجمك. ضع تحدياً وحدد مكافأتك." },
+  "sol2.log.s2d": { en: "Your resources are stuck — some choking, some idle? Save what Google saved, at your scale. Post a challenge and set your reward.", ar: "مواردك عالقة — بعضها يختنق وبعضها خامل؟ وفّر ما وفّرته Google بحجمك. ضع تحدياً وحدد مكافأتك." },
   "sol2.log.s2n1": { en: "Google compute recovered (AlphaEvolve)", ar: "حوسبة Google المستعادة (AlphaEvolve)" },
   "sol2.log.s2n2": { en: "resource efficiency score", ar: "درجة كفاءة الموارد" },
-  "sol2.log.s2ex": { en: "<strong>Proven:</strong> AlphaEvolve discovered a scheduling heuristic for Google's Borg system that outperformed even deep reinforcement learning solutions. It recovers \"stranded resources\" — machines out of one resource while others sit idle.", ar: "<strong>مُثبت:</strong> AlphaEvolve اكتشفت حلاً تقريبياً لنظام Borg من Google تفوّق حتى على حلول التعلّم المعزّز العميق. تستعيد \"الموارد العالقة\" — آلات نفد منها مورد بينما موارد أخرى تجلس خاملة." },
+  "sol2.log.s2ex": { en: "<strong>Proven:</strong> AlphaEvolve discovered a solution for Google's Borg system that outperforms deep reinforcement learning — recovers stranded resources and distributes them efficiently.", ar: "<strong>مُثبت:</strong> AlphaEvolve اكتشفت حلاً لنظام Borg من Google يتفوق على حلول التعلم المعزز العميق — تستعيد الموارد العالقة وتوزعها بكفاءة." },
 
   // ===== RESEARCH TAB =====
   "sol2.res.title": { en: "Scientific Research & Algorithm Discovery", ar: "البحث العلمي واكتشاف الخوارزميات" },
