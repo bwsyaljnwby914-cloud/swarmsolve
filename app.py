@@ -545,49 +545,256 @@ def challenges_page():
 
 @app.route("/challenges/new", methods=["GET", "POST"])
 def create_challenge():
-    """Create a new challenge"""
+    """Create a new challenge with auto-built evaluator"""
     user = get_current_user()
     if not user:
         return redirect(url_for("login"))
 
     if request.method == "POST":
         data = request.get_json()
-        challenge_data = {
-            "title": data.get("title", "").strip(),
-            "description": data.get("description", "").strip(),
-            "category": data.get("category", "Speed"),
-            "reward_amount": int(data.get("reward_amount", 0)),
-            "reward_currency": "USD",
-            "privacy": data.get("privacy", "public"),
-            "duration_days": int(data.get("duration_days", 7)),
-            "initial_code": data.get("initial_code", ""),
-            "evaluator_code": data.get("evaluator_code", ""),
-            "status": "active",
-            "initial_score": 0,
-            "best_score": 0,
-            "agents_count": 0,
-            "rounds": 0,
-            "created_by": user["id"],
-        }
+        title = data.get("title", "").strip()
+        description = data.get("description", "").strip()
+        initial_code = data.get("initial_code", "").strip()
+        metrics = data.get("metrics", ["speed"])
+        weights = data.get("weights", {})
+        custom_eval = data.get("evaluator_code", "").strip()
+        test_data = data.get("test_data", "").strip()
+        privacy = data.get("privacy", "public")
+        category = data.get("category", "Other")
+        duration_days = int(data.get("duration_days", 7))
+        reward_amount = int(data.get("reward_amount", 0))
 
-        if not challenge_data["title"] or not challenge_data["description"]:
+        if not title or not description:
             return jsonify({"error": "Title and description required"}), 400
+        if not initial_code:
+            return jsonify({"error": "Initial code is required"}), 400
 
-        h = supabase_headers(session.get("access_token"))
-        h["Prefer"] = "return=representation"
-        r = requests.post(
-            f"{SUPABASE_URL}/rest/v1/challenges",
-            headers=h,
-            json=challenge_data
-        )
+        # Generate challenge ID
+        import hashlib, time as _time
+        cid = hashlib.md5(f"{title}{_time.time()}".encode()).hexdigest()[:12]
 
-        if r.status_code in [200, 201]:
-            result = r.json()
-            cid = result[0]["id"] if isinstance(result, list) else result.get("id", "")
-            return jsonify({"ok": True, "id": cid})
-        return jsonify({"error": "Failed to create", "detail": r.text}), 500
+        # Auto-build evaluator from selected metrics
+        if "custom" in metrics and custom_eval:
+            evaluator_code = custom_eval
+        else:
+            evaluator_code = build_evaluator(metrics, weights, test_data)
+
+        # Run evaluator once on initial code to get initial score
+        initial_score = 0
+        try:
+            from engine import SafeEvaluator
+            evaluator = SafeEvaluator(timeout_seconds=30)
+            initial_score = evaluator.evaluate(initial_code, evaluator_code)
+            if initial_score <= 0:
+                initial_score = 1  # minimum score
+        except Exception as e:
+            print(f"[EVAL] Initial eval failed: {e}")
+            initial_score = 1
+
+        # Register in the engine (makes it live immediately)
+        try:
+            challenge_manager.register_challenge(
+                challenge_id=cid,
+                title=title,
+                initial_code=initial_code,
+                evaluator_code=evaluator_code,
+                initial_score=initial_score,
+            )
+        except Exception as e:
+            print(f"[ENGINE] Registration failed: {e}")
+            return jsonify({"error": f"Engine error: {str(e)}"}), 500
+
+        # Save to Supabase for persistence
+        try:
+            db_save_challenge(
+                cid, title, initial_code, evaluator_code, initial_score,
+                best_score=initial_score, best_agent=None,
+            )
+            # Also save full metadata
+            requests.patch(
+                f"{SUPABASE_URL}/rest/v1/challenges?id=eq.{cid}",
+                headers=supabase_headers(),
+                json={
+                    "description": description,
+                    "category": category,
+                    "privacy": privacy,
+                    "duration_days": duration_days,
+                    "reward_amount": reward_amount,
+                    "owner_id": user["id"],
+                    "metrics": metrics,
+                    "weights": weights,
+                    "test_data": test_data,
+                },
+                timeout=5
+            )
+        except Exception as e:
+            print(f"[DB] Save challenge failed: {e}")
+
+        return jsonify({"ok": True, "id": cid, "initial_score": initial_score})
 
     return render_template("create_challenge.html", user=user)
+
+
+def build_evaluator(metrics, weights, test_data=""):
+    """Auto-build evaluator code from selected metrics"""
+
+    parts = []
+    parts.append('import time')
+    parts.append('import sys')
+    parts.append('import tracemalloc')
+    parts.append('')
+    parts.append('def evaluate(solution_path):')
+    parts.append('    """Auto-generated evaluator"""')
+    parts.append('    with open(solution_path) as f:')
+    parts.append('        code = f.read()')
+    parts.append('')
+    parts.append('    # Load the solution')
+    parts.append('    namespace = {}')
+    parts.append('    try:')
+    parts.append('        exec(code, namespace)')
+    parts.append('    except Exception as e:')
+    parts.append('        return 0  # Code has errors')
+    parts.append('')
+    parts.append('    solve_fn = namespace.get("solve")')
+    parts.append('    if not solve_fn:')
+    parts.append('        return 0  # No solve function')
+    parts.append('')
+
+    # Build test data
+    parts.append('    # Test data')
+    if test_data:
+        parts.append(f'    test_input = {repr(test_data)}')
+    else:
+        parts.append('    import random')
+        parts.append('    random.seed(42)')
+        parts.append('    test_input = [random.randint(0, 1000000) for _ in range(100000)]')
+
+    parts.append('')
+    parts.append('    scores = {}')
+    parts.append('')
+
+    # Speed metric
+    if "speed" in metrics:
+        parts.append('    # Speed: elements per second (higher = better)')
+        parts.append('    try:')
+        parts.append('        start = time.perf_counter()')
+        parts.append('        result = solve_fn(test_input if not isinstance(test_input, str) else list(test_input))')
+        parts.append('        elapsed = time.perf_counter() - start')
+        parts.append('        n = len(test_input) if hasattr(test_input, "__len__") else 1000')
+        parts.append('        scores["speed"] = n / max(elapsed, 0.0001)')
+        parts.append('    except:')
+        parts.append('        scores["speed"] = 0')
+        parts.append('')
+
+    # Memory metric
+    if "memory" in metrics:
+        parts.append('    # Memory: inverse peak RAM (less memory = higher score)')
+        parts.append('    try:')
+        parts.append('        tracemalloc.start()')
+        parts.append('        result = solve_fn(test_input if not isinstance(test_input, str) else list(test_input))')
+        parts.append('        current, peak = tracemalloc.get_traced_memory()')
+        parts.append('        tracemalloc.stop()')
+        parts.append('        scores["memory"] = 1000000000 / max(peak, 1)  # inverse')
+        parts.append('    except:')
+        parts.append('        scores["memory"] = 0')
+        parts.append('        try: tracemalloc.stop()')
+        parts.append('        except: pass')
+        parts.append('')
+
+    # Correctness metric
+    if "correctness" in metrics:
+        parts.append('    # Correctness: must match expected output')
+        parts.append('    try:')
+        parts.append('        result = solve_fn(test_input if not isinstance(test_input, str) else list(test_input))')
+        if test_data:
+            parts.append('        expected = test_input  # user provided test data')
+        else:
+            parts.append('        expected = sorted(test_input)')
+        parts.append('        scores["correctness"] = 1.0 if list(result) == list(expected) else 0.0')
+        parts.append('    except:')
+        parts.append('        scores["correctness"] = 0')
+        parts.append('')
+
+    # Code size metric
+    if "size" in metrics:
+        parts.append('    # Code size: shorter code = higher score')
+        parts.append('    code_len = len(code.strip())')
+        parts.append('    scores["size"] = 100000 / max(code_len, 1)')
+        parts.append('')
+
+    # Compression metric
+    if "compression" in metrics:
+        parts.append('    # Compression ratio: smaller output = higher score')
+        parts.append('    try:')
+        parts.append('        compress_fn = namespace.get("compress")')
+        parts.append('        decompress_fn = namespace.get("decompress")')
+        parts.append('        if compress_fn and decompress_fn:')
+        parts.append('            test_bytes = test_input.encode() if isinstance(test_input, str) else bytes(str(test_input), "utf-8")')
+        parts.append('            compressed = compress_fn(test_bytes)')
+        parts.append('            decompressed = decompress_fn(compressed)')
+        parts.append('            if decompressed == test_bytes:')
+        parts.append('                scores["compression"] = len(test_bytes) / max(len(compressed), 1)')
+        parts.append('            else:')
+        parts.append('                scores["compression"] = 0')
+        parts.append('        else:')
+        parts.append('            scores["compression"] = 0')
+        parts.append('    except:')
+        parts.append('        scores["compression"] = 0')
+        parts.append('')
+
+    # Accuracy metric
+    if "accuracy" in metrics:
+        parts.append('    # Accuracy: closer to expected = higher score')
+        parts.append('    try:')
+        parts.append('        result = solve_fn(test_input if not isinstance(test_input, str) else list(test_input))')
+        parts.append('        scores["accuracy"] = 1.0  # placeholder — customize per challenge')
+        parts.append('    except:')
+        parts.append('        scores["accuracy"] = 0')
+        parts.append('')
+
+    # Scalability metric
+    if "scalability" in metrics:
+        parts.append('    # Scalability: performance on 10x data')
+        parts.append('    try:')
+        parts.append('        import random as _r')
+        parts.append('        _r.seed(99)')
+        parts.append('        big_input = [_r.randint(0, 1000000) for _ in range(1000000)]')
+        parts.append('        start = time.perf_counter()')
+        parts.append('        solve_fn(big_input)')
+        parts.append('        elapsed = time.perf_counter() - start')
+        parts.append('        scores["scalability"] = len(big_input) / max(elapsed, 0.0001)')
+        parts.append('    except:')
+        parts.append('        scores["scalability"] = 0')
+        parts.append('')
+
+    # Combine scores with weights
+    parts.append('    # Combine scores')
+    parts.append('    if not scores:')
+    parts.append('        return 0')
+    parts.append('')
+
+    # If correctness is a metric, fail if incorrect
+    if "correctness" in metrics:
+        parts.append('    if scores.get("correctness", 1) == 0:')
+        parts.append('        return 0  # Must be correct')
+        parts.append('')
+
+    parts.append('    # Apply weights')
+    parts.append(f'    weights = {repr(weights)}')
+    parts.append('    total_weight = sum(weights.values()) if weights else len(scores)')
+    parts.append('    if total_weight == 0:')
+    parts.append('        total_weight = 1')
+    parts.append('')
+    parts.append('    final_score = 0')
+    parts.append('    for metric, value in scores.items():')
+    parts.append('        if metric == "correctness":')
+    parts.append('            continue  # already checked above')
+    parts.append('        w = weights.get(metric, 100/len(scores)) / total_weight')
+    parts.append('        final_score += value * w')
+    parts.append('')
+    parts.append('    return round(final_score, 2)')
+
+    return '\n'.join(parts)
 
 
 # ===== EVOLUTION API — The Real Engine =====

@@ -490,8 +490,8 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
         .then(function(r){return r.json();})
         .then(function(d){
             if(d.ok){
-                showToast("Challenge posted!");
-                setTimeout(function(){window.location.href="/challenges";}, 1500);
+                showToast("Challenge posted! Initial score: " + (d.initial_score || 0));
+                setTimeout(function(){window.location.href="/challenge/" + d.id;}, 1500);
             } else {
                 showToast("Error: " + (d.error||"Unknown"), true);
                 btn.disabled = false;
