@@ -256,8 +256,16 @@ body.rtl .nav-links.active{left:0!important}
     (function(){
         var canvas = document.getElementById('island-canvas');
         if(!canvas) return;
+
+        // Make canvas responsive
+        function resizeCanvas(){
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            canvas.height = Math.max(350, canvas.width * 0.5);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
         var ctx = canvas.getContext('2d');
-        var W = canvas.width, H = canvas.height;
 
         // Island data from server
         var islands = [
@@ -272,196 +280,310 @@ body.rtl .nav-links.active{left:0!important}
 
         var numIslands = islands.length;
         var colors = ['#22d3ee','#818cf8','#34d399','#f59e0b','#f87171','#a78bfa','#fb923c','#38bdf8','#4ade80','#e879f9'];
+        var sandColors = ['#1a2332','#1c2536','#1e2738','#1a2535','#1d2637','#1b2433','#1f2839','#1c2636','#1e2838','#1d2737'];
         var agents = [];
-        var particles = [];
+        var waterParticles = [];
         var migrationShips = [];
+        var bubbles = [];
         var time = 0;
 
-        // Position islands in circle
-        var cx = W/2, cy = H/2, radius = Math.min(W,H)*0.32;
-        var islandPositions = [];
-        for(var i=0;i<numIslands;i++){
-            var angle = (i/numIslands)*Math.PI*2 - Math.PI/2;
-            islandPositions.push({x: cx+Math.cos(angle)*radius, y: cy+Math.sin(angle)*radius});
+        function getPositions(){
+            var W = canvas.width, H = canvas.height;
+            var cx = W/2, cy = H/2;
+            var radius = Math.min(W,H)*0.32;
+            var positions = [];
+            for(var i=0;i<numIslands;i++){
+                var angle = (i/numIslands)*Math.PI*2 - Math.PI/2;
+                positions.push({x: cx+Math.cos(angle)*radius, y: cy+Math.sin(angle)*radius});
+            }
+            return {positions:positions, cx:cx, cy:cy, W:W, H:H};
         }
 
         // Create agent dots
-        for(var i=0;i<numIslands;i++){
-            var count = Math.min(islands[i].agents, 20); // max 20 dots per island
-            for(var j=0;j<count;j++){
-                var angle = Math.random()*Math.PI*2;
-                var dist = 20 + Math.random()*25;
-                agents.push({
-                    island: i,
-                    x: islandPositions[i].x + Math.cos(angle)*dist,
-                    y: islandPositions[i].y + Math.sin(angle)*dist,
-                    vx: (Math.random()-0.5)*0.3,
-                    vy: (Math.random()-0.5)*0.3,
-                    size: 2+Math.random()*2,
-                    phase: Math.random()*Math.PI*2,
-                });
+        function createAgents(){
+            agents = [];
+            var p = getPositions();
+            for(var i=0;i<numIslands;i++){
+                var count = Math.max(islands[i].agents, 3); // show at least 3 for visual
+                count = Math.min(count, 25);
+                for(var j=0;j<count;j++){
+                    var angle = Math.random()*Math.PI*2;
+                    var dist = 18 + Math.random()*28;
+                    agents.push({
+                        island: i,
+                        ox: Math.cos(angle)*dist,
+                        oy: Math.sin(angle)*dist,
+                        vx: (Math.random()-0.5)*0.4,
+                        vy: (Math.random()-0.5)*0.4,
+                        size: 2+Math.random()*2.5,
+                        phase: Math.random()*Math.PI*2,
+                        sending: 0,
+                    });
+                }
             }
         }
+        createAgents();
 
         // Water particles
-        for(var i=0;i<40;i++){
-            particles.push({x:Math.random()*W, y:Math.random()*H, size:1+Math.random()*2, speed:0.2+Math.random()*0.3, phase:Math.random()*Math.PI*2});
+        for(var i=0;i<60;i++){
+            waterParticles.push({x:Math.random(), y:Math.random(), size:0.5+Math.random()*2, speed:0.0003+Math.random()*0.0004, phase:Math.random()*Math.PI*2, alpha:0.02+Math.random()*0.04});
+        }
+
+        // Bubbles
+        for(var i=0;i<15;i++){
+            bubbles.push({x:Math.random(), y:Math.random(), size:1+Math.random()*3, speed:0.0005+Math.random()*0.001, phase:Math.random()*Math.PI*2});
         }
 
         function draw(){
             time += 0.016;
+            var layout = getPositions();
+            var W = layout.W, H = layout.H, cx = layout.cx, cy = layout.cy;
+            var positions = layout.positions;
+
             ctx.clearRect(0,0,W,H);
 
-            // Ocean background
-            var grad = ctx.createRadialGradient(cx,cy,50,cx,cy,W*0.6);
-            grad.addColorStop(0,'#0a1628');
-            grad.addColorStop(1,'#060911');
-            ctx.fillStyle = grad;
+            // Deep ocean gradient
+            var ocean = ctx.createRadialGradient(cx,cy,30,cx,cy,W*0.7);
+            ocean.addColorStop(0,'#0c1a2e');
+            ocean.addColorStop(0.5,'#091525');
+            ocean.addColorStop(1,'#060911');
+            ctx.fillStyle = ocean;
             ctx.fillRect(0,0,W,H);
 
-            // Water particles
-            ctx.fillStyle = '#22d3ee08';
-            for(var i=0;i<particles.length;i++){
-                var p = particles[i];
-                p.x += p.speed;
-                p.y += Math.sin(time*2+p.phase)*0.2;
-                if(p.x > W) p.x = 0;
+            // Water waves
+            ctx.strokeStyle = '#22d3ee06';
+            ctx.lineWidth = 1;
+            for(var w=0;w<5;w++){
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                for(var x=0;x<W;x+=3){
+                    var y2 = H*0.3 + w*40 + Math.sin(x*0.01+time+w)*15 + Math.sin(x*0.02+time*1.5)*8;
+                    x===0 ? ctx.moveTo(x,y2) : ctx.lineTo(x,y2);
+                }
+                ctx.stroke();
+            }
+
+            // Water particles (floating specs)
+            for(var i=0;i<waterParticles.length;i++){
+                var p = waterParticles[i];
+                p.x += p.speed;
+                if(p.x > 1) p.x = 0;
+                var px = p.x*W, py = p.y*H + Math.sin(time*1.5+p.phase)*3;
+                ctx.fillStyle = 'rgba(34,211,238,'+p.alpha+')';
+                ctx.beginPath();
+                ctx.arc(px, py, p.size, 0, Math.PI*2);
                 ctx.fill();
             }
 
-            // Ring connections (migration paths)
-            ctx.strokeStyle = '#21262d';
-            ctx.lineWidth = 1;
-            ctx.setLineDash([4,8]);
+            // Bubbles
+            for(var i=0;i<bubbles.length;i++){
+                var b = bubbles[i];
+                b.y -= b.speed;
+                if(b.y < 0) {b.y = 1; b.x = Math.random();}
+                var bx = b.x*W + Math.sin(time+b.phase)*5, by = b.y*H;
+                ctx.strokeStyle = 'rgba(34,211,238,0.08)';
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.arc(bx, by, b.size, 0, Math.PI*2);
+                ctx.stroke();
+            }
+
+            // Ring connections (dashed migration paths)
             for(var i=0;i<numIslands;i++){
                 var next = (i+1)%numIslands;
+                var dx = positions[next].x - positions[i].x;
+                var dy = positions[next].y - positions[i].y;
+                var len = Math.sqrt(dx*dx+dy*dy);
+
+                ctx.strokeStyle = '#21262d';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([6,10]);
                 ctx.beginPath();
-                ctx.moveTo(islandPositions[i].x, islandPositions[i].y);
-                ctx.lineTo(islandPositions[next].x, islandPositions[next].y);
+                ctx.moveTo(positions[i].x+dx/len*35, positions[i].y+dy/len*35);
+                ctx.lineTo(positions[next].x-dx/len*35, positions[next].y-dy/len*35);
                 ctx.stroke();
+
+                // Arrow at midpoint
+                var mx = (positions[i].x+positions[next].x)/2;
+                var my = (positions[i].y+positions[next].y)/2;
+                var angle = Math.atan2(dy,dx);
+                ctx.fillStyle = '#21262d';
+                ctx.setLineDash([]);
+                ctx.beginPath();
+                ctx.moveTo(mx+Math.cos(angle)*6, my+Math.sin(angle)*6);
+                ctx.lineTo(mx+Math.cos(angle+2.5)*5, my+Math.sin(angle+2.5)*5);
+                ctx.lineTo(mx+Math.cos(angle-2.5)*5, my+Math.sin(angle-2.5)*5);
+                ctx.fill();
             }
             ctx.setLineDash([]);
 
-            // Islands (glowing circles)
+            // Islands
             for(var i=0;i<numIslands;i++){
-                var pos = islandPositions[i];
+                var pos = positions[i];
                 var col = colors[i%colors.length];
-                var pulse = 1 + Math.sin(time*2+i)*0.05;
+                var pulse = 1 + Math.sin(time*1.8+i*0.7)*0.06;
+                var islandR = 32;
 
-                // Glow
-                var glow = ctx.createRadialGradient(pos.x,pos.y,10,pos.x,pos.y,50*pulse);
-                glow.addColorStop(0, col+'30');
+                // Sand/beach ring
+                ctx.fillStyle = sandColors[i%sandColors.length];
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, islandR+8, 0, Math.PI*2);
+                ctx.fill();
+
+                // Outer glow
+                var glow = ctx.createRadialGradient(pos.x,pos.y,islandR,pos.x,pos.y,(islandR+40)*pulse);
+                glow.addColorStop(0, col+'20');
                 glow.addColorStop(1, col+'00');
                 ctx.fillStyle = glow;
                 ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 50*pulse, 0, Math.PI*2);
+                ctx.arc(pos.x, pos.y, (islandR+40)*pulse, 0, Math.PI*2);
                 ctx.fill();
 
                 // Island body
-                ctx.fillStyle = '#161b22';
-                ctx.strokeStyle = col+'80';
-                ctx.lineWidth = 2;
+                ctx.fillStyle = '#0d1117';
+                ctx.strokeStyle = col+'90';
+                ctx.lineWidth = 2.5;
                 ctx.beginPath();
-                ctx.arc(pos.x, pos.y, 30, 0, Math.PI*2);
+                ctx.arc(pos.x, pos.y, islandR, 0, Math.PI*2);
                 ctx.fill();
                 ctx.stroke();
 
-                // Label
+                // Evaluator icon in center
+                ctx.fillStyle = '#f59e0b60';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y-2, 6, 0, Math.PI*2);
+                ctx.fill();
                 ctx.fillStyle = '#f0f6fc';
-                ctx.font = 'bold 10px Plus Jakarta Sans';
+                ctx.font = '8px Plus Jakarta Sans';
                 ctx.textAlign = 'center';
-                ctx.fillText('Island '+islands[i].id, pos.x, pos.y-8);
+                ctx.fillText('⚡', pos.x, pos.y+1);
+
+                // Label
+                ctx.fillStyle = '#8b949e';
+                ctx.font = 'bold 9px Plus Jakarta Sans';
+                ctx.fillText('Island '+islands[i].id, pos.x, pos.y-16);
 
                 // Score
                 ctx.fillStyle = col;
-                ctx.font = 'bold 12px JetBrains Mono';
-                var scoreText = islands[i].score > 1000000 ? (islands[i].score/1000000).toFixed(1)+'M' : islands[i].score > 1000 ? (islands[i].score/1000).toFixed(0)+'K' : islands[i].score;
-                ctx.fillText(scoreText, pos.x, pos.y+6);
+                ctx.font = 'bold 13px JetBrains Mono';
+                var scoreText = islands[i].score > 1000000 ? (islands[i].score/1000000).toFixed(1)+'M' :
+                                islands[i].score > 1000 ? (islands[i].score/1000).toFixed(0)+'K' :
+                                islands[i].score.toString();
+                ctx.fillText(scoreText, pos.x, pos.y+14);
 
                 // Agent count
                 ctx.fillStyle = '#6e7681';
-                ctx.font = '9px Plus Jakarta Sans';
-                ctx.fillText(islands[i].agents+' agents', pos.x, pos.y+18);
+                ctx.font = '8px Plus Jakarta Sans';
+                ctx.fillText(islands[i].agents+' agents', pos.x, pos.y+24);
             }
 
-            // Agents (moving dots)
+            // Agents (orbiting dots)
             for(var i=0;i<agents.length;i++){
                 var a = agents[i];
-                var home = islandPositions[a.island];
+                if(a.island >= positions.length) continue;
+                var home = positions[a.island];
 
-                // Orbit around island
-                a.x += a.vx;
-                a.y += a.vy;
+                // Update position
+                a.ox += a.vx;
+                a.oy += a.vy;
 
-                // Stay near island
-                var dx = home.x - a.x, dy = home.y - a.y;
-                var dist = Math.sqrt(dx*dx+dy*dy);
-                if(dist > 35){a.vx += dx*0.002; a.vy += dy*0.002;}
+                // Keep near island
+                var dist = Math.sqrt(a.ox*a.ox+a.oy*a.oy);
+                if(dist > 40){a.vx -= a.ox*0.003; a.vy -= a.oy*0.003;}
+                if(dist < 15){a.vx += a.ox*0.003; a.vy += a.oy*0.003;}
 
-                // Random jitter
-                a.vx += (Math.random()-0.5)*0.05;
-                a.vy += (Math.random()-0.5)*0.05;
-                a.vx *= 0.98; a.vy *= 0.98;
+                a.vx += (Math.random()-0.5)*0.06;
+                a.vy += (Math.random()-0.5)*0.06;
+                a.vx *= 0.97; a.vy *= 0.97;
 
-                var alpha = 0.5 + Math.sin(time*3+a.phase)*0.3;
+                var ax = home.x + a.ox;
+                var ay = home.y + a.oy;
+
+                // Agent dot
+                var alpha = 0.5 + Math.sin(time*2.5+a.phase)*0.3;
                 ctx.fillStyle = colors[a.island%colors.length];
                 ctx.globalAlpha = alpha;
                 ctx.beginPath();
-                ctx.arc(a.x, a.y, a.size, 0, Math.PI*2);
+                ctx.arc(ax, ay, a.size, 0, Math.PI*2);
                 ctx.fill();
                 ctx.globalAlpha = 1;
 
-                // Occasionally send a "solution" line to evaluator
-                if(Math.random() < 0.003){
-                    ctx.strokeStyle = colors[a.island%colors.length]+'40';
-                    ctx.lineWidth = 0.5;
+                // Sending animation (solution line to evaluator)
+                if(a.sending > 0){
+                    a.sending -= 0.02;
+                    ctx.strokeStyle = colors[a.island%colors.length]+'60';
+                    ctx.lineWidth = 1;
                     ctx.beginPath();
-                    ctx.moveTo(a.x, a.y);
+                    ctx.moveTo(ax, ay);
                     ctx.lineTo(home.x, home.y);
                     ctx.stroke();
+
+                    // Small particle along the line
+                    var t = 1 - a.sending;
+                    var px = ax + (home.x-ax)*t;
+                    var py = ay + (home.y-ay)*t;
+                    ctx.fillStyle = colors[a.island%colors.length];
+                    ctx.beginPath();
+                    ctx.arc(px, py, 1.5, 0, Math.PI*2);
+                    ctx.fill();
+                }
+
+                // Random chance to send
+                if(Math.random() < 0.004 && a.sending <= 0){
+                    a.sending = 1;
                 }
             }
 
-            // Migration ships (animated)
-            if(Math.random() < 0.005 && numIslands > 1){
+            // Migration ships
+            if(Math.random() < 0.008 && numIslands > 1){
                 var from = Math.floor(Math.random()*numIslands);
                 var to = (from+1)%numIslands;
-                migrationShips.push({from:from, to:to, t:0, speed:0.005+Math.random()*0.005});
+                migrationShips.push({from:from, to:to, t:0, speed:0.004+Math.random()*0.004});
             }
 
             for(var i=migrationShips.length-1;i>=0;i--){
                 var ship = migrationShips[i];
                 ship.t += ship.speed;
                 if(ship.t >= 1){migrationShips.splice(i,1);continue;}
+                if(ship.from >= positions.length || ship.to >= positions.length) continue;
 
-                var fromPos = islandPositions[ship.from];
-                var toPos = islandPositions[ship.to];
+                var fromPos = positions[ship.from];
+                var toPos = positions[ship.to];
                 var sx = fromPos.x + (toPos.x-fromPos.x)*ship.t;
                 var sy = fromPos.y + (toPos.y-fromPos.y)*ship.t;
 
+                // Ship trail
+                ctx.strokeStyle = '#f59e0b15';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                var tx = fromPos.x + (toPos.x-fromPos.x)*Math.max(0,ship.t-0.15);
+                var ty = fromPos.y + (toPos.y-fromPos.y)*Math.max(0,ship.t-0.15);
+                ctx.moveTo(tx, ty);
+                ctx.lineTo(sx, sy);
+                ctx.stroke();
+
                 // Ship glow
+                var shipGlow = ctx.createRadialGradient(sx,sy,1,sx,sy,8);
+                shipGlow.addColorStop(0,'#f59e0b90');
+                shipGlow.addColorStop(1,'#f59e0b00');
+                ctx.fillStyle = shipGlow;
+                ctx.beginPath();
+                ctx.arc(sx, sy, 8, 0, Math.PI*2);
+                ctx.fill();
+
+                // Ship dot
                 ctx.fillStyle = '#f59e0b';
-                ctx.globalAlpha = 0.8;
                 ctx.beginPath();
                 ctx.arc(sx, sy, 3, 0, Math.PI*2);
                 ctx.fill();
-
-                // Trail
-                ctx.globalAlpha = 0.2;
-                ctx.beginPath();
-                ctx.arc(sx, sy, 6, 0, Math.PI*2);
-                ctx.fill();
-                ctx.globalAlpha = 1;
             }
 
-            // Center label
-            ctx.fillStyle = '#6e768140';
-            ctx.font = '10px Plus Jakarta Sans';
+            // Center info
+            ctx.fillStyle = '#6e768130';
+            ctx.font = '9px Plus Jakarta Sans';
             ctx.textAlign = 'center';
-            ctx.fillText('Ring Migration', cx, cy-6);
-            ctx.fillText('🔄', cx, cy+10);
+            ctx.fillText('Ring Migration', cx, cy-4);
+            ctx.font = '12px sans-serif';
+            ctx.fillText('🔄', cx, cy+12);
 
             requestAnimationFrame(draw);
         }

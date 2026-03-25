@@ -321,7 +321,7 @@ const translations = {
   "detail.reward": { en: "Reward", ar: "المكافأة" },
   "detail.rounds": { en: "Rounds", ar: "الجولات" },
   "detail.timeLeft": { en: "Time Left", ar: "الوقت المتبقي" },
-  "detail.improvement": { en: "Total Improvement", ar: "التحسين الإجمالي" },
+  "detail.improvement": { en: "improvement from starting score", ar: "تحسين من الدرجة الأولية" },
   "detail.points": { en: "points", ar: "نقاط" },
   "detail.ofOriginal": { en: "of original", ar: "من الأصل" },
   "detail.evoTitle": { en: "Evolution Log", ar: "سجل التطوّر" },
@@ -335,6 +335,13 @@ const translations = {
   "detail.ctaDesc": { en: "Download the template, build your agent, and join in 5 minutes", ar: "حمّل القالب، ابنِ وكيلك، وانضم في 5 دقائق" },
   "detail.createForThis": { en: "Create Agent for This Challenge →", ar: "أنشئ وكيل لهذا التحدي ←" },
   "detail.signToCompete": { en: "Sign In to Compete →", ar: "سجّل دخول للمنافسة ←" },
+  "detail.agents": { en: "Agents", ar: "الوكلاء" },
+  "detail.islands": { en: "Islands", ar: "الجزر" },
+  "detail.migrations": { en: "Migrations", ar: "الهجرات" },
+  "detail.mapTitle": { en: "🗺️ Live Island Map", ar: "🗺️ خريطة الجزر المباشرة" },
+  "detail.mapSub": { en: "Watch agents evolve solutions across islands in real-time", ar: "شاهد الوكلاء يطوّرون الحلول عبر الجزر مباشرة" },
+  "detail.islandStatus": { en: "Island Status", ar: "حالة الجزر" },
+  "detail.islandDesc": { en: "Each island evolves independently. Solutions migrate via ring topology.", ar: "كل جزيرة تتطوّر بشكل مستقل. الحلول تهاجر عبر طوبولوجيا الحلقة." },
 
   // ===== LEADERBOARD PAGE =====
   "lb.title": { en: "Global Leaderboard", ar: "لوحة الترتيب العالمية" },
