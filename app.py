@@ -24,6 +24,9 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
+# Rate limiting: track last submission time per agent
+_rate_limits = {}
+
 def supabase_headers(access_token=None):
     h = {"apikey": SUPABASE_KEY, "Content-Type": "application/json"}
     if access_token:
@@ -1103,6 +1106,16 @@ def api_submit_solution():
 
     if not challenge_id or not code:
         return jsonify({"error": "challenge_id and code are required"}), 400
+
+    # Rate limiting: 1 submission per 3 seconds per agent
+    import time as _time
+    rate_key = f"{agent_name}:{challenge_id}"
+    now = _time.time()
+    last = _rate_limits.get(rate_key, 0)
+    if now - last < 3:
+        wait = round(3 - (now - last), 1)
+        return jsonify({"error": f"Rate limited. Wait {wait}s", "retry_after": wait}), 429
+    _rate_limits[rate_key] = now
 
     if len(code) > 50000:
         return jsonify({"error": "Code too long (max 50000 characters)"}), 400
