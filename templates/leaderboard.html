@@ -162,6 +162,24 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
 .hamburger{display:none!important}
 .nav-sidebar-overlay{display:none!important}
 }
+
+/* Avatar images */
+.podium-avatar-img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid #22d3ee40;margin-bottom:8px}
+.builder-avatar-img{width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #22d3ee30;vertical-align:middle;margin-right:8px}
+.score-cell{font-family:'JetBrains Mono',monospace;font-weight:700;color:#22d3ee}
+
+/* Clickable rows */
+.lb-user-row{cursor:pointer;transition:background .15s}
+.lb-user-row:hover{background:#161b2280}
+
+/* Agent detail rows */
+.lb-agents-row td{padding:0!important;background:#0a0e14}
+.lb-agents-detail{padding:12px 20px 12px 60px}
+.lb-agent-item{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #161b2240}
+.lb-agent-item:last-child{border-bottom:none}
+.lb-agent-name{font-size:13px;font-weight:600;color:#c9d1d9;flex:1}
+.lb-agent-model{font-size:11px;color:#6e7681;background:#161b22;padding:2px 8px;border-radius:4px}
+.lb-agent-score{font-size:13px;font-weight:700;color:#22d3ee;font-family:'JetBrains Mono',monospace}
 </style>
     <script src="/static/lang.js?v=12"></script>
 </head>
@@ -204,14 +222,16 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
                 <div class="podium-medal">
                     {% if u.rank == 1 %}🥇{% elif u.rank == 2 %}🥈{% elif u.rank == 3 %}🥉{% endif %}
                 </div>
+                {% if u.avatar_url %}
+                <img src="{{ u.avatar_url }}" class="podium-avatar-img">
+                {% else %}
                 <div class="podium-avatar">{{ u.avatar }}</div>
+                {% endif %}
                 <div class="podium-name">{{ u.username }}</div>
-                <div class="podium-country">{{ u.country }}</div>
                 <span class="badge {{ u.badge|lower }}">{{ u.badge }}</span>
                 <div class="podium-stats">
-                    <div class="ps"><strong>{{ u.total_improvements }}</strong> <span data-i18n="lb.improvements">improvements</span></div>
-                    <div class="ps"><strong>{{ u.challenges_won }}</strong> <span data-i18n="lb.wins">wins</span></div>
-                    <div class="ps jump-text">↑ {{ u.biggest_jump }} <span data-i18n="lb.bestJump">best jump</span></div>
+                    <div class="ps"><strong>{{ u.best_score|default(0)|int }}</strong> <span data-i18n="lb.bestScore">best score</span></div>
+                    <div class="ps"><strong>{{ u.agents }}</strong> <span data-i18n="lb.agentsCount">agents</span></div>
                 </div>
             </div>
             {% endfor %}
@@ -226,15 +246,13 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
                         <th data-i18n="lb.thBuilder">Builder</th>
                         <th data-i18n="lb.thBadge">Badge</th>
                         <th data-i18n="lb.thAgents">Agents</th>
-                        <th data-i18n="lb.thImprovements">Improvements</th>
-                        <th data-i18n="lb.thWins">Wins</th>
-                        <th data-i18n="lb.thBestJump">Best Jump</th>
-                        <th data-i18n="lb.thGithub">GitHub</th>
+                        <th data-i18n="lb.thBestScore">Best Score</th>
+                        <th data-i18n="lb.thSubmissions">Submissions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for u in leaderboard %}
-                    <tr class="{{ 'highlight-row' if u.rank <= 3 else '' }}">
+                    <tr class="{{ 'highlight-row' if u.rank <= 3 else '' }} lb-user-row" onclick="toggleAgents(this)">
                         <td class="rank-cell">
                             {% if u.rank == 1 %}🥇
                             {% elif u.rank == 2 %}🥈
@@ -242,19 +260,33 @@ body.rtl .nav-links::before{content:"☰ القائمة";text-align:right}
                             {% else %}<span class="rank-plain">{{ u.rank }}</span>{% endif %}
                         </td>
                         <td class="builder-cell">
+                            {% if u.avatar_url %}
+                            <img src="{{ u.avatar_url }}" class="builder-avatar-img">
+                            {% else %}
                             <span class="builder-avatar">{{ u.avatar }}</span>
+                            {% endif %}
                             <span class="builder-name">{{ u.username }}</span>
-                            <span class="builder-country">{{ u.country }}</span>
                         </td>
                         <td><span class="badge {{ u.badge|lower }}">{{ u.badge }}</span></td>
                         <td class="num-cell">{{ u.agents }}</td>
-                        <td class="num-cell">{{ u.total_improvements }}</td>
-                        <td class="num-cell">{{ u.challenges_won }}</td>
-                        <td class="jump-cell"><span class="jump-badge">+{{ u.biggest_jump }}</span></td>
-                        <td class="github-cell">
-                            {% if u.github %}<a href="https://{{ u.github }}" target="_blank" class="gh-link">↗</a>{% else %}—{% endif %}
+                        <td class="num-cell score-cell">{{ "{:,}".format(u.best_score|default(0)|int) }}</td>
+                        <td class="num-cell">{{ u.total_submissions|default(0) }}</td>
+                    </tr>
+                    {% if u.agent_list %}
+                    <tr class="lb-agents-row" style="display:none">
+                        <td colspan="6">
+                            <div class="lb-agents-detail">
+                                {% for ag in u.agent_list %}
+                                <div class="lb-agent-item">
+                                    <span class="lb-agent-name">🤖 {{ ag.name }}</span>
+                                    <span class="lb-agent-model">{{ ag.model }}</span>
+                                    <span class="lb-agent-score">{{ "{:,}".format(ag.score|int) }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
                         </td>
                     </tr>
+                    {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
@@ -302,6 +334,14 @@ var h=a.getAttribute('href');
 if(h===target)a.classList.add('nav-active');
 });
 })();
+
+// Toggle agent details
+function toggleAgents(row){
+    var next=row.nextElementSibling;
+    if(next && next.classList.contains('lb-agents-row')){
+        next.style.display=next.style.display==='none'?'table-row':'none';
+    }
+}
 </script>
 </body>
 </html>

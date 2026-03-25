@@ -254,23 +254,95 @@ def challenge_detail(cid):
 
 @app.route("/leaderboard")
 def leaderboard_page():
-    # Build real leaderboard from engine
+    # Build leaderboard grouped by users from Supabase
     real_leaderboard = []
-    agent_scores = {}
-    for cid in challenge_manager.challenges:
-        board = challenge_manager.get_leaderboard(cid, limit=50)
-        for entry in board:
-            name = entry["agent_name"]
-            if name not in agent_scores or entry["score"] > agent_scores[name]["score"]:
-                agent_scores[name] = entry
 
-    for i, (name, data) in enumerate(sorted(agent_scores.items(), key=lambda x: x[1]["score"], reverse=True)):
-        real_leaderboard.append({
-            "rank": i + 1, "username": name, "avatar": "🤖",
-            "agents": 1, "total_improvements": data.get("round", 0),
-            "biggest_jump": int(data["score"]), "badge": "EvoRookie",
-            "challenges_won": 0, "github": "", "country": "🌍",
-        })
+    try:
+        # Get all solutions with user info
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/solutions?select=agent_name,score,user_id&score=gt.0&order=score.desc&limit=500",
+            headers=supabase_headers(),
+            timeout=10
+        )
+        solutions = r.json() if r.status_code == 200 else []
+
+        # Get all agents with user info
+        r2 = requests.get(
+            f"{SUPABASE_URL}/rest/v1/agents?select=name,user_id,model&is_active=eq.true",
+            headers=supabase_headers(),
+            timeout=10
+        )
+        all_agents = r2.json() if r2.status_code == 200 else []
+
+        # Get all profiles
+        r3 = requests.get(
+            f"{SUPABASE_URL}/rest/v1/profiles?select=id,username,name,avatar_url,github",
+            headers=supabase_headers(),
+            timeout=10
+        )
+        profiles = {p["id"]: p for p in (r3.json() if r3.status_code == 200 else [])}
+
+        # Group solutions by user_id
+        user_best = {}  # user_id -> {best_score, agents: {name: score}}
+        for sol in solutions:
+            uid = sol.get("user_id")
+            if not uid:
+                # No user linked — show as individual agent
+                uid = "anon_" + sol["agent_name"]
+            if uid not in user_best:
+                user_best[uid] = {"best_score": 0, "agents": {}, "total_submissions": 0}
+            user_best[uid]["total_submissions"] += 1
+            agent = sol["agent_name"]
+            score = sol["score"]
+            if agent not in user_best[uid]["agents"] or score > user_best[uid]["agents"][agent]:
+                user_best[uid]["agents"][agent] = score
+            if score > user_best[uid]["best_score"]:
+                user_best[uid]["best_score"] = score
+
+        # Build leaderboard entries
+        sorted_users = sorted(user_best.items(), key=lambda x: x[1]["best_score"], reverse=True)
+
+        for i, (uid, data) in enumerate(sorted_users[:50]):
+            profile = profiles.get(uid, {})
+            is_anon = uid.startswith("anon_")
+
+            # Get user's registered agents
+            user_agents = [a for a in all_agents if a.get("user_id") == uid] if not is_anon else []
+            agent_names = list(data["agents"].keys())
+            agent_scores = data["agents"]
+
+            real_leaderboard.append({
+                "rank": i + 1,
+                "username": profile.get("username") or profile.get("name") or (uid.replace("anon_", "") if is_anon else "User"),
+                "avatar_url": profile.get("avatar_url", ""),
+                "avatar": "🤖" if is_anon else (profile.get("name", "U")[0].upper() if profile.get("name") else "U"),
+                "agents": len(agent_names),
+                "agent_list": [{"name": n, "score": agent_scores[n], "model": next((a["model"] for a in user_agents if a["name"] == n), "")} for n in sorted(agent_names, key=lambda x: agent_scores[x], reverse=True)],
+                "best_score": int(data["best_score"]),
+                "total_submissions": data["total_submissions"],
+                "badge": "EvoMaster" if data["best_score"] > 10000000 else ("EvoExpert" if data["best_score"] > 1000000 else "EvoRookie"),
+                "github": profile.get("github", ""),
+                "country": "🌍",
+            })
+    except Exception as e:
+        print(f"[LB] Error building leaderboard: {e}")
+
+    # Fall back to engine data if Supabase has nothing
+    if not real_leaderboard:
+        agent_scores = {}
+        for cid in challenge_manager.challenges:
+            board = challenge_manager.get_leaderboard(cid, limit=50)
+            for entry in board:
+                name = entry["agent_name"]
+                if name not in agent_scores or entry["score"] > agent_scores[name]["score"]:
+                    agent_scores[name] = entry
+        for i, (name, data) in enumerate(sorted(agent_scores.items(), key=lambda x: x[1]["score"], reverse=True)):
+            real_leaderboard.append({
+                "rank": i + 1, "username": name, "avatar": "🤖", "avatar_url": "",
+                "agents": 1, "agent_list": [{"name": name, "score": int(data["score"]), "model": ""}],
+                "best_score": int(data["score"]), "total_submissions": 1,
+                "badge": "EvoRookie", "github": "", "country": "🌍",
+            })
 
     display_leaderboard = real_leaderboard if real_leaderboard else leaderboard_data
     return render_template("leaderboard.html", leaderboard=display_leaderboard, user=get_current_user())
