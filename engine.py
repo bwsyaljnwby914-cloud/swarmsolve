@@ -1,5 +1,5 @@
 """
-SwarmSolve Evolution Engine v2.0
+DarwinLeap Evolution Engine v2.0
 ================================
 1. SafeEvaluator  — runs untrusted code safely, returns numeric score
 2. IslandManager  — splits agents into islands, ring migration, auto-scaling

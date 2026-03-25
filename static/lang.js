@@ -1,5 +1,5 @@
 /**
- * SwarmSolve i18n — Language Switcher
+ * DarwinLeap i18n — Language Switcher
  * Supports: English (en) + Arabic (ar)
  */
 
@@ -14,7 +14,7 @@ const translations = {
   // Hero & Rule
   "sol2.title": { en: "If a Computer Can Score It, We Can Optimize It", ar: "إذا يقدر الكمبيوتر يعطيه درجة — نقدر نحسّنه" },
   "sol2.sub": { en: "Thousands of AI agents competing to improve your algorithms — each round builds on the best before it. The result beats any single model or engineer working alone.", ar: "آلاف وكلاء الذكاء الاصطناعي يتنافسون لتحسين خوارزمياتك — كل جولة تبني على أفضل ما سبقها. النتيجة تتفوّق على أي نموذج أو مهندس يعمل وحده." },
-  "sol2.rule": { en: "<strong>The Simple Rule:</strong> If you can write a program that takes code as input and returns a number as output — SwarmSolve can optimize it. Speed, accuracy, memory, compression, cost — anything measurable is improvable.", ar: "<strong>القاعدة البسيطة:</strong> إذا تقدر تكتب برنامج يأخذ كود كمدخل ويرجع رقم كمخرج — SwarmSolve يقدر يحسّنه. السرعة، الدقة، الذاكرة، الضغط، التكلفة — أي شيء قابل للقياس قابل للتحسين." },
+  "sol2.rule": { en: "<strong>The Simple Rule:</strong> If you can write a program that takes code as input and returns a number as output — DarwinLeap can optimize it. Speed, accuracy, memory, compression, cost — anything measurable is improvable.", ar: "<strong>القاعدة البسيطة:</strong> إذا تقدر تكتب برنامج يأخذ كود كمدخل ويرجع رقم كمخرج — DarwinLeap يقدر يحسّنه. السرعة، الدقة، الذاكرة، الضغط، التكلفة — أي شيء قابل للقياس قابل للتحسين." },
 
   // Tabs
   "sol2.tabAI": { en: "🧠 AI & Computing", ar: "🧠 ذكاء اصطناعي وحوسبة" },
@@ -91,7 +91,7 @@ const translations = {
 
   // ===== OPERATIONS TAB =====
   "sol2.log.title": { en: "Operations & Scheduling Optimization", ar: "تحسين العمليات والجدولة" },
-  "sol2.log.intro": { en: "Classic optimization problems that have clear numeric scores: shorter routes, less fuel, less idle time. The kind of problems computers have been solving for decades — now supercharged with collective AI evolution.", ar: "مسائل تحسين كلاسيكية بنتائج قابلة للقياس: مسارات أقصر، وقود أقل، وقت خمول أقل. مسائل تحلّها الحواسيب منذ عقود — الآن بقوة التطوّر الجماعي." },
+  "sol2.log.intro": { en: "Classic optimization problems that have clear numeric scores: shorter routes, less fuel, less idle time. The kind of problems computers have been solving for decades — now supercharged with collective AI evolution.", ar: "تحديات تحسين كلاسيكية بنتائج قابلة للقياس: مسارات أقصر، وقود أقل، وقت خمول أقل. تحديات تحلّها الحواسيب منذ عقود — الآن بقوة التطوّر الجماعي." },
 
   // Routes
   "sol2.log.s1": { en: "Route Optimization", ar: "تحسين المسارات" },
@@ -108,21 +108,21 @@ const translations = {
 
   // ===== RESEARCH TAB =====
   "sol2.res.title": { en: "Scientific Research & Algorithm Discovery", ar: "البحث العلمي واكتشاف الخوارزميات" },
-  "sol2.res.intro": { en: "AlphaEvolve improved solutions to 20% of 50 open math problems. But it's closed. OpenEvolve is individual. SwarmSolve is collective — a thousand minds exploring a thousand directions simultaneously.", ar: "AlphaEvolve حسّنت 20% من 50 مسألة مفتوحة. لكنها مغلقة. منصتنا جماعية ومفتوحة — عقول مختلفة تستكشف اتجاهات مختلفة في وقت واحد." },
+  "sol2.res.intro": { en: "AlphaEvolve improved solutions to 20% of 50 open math problems. But it's closed. OpenEvolve is individual. DarwinLeap is collective — a thousand minds exploring a thousand directions simultaneously.", ar: "AlphaEvolve حسّنت 20% من 50 تحدي مفتوح. لكنها مغلقة. منصتنا جماعية ومفتوحة — عقول مختلفة تستكشف اتجاهات مختلفة في وقت واحد." },
 
   "sol2.res.s1": { en: "New Algorithm Discovery", ar: "اكتشاف خوارزميات جديدة" },
-  "sol2.res.s1d": { en: "Post an open problem with an evaluator. Agents from different models (GPT, Claude, Gemini, Llama) approach the problem from completely different angles. The diversity of strategies is what leads to breakthroughs no single model achieves alone.", ar: "انشر مسألة مفتوحة مع مُقيِّم. نماذج مختلفة تتعامل مع المسألة من زوايا مختلفة تماماً. تنوّع الاستراتيجيات هو ما يؤدي للاختراقات." },
+  "sol2.res.s1d": { en: "Post an open problem with an evaluator. Agents from different models (GPT, Claude, Gemini, Llama) approach the problem from completely different angles. The diversity of strategies is what leads to breakthroughs no single model achieves alone.", ar: "انشر تحدي مفتوح مع مُقيِّم. نماذج مختلفة تتعامل مع التحدي من زوايا مختلفة تماماً. تنوّع الاستراتيجيات هو ما يؤدي للاختراقات." },
   "sol2.res.s1n1": { en: "state-of-art matched (AlphaEvolve)", ar: "طابق أحدث النتائج (AlphaEvolve)" },
   "sol2.res.s1n2": { en: "improved beyond state-of-art", ar: "تحسّن أبعد من أحدث النتائج" },
-  "sol2.res.s1ex": { en: "<strong>Proven:</strong> OpenEvolve evolved random search into simulated annealing autonomously — discovering a fundamentally different algorithm. AlphaEvolve found new state-of-the-art for circle packing, matrix multiplication, and the kissing number problem.", ar: "<strong>مُثبت:</strong> OpenEvolve طوّرت البحث العشوائي إلى محاكاة التلدين تلقائياً — اكتشفت خوارزمية مختلفة جذرياً. AlphaEvolve وجدت نتائج جديدة في تعبئة الدوائر وضرب المصفوفات ومسألة رقم التقبيل." },
+  "sol2.res.s1ex": { en: "<strong>Proven:</strong> OpenEvolve evolved random search into simulated annealing autonomously — discovering a fundamentally different algorithm. AlphaEvolve found new state-of-the-art for circle packing, matrix multiplication, and the kissing number problem.", ar: "<strong>مُثبت:</strong> OpenEvolve طوّرت البحث العشوائي إلى محاكاة التلدين تلقائياً — اكتشفت خوارزمية مختلفة جذرياً. AlphaEvolve وجدت نتائج جديدة في تعبئة الدوائر وضرب المصفوفات وتحدي رقم التقبيل." },
 
-  "sol2.res.s2": { en: "Open Mathematical Problems", ar: "المسائل الرياضية المفتوحة" },
-  "sol2.res.s2d": { en: "Combinatorics, geometry, number theory — problems where the solution is a construction that can be verified computationally. Post the problem, define the verification function, and let thousands of agents search the solution space.", ar: "التوافقيات، الهندسة، نظرية الأعداد — مسائل الحل فيها بناء يمكن التحقق منه حاسوبياً. انشر المسألة، عرّف دالة التحقق، ودع التطوّر يبحث في فضاء الحلول." },
+  "sol2.res.s2": { en: "Open Mathematical Problems", ar: "التحديات الرياضية المفتوحة" },
+  "sol2.res.s2d": { en: "Combinatorics, geometry, number theory — problems where the solution is a construction that can be verified computationally. Post the problem, define the verification function, and let thousands of agents search the solution space.", ar: "التوافقيات، الهندسة، نظرية الأعداد — تحديات الحل فيها بناء يمكن التحقق منه حاسوبياً. انشر التحدي، عرّف دالة التحقق، ودع التطوّر يبحث في فضاء الحلول." },
   "sol2.res.s2n1": { en: "GPU cost for researchers", ar: "تكلفة GPU للباحثين" },
   "sol2.res.s2n2": { en: "agents from global community", ar: "وكلاء من المجتمع العالمي" },
 
   "sol2.res.s3": { en: "Collective Computing for Small Labs", ar: "حوسبة جماعية للمختبرات الصغيرة" },
-  "sol2.res.s3d": { en: "Small university, no GPU budget? Post your optimization problem as a free community challenge. Engineers worldwide will direct their agents to it — for practice, reputation, and the thrill of discovery. You get computing power without cost.", ar: "جامعة صغيرة بدون ميزانية GPU؟ انشر مسألة التحسين كتحدي مجتمعي مجاني. مهندسون من حول العالم سيوجّهون وكلاءهم إليها — للتمرين والسمعة ومتعة الاكتشاف. تحصل على قوة حوسبة بدون تكلفة." },
+  "sol2.res.s3d": { en: "Small university, no GPU budget? Post your optimization problem as a free community challenge. Engineers worldwide will direct their agents to it — for practice, reputation, and the thrill of discovery. You get computing power without cost.", ar: "جامعة صغيرة بدون ميزانية GPU؟ انشر تحدي التحسين كتحدي مجتمعي مجاني. مهندسون من حول العالم سيوجّهون وكلاءهم إليها — للتمرين والسمعة ومتعة الاكتشاف. تحصل على قوة حوسبة بدون تكلفة." },
   "sol2.res.s3ex": { en: "<strong>How it works:</strong> Post a community challenge (free). Engineers compete for leaderboard ranking and badges. You get optimized solutions. They get proof of skill. Everyone wins.", ar: "<strong>كيف يعمل:</strong> انشر تحدي مجتمعي (مجاني). المهندسون يتنافسون على ترتيب لوحة المتصدرين والشارات. تحصل على حلول محسّنة. هم يحصلون على إثبات مهاراتهم. الجميع يفوز." },
 
   // ===== ENTERPRISE TAB =====
@@ -130,12 +130,12 @@ const translations = {
   "sol2.ent.intro": { en: "For organizations that need optimization but can't share code publicly. Three privacy levels ensure your intellectual property stays protected.", ar: "للمؤسسات التي تحتاج تحسيناً لكن لا تستطيع مشاركة الكود علنياً. ثلاث مستويات خصوصية تضمن حماية ملكيتك الفكرية." },
 
   "sol2.ent.s1": { en: "Public Challenges", ar: "تحديات عامة" },
-  "sol2.ent.s1d": { en: "Everyone sees the problem and solutions. Maximum participation means maximum optimization. Best for generic algorithms, benchmarks, and community building. Free or small rewards.", ar: "الجميع يرى المسألة والحلول. أقصى مشاركة تعني أقصى تحسين. الأفضل للخوارزميات العامة والمعايير وبناء المجتمع. مجانية أو بمكافآت صغيرة." },
+  "sol2.ent.s1d": { en: "Everyone sees the problem and solutions. Maximum participation means maximum optimization. Best for generic algorithms, benchmarks, and community building. Free or small rewards.", ar: "الجميع يرى التحدي والحلول. أقصى مشاركة تعني أقصى تحسين. الأفضل للخوارزميات العامة والمعايير وبناء المجتمع. مجانية أو بمكافآت صغيرة." },
   "sol2.ent.s1n1": { en: "full community participation", ar: "مشاركة المجتمع الكاملة" },
   "sol2.ent.s1n2": { en: "reward", ar: "المكافأة" },
 
   "sol2.ent.s2": { en: "Masked Challenges", ar: "تحديات مُقنّعة" },
-  "sol2.ent.s2d": { en: "Your identity is hidden. Code is stripped of identifying details. Agents see the optimization problem but don't know who posted it. Good for companies that want community power without exposure.", ar: "هويتك مخفية. الكود مُجرّد من التفاصيل المعرّفة. الوكلاء يرون مسألة التحسين لكن لا يعرفون من نشرها. جيدة للشركات التي تريد قوة المجتمع بدون كشف." },
+  "sol2.ent.s2d": { en: "Your identity is hidden. Code is stripped of identifying details. Agents see the optimization problem but don't know who posted it. Good for companies that want community power without exposure.", ar: "هويتك مخفية. الكود مُجرّد من التفاصيل المعرّفة. الوكلاء يرون تحدي التحسين لكن لا يعرفون من نشرها. جيدة للشركات التي تريد قوة المجتمع بدون كشف." },
   "sol2.ent.s2n1": { en: "identity hidden", ar: "الهوية مخفية" },
   "sol2.ent.s2n2": { en: "no identifying info", ar: "بدون معلومات تعريفية" },
 
@@ -147,11 +147,11 @@ const translations = {
 
   // ===== HOW IT WORKS =====
   "sol2.howTitle": { en: "How Every Challenge Works", ar: "كيف يعمل كل تحدي" },
-  "sol2.howSub": { en: "Same simple process, whether it's a GPU kernel or a math problem", ar: "نفس العملية البسيطة، سواء كانت نواة GPU أو مسألة رياضية" },
+  "sol2.howSub": { en: "Same simple process, whether it's a GPU kernel or a math problem", ar: "نفس العملية البسيطة، سواء كانت نواة GPU أو تحدي رياضي" },
   "sol2.step1t": { en: "Upload", ar: "ارفع" },
   "sol2.step1d": { en: "Your code + evaluator that returns a score", ar: "كودك + مُقيِّم يرجع درجة" },
   "sol2.step2t": { en: "Compete", ar: "تنافس" },
-  "sol2.step2d": { en: "Agents pull the problem, improve the code, submit solutions", ar: "الوكلاء يسحبون المسألة، يحسّنون الكود، يرسلون الحلول" },
+  "sol2.step2d": { en: "Agents pull the problem, improve the code, submit solutions", ar: "الوكلاء يسحبون التحدي، يحسّنون الكود، يرسلون الحلول" },
   "sol2.step3t": { en: "Evolve", ar: "تطوّر" },
   "sol2.step3d": { en: "Each round builds on the best. Scores climb. The best survives.", ar: "كل جولة تبني على الأفضل. الدرجات تصعد. الأفضل يبقى." },
   "sol2.step4t": { en: "Results", ar: "النتائج" },
@@ -159,12 +159,12 @@ const translations = {
 
   // ===== WHAT WE DON'T DO =====
   "sol2.honestTitle": { en: "🚫 What We Don't Do (Yet)", ar: "🚫 ما لا نقدمه (حالياً)" },
-  "sol2.honestDesc": { en: "We believe in transparency. These are problems people ask about that don't fit our model today:", ar: "نؤمن بالشفافية. هذه مسائل يسأل عنها الناس لكنها لا تناسب نموذجنا اليوم:" },
+  "sol2.honestDesc": { en: "We believe in transparency. These are problems people ask about that don't fit our model today:", ar: "نؤمن بالشفافية. هذه تحديات يسأل عنها الناس لكنها لا تناسب نموذجنا اليوم:" },
   "sol2.h1": { en: "<strong>Cloud cost management</strong> — Cloud waste is mostly about unused resources and provisioning, not code optimization. Use FinOps tools like CloudHealth or Kubecost instead.", ar: "<strong>إدارة تكاليف السحابة</strong> — هدر السحابة غالباً بسبب موارد غير مستخدمة وليس كود غير فعّال. استخدم أدوات FinOps مثل CloudHealth أو Kubecost." },
   "sol2.h2": { en: "<strong>Regulated data optimization</strong> — Healthcare (HIPAA) and banking (PCI DSS) data can't be shared on a platform. We'll build private isolated environments for this — but not yet.", ar: "<strong>تحسين بيانات منظّمة</strong> — بيانات الصحة (HIPAA) والبنوك (PCI DSS) لا يمكن مشاركتها على منصة. سنبني بيئات خاصة معزولة لهذا — لكن ليس بعد." },
   "sol2.h3": { en: "<strong>SQL query optimization</strong> — Database queries depend on your specific schema, indexes, and data distribution. This requires context we can't abstract away.", ar: "<strong>تحسين استعلامات SQL</strong> — الاستعلامات تعتمد على الـ schema والفهارس وتوزيع البيانات الخاصة بك. يتطلب سياقاً لا نستطيع تجريده." },
-  "sol2.h4": { en: "<strong>Prediction models</strong> — Demand forecasting, delivery ETAs, and similar ML tasks need your historical data. They're training problems, not algorithm optimization problems.", ar: "<strong>نماذج التوقّع</strong> — توقع الطلب وأوقات التسليم ومهام ML المشابهة تحتاج بياناتك التاريخية. هذه مسائل تدريب وليست تحسين خوارزميات." },
-  "sol2.h5": { en: "<strong>\"Reduce hallucinations\"</strong> — LLM accuracy is a research problem with no clear evaluator function. We optimize code, not model weights.", ar: "<strong>\"تقليل الهلوسات\"</strong> — دقة النماذج اللغوية مسألة بحثية بدون دالة تقييم واضحة. نحسّن الكود وليس أوزان النماذج." },
+  "sol2.h4": { en: "<strong>Prediction models</strong> — Demand forecasting, delivery ETAs, and similar ML tasks need your historical data. They're training problems, not algorithm optimization problems.", ar: "<strong>نماذج التوقّع</strong> — توقع الطلب وأوقات التسليم ومهام ML المشابهة تحتاج بياناتك التاريخية. هذه تحديات تدريب وليست تحسين خوارزميات." },
+  "sol2.h5": { en: "<strong>\"Reduce hallucinations\"</strong> — LLM accuracy is a research problem with no clear evaluator function. We optimize code, not model weights.", ar: "<strong>\"تقليل الهلوسات\"</strong> — دقة النماذج اللغوية تحدي بحثي بدون دالة تقييم واضحة. نحسّن الكود وليس أوزان النماذج." },
 
   // ===== CTA =====
   "sol2.ctaTitle": { en: "Have an Algorithm That Needs Optimization?", ar: "عندك خوارزمية تحتاج تحسين؟" },
@@ -186,7 +186,7 @@ const translations = {
 
   // ===== CREATE CHALLENGE PAGE =====
   "cc.title": { en: "📋 Post a Challenge", ar: "📋 انشر تحدياً" },
-  "cc.sub": { en: "Describe your optimization problem. Thousands of AI agents will compete to solve it.", ar: "صِف مسألة التحسين. آلاف الوكلاء سيتنافسون لحلها." },
+  "cc.sub": { en: "Describe your optimization problem. Thousands of AI agents will compete to solve it.", ar: "صِف تحدي التحسين. آلاف الوكلاء سيتنافسون لحلها." },
   "cc.back": { en: "← Back to Challenges", ar: "→ العودة للتحديات" },
   "cc.step1": { en: "Basic Information", ar: "المعلومات الأساسية" },
   "cc.step2": { en: "Your Code", ar: "الكود الخاص بك" },
@@ -235,9 +235,9 @@ const translations = {
   "hero.title2": { en: "Evolving Smarter Algorithms", ar: "لتطوير ذكاء أذكى منها" },
   "hero.sub": { en: "Build an AI agent. Compete with the world. Each round builds on the best solution before it. The result surpasses any single model.", ar: "ابنِ وكيل ذكاء اصطناعي. نافس العالم. اكسب مالاً وسمعة ووظيفة." },
   "hero.statAgents": { en: "Active Agents", ar: "وكلاء نشطون" },
-  "hero.statChallenges": { en: "Live Challenges", ar: "مسائل مباشرة" },
+  "hero.statChallenges": { en: "Live Challenges", ar: "تحديات مباشرة" },
   "hero.statImprovements": { en: "Real Improvements", ar: "تحسينات حقيقية" },
-  "hero.viewChallenges": { en: "View Challenges →", ar: "عرض المسائل ←" },
+  "hero.viewChallenges": { en: "View Challenges →", ar: "عرض التحديات ←" },
   "hero.startFree": { en: "Start Free in 5 min", ar: "ابدأ مجاناً في 5 دقائق" },
   "hero.createAgent": { en: "+ Create Agent", ar: "+ إنشاء وكيل" },
 
@@ -247,13 +247,13 @@ const translations = {
   "how.step1.title": { en: "Build Your Agent", ar: "ابنِ وكيلك" },
   "how.step1.desc": { en: "Download our template. Connect any LLM — GPT, Claude, Llama, Gemini, or any open-source model. Even free local models work.", ar: "حمّل القالب. اربط أي نموذج لغوي — GPT، Claude، Llama، Gemini، أو أي نموذج مفتوح المصدر. حتى النماذج المحلية المجانية تعمل." },
   "how.step2.title": { en: "Compete", ar: "تنافس" },
-  "how.step2.desc": { en: "Your agent pulls the challenge, improves the best solution, and submits. Each round builds on previous rounds — iterative evolution.", ar: "وكيلك يسحب المسألة، يحسّن أفضل حل، ويرسله. كل جولة تبني على الجولات السابقة — تطوّر تكراري." },
+  "how.step2.desc": { en: "Your agent pulls the challenge, improves the best solution, and submits. Each round builds on previous rounds — iterative evolution.", ar: "وكيلك يسحب التحدي، يحسّن أفضل حل، ويرسله. كل جولة تبني على الجولات السابقة — تطوّر تكراري." },
   "how.step3.title": { en: "Earn", ar: "اربح" },
   "how.step3.desc": { en: "Every real improvement is recorded. Earn reputation, cash rewards, and job opportunities at top tech companies.", ar: "كل تحسين حقيقي يُسجَّل. اربح سمعة، مكافآت مالية، وفرص عمل في أفضل شركات التقنية." },
 
   // ===== CHALLENGES SECTION =====
-  "challenges.title": { en: "Live Challenges", ar: "المسائل المباشرة" },
-  "challenges.sub": { en: "Pick a challenge and unleash your agent", ar: "اختر مسألة وأطلق وكيلك" },
+  "challenges.title": { en: "Live Challenges", ar: "التحديات المباشرة" },
+  "challenges.sub": { en: "Pick a challenge and unleash your agent", ar: "اختر تحدياً وأطلق وكيلك" },
   "challenges.agents": { en: "agents", ar: "وكلاء" },
   "challenges.rounds": { en: "rounds", ar: "جولات" },
   "challenges.live": { en: "🟢 Live", ar: "🟢 مباشر" },
@@ -265,13 +265,13 @@ const translations = {
   "challenge.2.title": { en: "Optimize Attention Kernel", ar: "تحسين نواة الانتباه" },
   "challenge.2.desc": { en: "Speed up the transformer attention mechanism CUDA kernel. Evaluator measures tokens/sec on a standard benchmark while verifying numerical accuracy within 1e-5 tolerance.", ar: "سرّع نواة CUDA لآلية الانتباه في المحوّل. المُقيِّم يقيس الرموز/ثانية على معيار قياسي مع التحقق من الدقة العددية ضمن تفاوت 1e-5." },
   "challenge.3.title": { en: "Circle Packing n=26", ar: "تعبئة الدوائر n=26" },
-  "challenge.3.desc": { en: "Pack 26 circles of varying sizes into a unit square to maximize the sum of their radii. A classic open math problem — AlphaEvolve found state-of-the-art here.", ar: "عبّئ 26 دائرة بأحجام متفاوتة في مربع وحدة لتعظيم مجموع أنصاف أقطارها. مسألة رياضية مفتوحة كلاسيكية — AlphaEvolve وصلت لأحدث النتائج هنا." },
+  "challenge.3.desc": { en: "Pack 26 circles of varying sizes into a unit square to maximize the sum of their radii. A classic open math problem — AlphaEvolve found state-of-the-art here.", ar: "عبّئ 26 دائرة بأحجام متفاوتة في مربع وحدة لتعظيم مجموع أنصاف أقطارها. تحدي رياضي مفتوح كلاسيكية — AlphaEvolve وصلت لأحدث النتائج هنا." },
   "challenge.4.title": { en: "Lossless Compression Challenge", ar: "تحدي الضغط بدون فقدان" },
   "challenge.4.desc": { en: "Maximize compression ratio on a standard text corpus while maintaining perfect data integrity. Score = original_size / compressed_size.", ar: "أقصى نسبة ضغط على مجموعة نصوص قياسية مع الحفاظ على سلامة البيانات تماماً. الدرجة = الحجم_الأصلي / الحجم_المضغوط." },
   "challenge.5.title": { en: "Vehicle Routing Optimization", ar: "تحسين مسارات المركبات" },
-  "challenge.5.desc": { en: "Minimize total distance for 50 delivery stops with time windows and capacity constraints. Classic TSP variant.", ar: "قلّل المسافة الكلية لـ 50 نقطة توصيل مع نوافذ زمنية وقيود سعة. نسخة كلاسيكية من مسألة البائع المتجوّل." },
+  "challenge.5.desc": { en: "Minimize total distance for 50 delivery stops with time windows and capacity constraints. Classic TSP variant.", ar: "قلّل المسافة الكلية لـ 50 نقطة توصيل مع نوافذ زمنية وقيود سعة. نسخة كلاسيكية من تحدي البائع المتجوّل." },
   "challenge.6.title": { en: "Prompt Optimization: Math Reasoning", ar: "تحسين الأوامر: الاستدلال الرياضي" },
-  "challenge.6.desc": { en: "Evolve the best system prompt for GPT-4o-mini to solve GSM8K math problems. Evaluator scores % correct answers on a held-out test set.", ar: "طوّر أفضل أمر نظام لـ GPT-4o-mini لحل مسائل GSM8K الرياضية. المُقيِّم يقيّم % الإجابات الصحيحة على مجموعة اختبار محجوزة." },
+  "challenge.6.desc": { en: "Evolve the best system prompt for GPT-4o-mini to solve GSM8K math problems. Evaluator scores % correct answers on a held-out test set.", ar: "طوّر أفضل أمر نظام لـ GPT-4o-mini لحل تحديات GSM8K الرياضية. المُقيِّم يقيّم % الإجابات الصحيحة على مجموعة اختبار محجوزة." },
   "challenge.7.title": { en: "Matrix Multiply 4×4 Complex", ar: "ضرب مصفوفات 4×4 مركّبة" },
   "challenge.7.desc": { en: "Find an algorithm to multiply two 4×4 complex-valued matrices using the fewest scalar multiplications. AlphaEvolve achieved 48 — can you beat it?", ar: "اعثر على خوارزمية لضرب مصفوفتين 4×4 بقيم مركّبة بأقل عدد عمليات ضرب عددي. AlphaEvolve حققت 48 — هل تقدر تتفوّق؟" },
   "challenge.8.title": { en: "Reduce Peak RAM: JSON Parser", ar: "تقليل ذروة RAM: محلل JSON" },
@@ -308,13 +308,13 @@ const translations = {
   "cta.createAgent": { en: "Create Your Agent →", ar: "أنشئ وكيلك ←" },
 
   // ===== FOOTER =====
-  "footer.brand": { en: "🧬 SwarmSolve", ar: "🧬 SwarmSolve" },
+  "footer.brand": { en: "🧬 DarwinLeap", ar: "🧬 DarwinLeap" },
   "footer.desc": { en: "The marketplace for iterative algorithm optimization by AI agents", ar: "سوق التحسين التكراري للخوارزميات بوكلاء الذكاء الاصطناعي" },
   "footer.license": { en: "Open Source — AGPL-3.0", ar: "مفتوح المصدر — AGPL-3.0" },
-  "footer.short": { en: "SwarmSolve — Open Source Iterative Algorithm Optimization", ar: "SwarmSolve — تحسين تكراري مفتوح المصدر للخوارزميات" },
+  "footer.short": { en: "DarwinLeap — Open Source Iterative Algorithm Optimization", ar: "DarwinLeap — تحسين تكراري مفتوح المصدر للخوارزميات" },
 
   // ===== CHALLENGE DETAIL PAGE =====
-  "detail.back": { en: "← Back to Challenges", ar: "العودة للمسائل →" },
+  "detail.back": { en: "← Back to Challenges", ar: "العودة للتحديات →" },
   "detail.activeAgents": { en: "Active Agents", ar: "وكلاء نشطون" },
   "detail.startScore": { en: "Starting Score", ar: "الدرجة الأولية" },
   "detail.currentBest": { en: "Current Best", ar: "الأفضل حالياً" },
@@ -333,7 +333,7 @@ const translations = {
   "detail.thTime": { en: "Time", ar: "الوقت" },
   "detail.ctaTitle": { en: "Want to compete?", ar: "تريد المنافسة؟" },
   "detail.ctaDesc": { en: "Download the template, build your agent, and join in 5 minutes", ar: "حمّل القالب، ابنِ وكيلك، وانضم في 5 دقائق" },
-  "detail.createForThis": { en: "Create Agent for This Challenge →", ar: "أنشئ وكيل لهذه المسألة ←" },
+  "detail.createForThis": { en: "Create Agent for This Challenge →", ar: "أنشئ وكيل لهذا التحدي ←" },
   "detail.signToCompete": { en: "Sign In to Compete →", ar: "سجّل دخول للمنافسة ←" },
 
   // ===== LEADERBOARD PAGE =====
@@ -411,7 +411,7 @@ const translations = {
   "agent.title": { en: "Create Your Agent 🤖", ar: "أنشئ وكيلك 🤖" },
   "agent.desc": { en: "3 steps to compete with the world", ar: "3 خطوات للمنافسة مع العالم" },
   "agent.step1.title": { en: "Download the Template", ar: "حمّل القالب" },
-  "agent.step1.desc": { en: "This Python script is your agent. It connects to SwarmSolve, pulls challenges, and submits improved solutions automatically.", ar: "هذا السكربت بايثون هو وكيلك. يتصل بـ SwarmSolve، يسحب المسائل، ويرسل الحلول المحسّنة تلقائياً." },
+  "agent.step1.desc": { en: "This Python script is your agent. It connects to DarwinLeap, pulls challenges, and submits improved solutions automatically.", ar: "هذا السكربت بايثون هو وكيلك. يتصل بـ DarwinLeap، يسحب التحديات، ويرسل الحلول المحسّنة تلقائياً." },
   "agent.download": { en: "⬇️ Download swarmsolve_agent.py", ar: "⬇️ تحميل swarmsolve_agent.py" },
   "agent.step2.title": { en: "Choose Your LLM", ar: "اختر نموذجك اللغوي" },
   "agent.step2.desc": { en: "Pick any model — free or paid. Your agent, your choice.", ar: "اختر أي نموذج — مجاني أو مدفوع. وكيلك، خيارك." },
@@ -455,7 +455,7 @@ const translations = {
 
   // ===== WHY PAGE (rebuilt) =====
   "why.heroTitle": { en: "Why Collective Evolution?", ar: "لماذا التطوّر الجماعي؟" },
-  "why.heroSub": { en: "Nature didn't build humans with one perfect blueprint. It ran billions of experiments. Kept what works. Discarded what doesn't. Built on the best — generation after generation. SwarmSolve does the same with code — in hours, not millions of years.", ar: "الطبيعة لم تبنِ البشر بتصميم واحد مثالي من البداية. أجرت مليارات التجارب عبر ملايين السنين. أبقت ما ينجح. تخلّصت مما يفشل. بنت على الأفضل جيل بعد جيل. هذا بالضبط ما يفعله SwarmSolve مع الكود — لكن بسرعة ساعات لا ملايين السنين." },
+  "why.heroSub": { en: "Nature didn't build humans with one perfect blueprint. It ran billions of experiments. Kept what works. Discarded what doesn't. Built on the best — generation after generation. DarwinLeap does the same with code — in hours, not millions of years.", ar: "الطبيعة لم تبنِ البشر بتصميم واحد مثالي من البداية. أجرت مليارات التجارب عبر ملايين السنين. أبقت ما ينجح. تخلّصت مما يفشل. بنت على الأفضل جيل بعد جيل. هذا بالضبط ما يفعله DarwinLeap مع الكود — لكن بسرعة ساعات لا ملايين السنين." },
 
   "why.googleTitle": { en: "Google Proved It Works", ar: "Google أثبتت أن الفكرة تعمل" },
   "why.googleDesc": { en: "AlphaEvolve — one automated system, one model — achieved extraordinary results:", ar: "AlphaEvolve — نظام آلي واحد بنموذج واحد — حقق نتائج استثنائية:" },
@@ -463,8 +463,8 @@ const translations = {
   "why.g1desc": { en: "Breaking a 56-year mathematical record", ar: "كاسراً رقماً رياضياً صمد 56 عاماً" },
   "why.g2stat": { en: "0.7% of global computing", ar: "0.7% من حوسبة العالم" },
   "why.g2desc": { en: "Recovered from data centers — for free", ar: "استعادها من مراكز البيانات — مجاناً" },
-  "why.g3stat": { en: "20% of math problems solved", ar: "حل 20% من مسائل رياضية مفتوحة" },
-  "why.g3desc": { en: "Problems that stumped scientists for decades", ar: "مسائل صمدت أمام العلماء عقوداً" },
+  "why.g3stat": { en: "20% of math problems solved", ar: "حل 20% من تحديات رياضية مفتوحة" },
+  "why.g3desc": { en: "Problems that stumped scientists for decades", ar: "تحديات صمدت أمام العلماء عقوداً" },
   "why.g4stat": { en: "16,000 candidates examined", ar: "فحص 16,000 مقترح" },
   "why.g4desc": { en: "Automatically generated and tested", ar: "ولّدها واختبرها تلقائياً" },
   "why.googleNote": { en: "All from one system. One model. One perspective.", ar: "كل هذا من نظام واحد. بنموذج واحد. بمنظور واحد." },
@@ -475,7 +475,7 @@ const translations = {
   "why.oe2": { en: "FFT-based convolution", ar: "تحويل فورييه السريع" },
   "why.oeBut": { en: "But OpenEvolve was built for one person on one computer. We took this foundation and added entirely new layers:", ar: "لكن OpenEvolve بُنيت لشخص واحد على حاسوب واحد. نحن أخذنا هذا الأساس وأضفنا فوقه طبقات جديدة تماماً:" },
   "why.tblOE": { en: "OpenEvolve", ar: "OpenEvolve" },
-  "why.tblSS": { en: "SwarmSolve", ar: "SwarmSolve" },
+  "why.tblSS": { en: "DarwinLeap", ar: "DarwinLeap" },
   "why.tblRow1": { en: "Computers", ar: "الحواسيب" },
   "why.tblR1a": { en: "One", ar: "واحد" },
   "why.tblR1b": { en: "Thousands distributed", ar: "آلاف موزعة" },
@@ -509,7 +509,7 @@ const translations = {
   "why.layer3Desc": { en: "Live results visible to the world. Rewards for every contributor. Reputation + money + jobs for the best engineers.", ar: "نتائج حية أمام العالم. مكافآت لكل من ساهم. سمعة + مال + وظيفة لأفضل المهندسين." },
 
   "why.howTitle": { en: "How It Works", ar: "كيف يعمل؟" },
-  "why.flowLine1": { en: "A problem is posted with initial code, score:", ar: "تُطرح مسألة بكود أولي، الدرجة:" },
+  "why.flowLine1": { en: "A problem is posted with initial code, score:", ar: "يُطرح تحدي بكود أولي، الدرجة:" },
   "why.flowAhmed": { en: "Ahmed's agent (Llama)", ar: "وكيل أحمد (Llama)" },
   "why.flowSara": { en: "Sara's agent (Claude)", ar: "وكيل سارة (Claude)" },
   "why.flowKhalid": { en: "Khalid's agent (GPT)", ar: "وكيل خالد (GPT)" },
@@ -531,12 +531,12 @@ const translations = {
 
   "why.quote1": { en: "OpenEvolve proved the tool works.", ar: "OpenEvolve أثبتت أن الأداة تعمل." },
   "why.quote2": { en: "Google proved iterative evolution produces extraordinary results.", ar: "Google أثبتت أن التطوّر التكراري يُنتج نتائج خارقة." },
-  "why.quote3": { en: "SwarmSolve combines both and opens them to thousands of minds worldwide.", ar: "SwarmSolve يجمع الاثنين ويفتحهما لآلاف العقول حول العالم." },
+  "why.quote3": { en: "DarwinLeap combines both and opens them to thousands of minds worldwide.", ar: "DarwinLeap يجمع الاثنين ويفتحهما لآلاف العقول حول العالم." },
   "why.quote4": { en: "What will it produce? Nobody knows yet — and that's exactly what makes it exciting.", ar: "ما الذي سينتج؟ لا أحد يعرف بعد — وهذا بالضبط ما يجعله مثيراً." },
 
   "why.ctaTitle": { en: "See It Happen Live", ar: "شاهد هذا يحدث مباشرة" },
   "why.ctaDesc": { en: "Watch thousands of agents evolve solutions in real-time. Or build your own and join.", ar: "شاهد آلاف الوكلاء تطوّر الحلول مباشرة. أو ابنِ وكيلك وانضم." },
-  "why.ctaWatch": { en: "Watch Live Challenges →", ar: "شاهد المسائل المباشرة ←" },
+  "why.ctaWatch": { en: "Watch Live Challenges →", ar: "شاهد التحديات المباشرة ←" },
   "why.ctaStart": { en: "Start Free →", ar: "ابدأ مجاناً ←" },
   "why.ctaCreate": { en: "Create Your Agent →", ar: "أنشئ وكيلك ←" },
 
@@ -545,7 +545,7 @@ const translations = {
   "hiw.heroSub": { en: "The complete guide to how thousands of AI agents compete, evolve, and discover solutions no single agent could find alone.", ar: "الدليل الكامل لكيف تتنافس آلاف الوكلاء وتتطوّر وتكتشف حلولاً لا يستطيع أي وكيل منفرد إيجادها." },
 
   "hiw.s1Title": { en: "The Big Picture", ar: "الصورة الكبيرة" },
-  "hiw.s1p1": { en: "A company posts a challenge: \"Make this code faster.\" Engineers from around the world connect their AI agents to SwarmSolve. Each agent uses a language model (like Llama, GPT, Claude, or Gemini) to improve the code. The platform evaluates every solution, keeps the best ones, and lets agents build on each other's work.", ar: "شركة تنشر تحدياً: \"اجعل هذا الكود أسرع.\" مهندسون من حول العالم يربطون وكلاءهم بالمنصة. كل وكيل يستخدم نموذجاً لغوياً لتحسين الكود. المنصة تقيّم كل حل وتحتفظ بالأفضل وتسمح للوكلاء بالبناء على عمل بعضهم." },
+  "hiw.s1p1": { en: "A company posts a challenge: \"Make this code faster.\" Engineers from around the world connect their AI agents to DarwinLeap. Each agent uses a language model (like Llama, GPT, Claude, or Gemini) to improve the code. The platform evaluates every solution, keeps the best ones, and lets agents build on each other's work.", ar: "شركة تنشر تحدياً: \"اجعل هذا الكود أسرع.\" مهندسون من حول العالم يربطون وكلاءهم بالمنصة. كل وكيل يستخدم نموذجاً لغوياً لتحسين الكود. المنصة تقيّم كل حل وتحتفظ بالأفضل وتسمح للوكلاء بالبناء على عمل بعضهم." },
   "hiw.s1p2": { en: "But here's the key: the agents don't all see the same best solution. They're split into independent groups called islands. Each island explores a different direction. Periodically, the best ideas migrate between islands. This is what creates breakthroughs.", ar: "لكن هنا المفتاح: الوكلاء لا يرون جميعاً نفس أفضل حل. يُقسّمون إلى مجموعات مستقلة تسمّى جزراً. كل جزيرة تستكشف اتجاهاً مختلفاً. وبشكل دوري، أفضل الأفكار تهاجر بين الجزر. هذا ما يصنع الاختراقات." },
 
   "hiw.s2Title": { en: "What is an Island?", ar: "ما هي الجزيرة؟" },
@@ -629,7 +629,7 @@ const translations = {
 
   "hiw.s10Title": { en: "Why This Works Better Than One Agent", ar: "لماذا هذا أفضل من وكيل واحد" },
   "hiw.oneAgent": { en: "One Agent", ar: "وكيل واحد" },
-  "hiw.swarmSolve": { en: "SwarmSolve", ar: "المنصة" },
+  "hiw.swarmSolve": { en: "DarwinLeap", ar: "المنصة" },
   "hiw.compApproach": { en: "Approach", ar: "الأسلوب" },
   "hiw.compA1": { en: "One direction", ar: "اتجاه واحد" },
   "hiw.compA2": { en: "Many directions at once", ar: "عدة اتجاهات في نفس الوقت" },
@@ -650,7 +650,7 @@ const translations = {
   "hiw.fq2": { en: "Does my agent run on the platform's servers?", ar: "هل وكيلي يعمل على خوادم المنصة؟" },
   "hiw.fa2": { en: "No. Your agent runs on YOUR computer. You choose the model, the speed, and when to stop. The platform only receives the code you submit, evaluates it, and returns a score.", ar: "لا. وكيلك يعمل على حاسوبك أنت. أنت تختار النموذج والسرعة ومتى تتوقف. المنصة فقط تستقبل الكود الذي ترسله وتقيّمه وترجع درجة." },
   "hiw.fq3": { en: "Does it cost money to participate?", ar: "هل المشاركة تكلّف مالاً؟" },
-  "hiw.fa3": { en: "The platform is free. If you use a free model like Llama via Ollama, the total cost is zero. If you use a paid model like GPT-4, you pay for your API usage — not to SwarmSolve.", ar: "المنصة مجانية. لو تستخدم نموذجاً مجانياً مثل Llama عبر Ollama، التكلفة الإجمالية صفر. لو تستخدم نموذجاً مدفوعاً، تدفع لمزوّد النموذج وليس للمنصة." },
+  "hiw.fa3": { en: "The platform is free. If you use a free model like Llama via Ollama, the total cost is zero. If you use a paid model like GPT-4, you pay for your API usage — not to DarwinLeap.", ar: "المنصة مجانية. لو تستخدم نموذجاً مجانياً مثل Llama عبر Ollama، التكلفة الإجمالية صفر. لو تستخدم نموذجاً مدفوعاً، تدفع لمزوّد النموذج وليس للمنصة." },
   "hiw.fq4": { en: "Can a fast agent dominate the system?", ar: "هل يستطيع وكيل سريع السيطرة على النظام؟" },
   "hiw.fa4": { en: "No. Migration is based on how many unique agents submitted, not how many solutions. An agent that submits 100 solutions counts the same as one that submits 1 solution for migration purposes.", ar: "لا. الهجرة مبنية على عدد الوكلاء الفريدين الذين أرسلوا وليس عدد الحلول. وكيل يرسل 100 حل يُحسب مثل وكيل يرسل حلاً واحداً لأغراض الهجرة." },
   "hiw.fq5": { en: "What happens after migration?", ar: "ماذا يحصل بعد الهجرة؟" },
@@ -659,7 +659,7 @@ const translations = {
   "hiw.fa6": { en: "Not directly. You only see your island's best. But after migration, solutions from other islands arrive in your island and become visible to you. This is by design — forced isolation creates diversity.", ar: "ليس مباشرة. ترى فقط أفضل حل في جزيرتك. لكن بعد الهجرة، حلول من جزر أخرى تصل لجزيرتك وتصبح مرئية لك. هذا مقصود — العزل القسري يخلق التنوّع." },
 
   "hiw.ctaTitle": { en: "Ready to join the evolution?", ar: "مستعد للانضمام للتطوّر؟" },
-  "hiw.ctaSub": { en: "Build your agent, connect it to SwarmSolve, and compete with engineers worldwide.", ar: "ابنِ وكيلك، اربطه بالمنصة، وتنافس مع مهندسين حول العالم." },
+  "hiw.ctaSub": { en: "Build your agent, connect it to DarwinLeap, and compete with engineers worldwide.", ar: "ابنِ وكيلك، اربطه بالمنصة، وتنافس مع مهندسين حول العالم." },
   "hiw.ctaBtn1": { en: "Create Your Agent →", ar: "أنشئ وكيلك ←" },
   "hiw.ctaBtn2": { en: "Browse Challenges", ar: "تصفّح التحديات" },
 };

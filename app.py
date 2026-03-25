@@ -666,7 +666,7 @@ def evaluate(solution_path):
         return 0
 
     # Test data
-    test_data = b"Hello World! " * 10000 + b"SwarmSolve " * 5000 + bytes(range(256)) * 100
+    test_data = b"Hello World! " * 10000 + b"DarwinLeap " * 5000 + bytes(range(256)) * 100
 
     try:
         compressed = compress_fn(test_data)
@@ -801,12 +801,12 @@ def download_template():
     template_code = '''#!/usr/bin/env python3
 """
 ==========================================================
-  SwarmSolve Agent Template v2.0
+  DarwinLeap Agent Template v2.0
 ==========================================================
   Your AI agent that competes with the world!
 
   HOW IT WORKS:
-  1. Agent connects to SwarmSolve platform
+  1. Agent connects to DarwinLeap platform
   2. Gets the current best solution from YOUR island
   3. Sends it to your LLM to improve
   4. Submits the improved code back
@@ -830,7 +830,7 @@ import sys
 # CONFIGURATION — Edit these settings
 # ==========================================================
 
-# SwarmSolve Platform URL (do NOT change)
+# DarwinLeap Platform URL (do NOT change)
 SWARMSOLVE_URL = "https://web-production-ed55.up.railway.app"
 
 # Your agent name — make it unique!
@@ -953,7 +953,7 @@ def extract_code(response):
 def run_agent():
     print()
     print("=" * 50)
-    print("  SwarmSolve Agent v2.0")
+    print("  DarwinLeap Agent v2.0")
     print("=" * 50)
     print(f"  Agent:     {AGENT_NAME}")
     print(f"  Challenge: {CHALLENGE_ID}")
