@@ -107,18 +107,21 @@ body.rtl .nav-links.active{left:0!important}
 .tip-content p{font-size:13px;color:#8b949e;line-height:1.6;margin:0}
 
 /* Model grid */
-.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.model-card{background:#0d1117;border:1px solid #161b22;border-radius:12px;padding:16px;position:relative}
-.model-card.free{border-color:#34d39930}
-.model-card.paid{border-color:#f59e0b20}
+.model-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.model-grid{grid-template-columns:1fr}}
+.model-card{background:#0d1117;border:1px solid #161b22;border-radius:12px;padding:18px;position:relative;overflow:hidden}
+.model-card.free{border-color:#34d39920}
+.model-card.paid{border-color:#f59e0b15}
 .model-badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;background:#34d39920;color:#34d399;padding:2px 8px;border-radius:4px}
-.model-card h3{font-size:15px;font-weight:700;color:#f0f6fc;margin-bottom:6px}
-.model-card p{font-size:12px;color:#8b949e;margin-bottom:10px;line-height:1.5}
+body.rtl .model-badge{right:auto;left:10px}
+.model-card h3{font-size:16px;font-weight:700;color:#f0f6fc;margin-bottom:8px;padding-right:60px}
+body.rtl .model-card h3{padding-right:0;padding-left:60px}
+.model-card>p{font-size:12px;color:#8b949e;margin-bottom:12px;line-height:1.5}
 .model-steps{margin-bottom:10px}
-.model-step{font-size:12px;color:#c9d1d9;padding:3px 0}
-.model-step code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:11px;color:#22d3ee}
+.model-step{font-size:12px;color:#c9d1d9;padding:4px 0}
+.model-step code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:11px;color:#22d3ee;font-family:'JetBrains Mono',monospace}
 .model-step a{color:#22d3ee}
-.model-cost{font-size:12px;font-weight:700;color:#34d399;margin-top:8px}
+.model-cost{font-size:13px;font-weight:700;color:#34d399;margin-top:8px;padding-top:8px;border-top:1px solid #161b22}
 .model-card.paid .model-cost{color:#f59e0b}
 
 /* Deploy options */
@@ -197,8 +200,8 @@ body.rtl .nav-links.active{left:0!important}
             <div class="tip-card tip-highlight">
                 <div class="tip-icon">🧠</div>
                 <div class="tip-content">
-                    <h3 data-i18n="ag.tip1Title">Smart prompts beat expensive models</h3>
-                    <p data-i18n="ag.tip1Desc">In our tests, a free model (Llama) with smart prompts scored 15x higher than the most expensive model (Claude Opus) on its first attempt. The engineer who writes the best instructions wins — not the one who pays the most.</p>
+                    <h3 data-i18n="ag.tip1Title">Agent engineering beats expensive models</h3>
+                    <p data-i18n="ag.tip1Desc">A free model with a well-engineered agent beat the most expensive model 15x on its first attempt. It's not just about prompts — it's how your agent analyzes errors, learns from past attempts, and decides when to try something new. The smartest engineer wins, not the richest.</p>
                 </div>
             </div>
 

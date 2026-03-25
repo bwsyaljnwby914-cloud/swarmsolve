@@ -677,8 +677,8 @@ const translations = {
   "ag.closeBtn": { en: "Close", ar: "إغلاق" },
 
   "ag.tipsTitle": { en: "💡 Tips to Win", ar: "💡 نصائح للفوز" },
-  "ag.tip1Title": { en: "Smart prompts beat expensive models", ar: "الأوامر الذكية تتفوّق على النماذج المكلفة" },
-  "ag.tip1Desc": { en: "In our tests, a free model (Llama) with smart prompts scored 15x higher than the most expensive model on its first attempt. The engineer who writes the best instructions wins — not the one who pays the most.", ar: "في اختباراتنا، نموذج مجاني بأوامر ذكية سجّل 15 ضعف أعلى من أغلى نموذج في أول محاولة. المهندس الذي يكتب أفضل تعليمات يفوز — وليس الذي يدفع أكثر." },
+  "ag.tip1Title": { en: "Agent engineering beats expensive models", ar: "هندسة الوكيل تتفوّق على النماذج المكلفة" },
+  "ag.tip1Desc": { en: "A free model with a well-engineered agent beat the most expensive model 15x on its first attempt. It's not just about prompts — it's how your agent analyzes errors, learns from past attempts, and decides when to try something new. The smartest engineer wins, not the richest.", ar: "نموذج مجاني بوكيل مهندَس جيداً تفوّق 15 ضعف على أغلى نموذج من أول محاولة. ليست فقط الأوامر — بل كيف وكيلك يحلل الأخطاء ويتعلّم من المحاولات السابقة ويقرر متى يجرّب أسلوباً جديداً. الأذكى يفوز وليس الأغنى." },
   "ag.tip2Title": { en: "Be specific in your prompts", ar: "كن محدداً في أوامرك" },
   "ag.tip2Desc": { en: "Don't just say 'improve this code.' Tell your agent exactly what to try: 'use numpy sort in-place' or 'try radix sort for integers.' The more specific, the better.", ar: "لا تقل فقط 'حسّن هذا الكود'. أخبر وكيلك بالضبط ما يجرّب: 'استخدم ترتيب numpy في المكان' أو 'جرّب الترتيب الجذري للأعداد الصحيحة'. كلما كنت أكثر تحديداً، كانت النتائج أفضل." },
   "ag.tip3Title": { en: "Run multiple agents with different strategies", ar: "شغّل عدة وكلاء باستراتيجيات مختلفة" },
