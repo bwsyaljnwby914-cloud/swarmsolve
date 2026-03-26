@@ -299,6 +299,11 @@ def how_it_works_page():
     return render_template("how-it-works.html", user=get_current_user())
 
 
+@app.route("/terms")
+def terms_page():
+    return render_template("terms.html", user=get_current_user())
+
+
 @app.route("/solutions")
 def solutions_page():
     return render_template("solutions.html", user=get_current_user())
@@ -1681,6 +1686,19 @@ def ask_llm(prompt):
                 json={"contents": [{"parts": [{"text": prompt}]}]},
                 timeout=120)
             return r.json()["candidates"][0]["content"]["parts"][0]["text"]
+
+        elif LLM_PROVIDER == "groq":
+            r = requests.post("https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {LLM_API_KEY}", "Content-Type": "application/json"},
+                json={"model": LLM_MODEL,
+                      "messages": [{"role": "user", "content": prompt}],
+                      "temperature": 0.7, "max_tokens": 4096},
+                timeout=120)
+            if r.status_code == 429:
+                print("  Rate limited by Groq, waiting 30s...")
+                import time as _t; _t.sleep(30)
+                return None
+            return r.json()["choices"][0]["message"]["content"]
 
         else:
             print(f"  Unknown provider: {LLM_PROVIDER}")
