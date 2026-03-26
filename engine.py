@@ -128,12 +128,13 @@ class IslandManager:
 
     def __init__(self, challenge_id, migration_rate=0.1,
                  participation_threshold=0.7, max_wait_seconds=600,
-                 stagnation_limit=50):
+                 stagnation_limit=50, target_score=0):
         self.challenge_id = challenge_id
         self.migration_rate = migration_rate          # fraction of top solutions to migrate
         self.participation_threshold = participation_threshold  # 70% of agents must submit
         self.max_wait_seconds = max_wait_seconds      # safety timeout (default 10 min)
         self.stagnation_limit = stagnation_limit      # rounds without improvement = auto-stop
+        self.target_score = target_score              # goal score — stop when reached (0 = no goal)
 
         # Island data
         self.num_islands = 1
@@ -249,8 +250,12 @@ class IslandManager:
         else:
             self.rounds_since_improvement += 1
 
-        # Auto-stop check
+        # Auto-stop check: stagnation
         if self.rounds_since_improvement >= self.stagnation_limit:
+            self.is_stopped = True
+
+        # Auto-stop check: target score reached
+        if self.target_score > 0 and self.global_best_score >= self.target_score:
             self.is_stopped = True
 
         # Track participation: this agent submitted in this island since last migration
@@ -301,6 +306,20 @@ class IslandManager:
             }
             self.migration_history.append(record)
 
+            # Save migration to DB
+            try:
+                import db
+                db.save_migration({
+                    "challenge_id": self.challenge_id,
+                    "from_island": source_island,
+                    "to_island": target_island,
+                    "solutions_count": added,
+                    "best_score": migrants[0]["score"],
+                    "trigger_type": record["trigger"],
+                })
+            except Exception as e:
+                print(f"[Engine] DB save migration error: {e}")
+
         # Reset participation tracking for this island
         self.island_participants[source_island] = set()
         self.island_last_migration[source_island] = datetime.now()
@@ -349,6 +368,7 @@ class IslandManager:
             "global_best_score": self.global_best_score if self.global_best_score > float("-inf") else 0,
             "rounds_since_improvement": self.rounds_since_improvement,
             "is_stopped": self.is_stopped,
+            "target_score": self.target_score,
             "migrations_completed": len(self.migration_history),
             "participation_threshold": f"{int(self.participation_threshold * 100)}%",
             "max_wait_seconds": self.max_wait_seconds,
@@ -436,19 +456,32 @@ class ChallengeManager:
 
     def register_challenge(self, challenge_id, title, initial_code, evaluator_code,
                            initial_score=0, participation_threshold=0.7,
-                           max_wait_seconds=600, stagnation_limit=50):
+                           max_wait_seconds=600, stagnation_limit=50,
+                           target_score=0, save_to_db=True, **extra):
         self.challenges[challenge_id] = {
             "id": challenge_id, "title": title,
             "initial_code": initial_code, "evaluator_code": evaluator_code,
-            "initial_score": initial_score,
+            "initial_score": initial_score, "target_score": target_score,
             "created_at": datetime.now().isoformat(),
         }
+        # Merge extra fields (category, description, metrics, etc.)
+        self.challenges[challenge_id].update(extra)
+
         self.island_managers[challenge_id] = IslandManager(
             challenge_id=challenge_id,
             participation_threshold=participation_threshold,
             max_wait_seconds=max_wait_seconds,
             stagnation_limit=stagnation_limit,
+            target_score=target_score,
         )
+
+        # Save to Supabase
+        if save_to_db:
+            try:
+                import db
+                db.save_challenge(self.challenges[challenge_id])
+            except Exception as e:
+                print(f"[Engine] DB save challenge error: {e}")
 
     def get_challenge_for_agent(self, challenge_id, agent_name=None):
         if challenge_id not in self.challenges:
@@ -498,7 +531,11 @@ class ChallengeManager:
         im = self.island_managers[challenge_id]
 
         if im.is_stopped:
-            return {"ok": False, "error": f"Challenge stopped (no improvement for {im.stagnation_limit} rounds). Best: {im.global_best_score}"}
+            if im.target_score > 0 and im.global_best_score >= im.target_score:
+                reason = f"Target score {im.target_score} reached!"
+            else:
+                reason = f"No improvement for {im.stagnation_limit} rounds (evolution ceiling)"
+            return {"ok": False, "error": f"Challenge ended: {reason} Best: {im.global_best_score}"}
 
         island_id = im.assign_agent_to_island(agent_name)
 
@@ -516,6 +553,29 @@ class ChallengeManager:
 
         global_best = self.store.get_best_solution(challenge_id)
         island_best = im.get_best_for_island(island_id)
+
+        # Save to Supabase (async-safe, non-blocking)
+        try:
+            import db
+            db.save_solution({
+                "challenge_id": challenge_id,
+                "agent_name": agent_name,
+                "user_id": user_id,
+                "code": code,
+                "score": score,
+                "island_id": island_id,
+                "is_best": global_best and global_best["id"] == solution["id"],
+            })
+            # Update challenge best score
+            db.update_challenge_score(
+                challenge_id=challenge_id,
+                best_score=im.global_best_score if im.global_best_score > float("-inf") else 0,
+                best_agent=global_best["agent_name"] if global_best else agent_name,
+                total_rounds=im.round_counter,
+                is_stopped=im.is_stopped,
+            )
+        except Exception as e:
+            print(f"[Engine] DB save solution error: {e}")
 
         return {
             "ok": True, "score": score, "round": solution["round"],

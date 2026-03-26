@@ -345,6 +345,12 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                 </div>
             </div>
 
+            <div class="fg">
+                <label data-i18n="cc.targetLabel">Target Score (Goal)</label>
+                <input type="number" id="cc-target" placeholder="0" min="0">
+                <div class="hint" data-i18n="cc.targetHint">0 = no goal, challenge runs until evolution ceiling (50 rounds without improvement). Set a number to auto-stop when reached.</div>
+            </div>
+
             <!-- Submit -->
             <div class="create-btns">
                 <div class="selected-metrics" id="selected-metrics-display"></div>
@@ -493,6 +499,7 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                 category: document.getElementById("cc-category").value,
                 duration_days: parseInt(document.getElementById("cc-duration").value),
                 reward_amount: parseInt(document.getElementById("cc-reward").value || "0"),
+                target_score: parseInt(document.getElementById("cc-target").value || "0"),
                 privacy: document.getElementById("cc-privacy").value,
                 initial_code: code,
                 evaluator_code: document.getElementById("cc-eval") ? document.getElementById("cc-eval").value : "",

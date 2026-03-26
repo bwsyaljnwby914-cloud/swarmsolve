@@ -314,6 +314,8 @@ const translations = {
   "footer.short": { en: "DarwinLeap — Open Source Iterative Algorithm Optimization", ar: "DarwinLeap — تحسين تكراري مفتوح المصدر للخوارزميات" },
   "footer.tagline": { en: "Collective evolution for algorithm optimization", ar: "تطوّر جماعي لتحسين الخوارزميات" },
   "footer.copy": { en: "© 2026 DarwinLeap. Open Source — AGPL-3.0", ar: "© 2026 DarwinLeap. مفتوح المصدر — AGPL-3.0" },
+  "cc.targetLabel": { en: "Target Score (Goal)", ar: "الدرجة المستهدفة (الهدف)" },
+  "cc.targetHint": { en: "0 = no goal, challenge runs until evolution ceiling (50 rounds without improvement). Set a number to auto-stop when reached.", ar: "0 = بدون هدف، التحدي يستمر حتى سقف التطوّر (50 جولة بدون تحسين). ضع رقماً للتوقف التلقائي عند الوصول إليه." },
 
   // ===== CHALLENGE DETAIL PAGE =====
   "detail.back": { en: "← Back to Challenges", ar: "العودة للتحديات →" },

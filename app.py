@@ -594,6 +594,7 @@ def create_challenge():
         category = data.get("category", "Other")
         duration_days = int(data.get("duration_days", 7))
         reward_amount = int(data.get("reward_amount", 0))
+        target_score = int(data.get("target_score", 0))
 
         if not title or not description:
             return jsonify({"error": "Title and description required"}), 400
@@ -630,6 +631,7 @@ def create_challenge():
                 initial_code=initial_code,
                 evaluator_code=evaluator_code,
                 initial_score=initial_score,
+                target_score=target_score,
             )
         except Exception as e:
             print(f"[ENGINE] Registration failed: {e}")
