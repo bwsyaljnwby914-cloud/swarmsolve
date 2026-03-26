@@ -501,20 +501,55 @@ body.modal-open{position:fixed;width:100%;left:0}
             html += '<div class="pr-chi"><div class="pr-chr ' + rank + '">' + rankLabel + '</div><div class="pr-chinfo"><strong>' + h.title + '</strong><small>' + h.submissions + ' submissions · Best agent: ' + h.best_agent + '</small></div><div class="pr-chsc"><b>' + h.best_score.toLocaleString() + '</b><small>best score</small></div></div>';
         });
         container.innerHTML = html;
-
-        // Update stats
-        var statEls = document.querySelectorAll(".pr-stat-num");
-        var totalSubs = 0;
-        history.forEach(function(h){ totalSubs += h.submissions; });
-        statEls.forEach(function(el){
-            var label = el.parentElement.querySelector(".pr-stat-label");
-            if(label && (label.textContent === "Improvements" || label.getAttribute("data-i18n") === "pr.improvements")){
-                el.textContent = totalSubs;
-            }
-        });
     }).catch(function(){
         document.getElementById("pr-challenge-history").innerHTML='<div style="text-align:center;padding:30px 0;color:#6e7681"><p>Could not load history</p></div>';
     });
+
+    // Load real stats and achievements
+    fetch("/api/my-stats").then(function(r){return r.json();}).then(function(d){
+        if(!d || !d.achievements) return;
+
+        // Update stat numbers
+        var statEls = document.querySelectorAll(".pr-stat");
+        statEls.forEach(function(el){
+            var label = el.querySelector(".pr-stat-label");
+            var num = el.querySelector(".pr-stat-num");
+            if(!label || !num) return;
+            var key = label.getAttribute("data-i18n") || "";
+            if(key === "pr.improvements") num.textContent = d.total_submissions || 0;
+            if(key === "pr.bestJump") num.textContent = d.biggest_jump ? d.biggest_jump.toLocaleString() : "—";
+            if(key === "pr.agents") num.textContent = d.agents_count || 0;
+        });
+
+        // Update achievements (unlock/lock)
+        var achMap = {
+            "pr.achFirstBlood": d.achievements.first_blood,
+            "pr.achChampion": d.achievements.champion,
+            "pr.achMulti": d.achievements.multi_agent,
+            "pr.achLeap": d.achievements.big_leap,
+            "pr.achFire": d.achievements.on_fire,
+            "pr.achDiamond": d.achievements.diamond,
+        };
+        document.querySelectorAll(".pr-ach").forEach(function(el){
+            var nameEl = el.querySelector(".pr-ach-n");
+            if(!nameEl) return;
+            var key = nameEl.getAttribute("data-i18n");
+            if(key && achMap[key] !== undefined){
+                if(achMap[key]){
+                    el.classList.remove("lk");
+                } else {
+                    el.classList.add("lk");
+                }
+            }
+        });
+
+        // Update badge
+        if(d.badge){
+            var badgeBox = document.querySelector(".pr-badge-box");
+            var badgeH3 = badgeBox ? badgeBox.querySelector("h3") : null;
+            if(badgeH3) badgeH3.textContent = d.badge;
+        }
+    }).catch(function(){});
     </script>
 </body>
 </html>

@@ -1191,11 +1191,15 @@ def api_submit_solution():
     if not api_key:
         return jsonify({"error": "API key is required. Create an agent at /new-agent to get one."}), 401
 
+    # Hash the key for comparison
+    import hashlib as _hashlib
+    api_key_hash = _hashlib.sha256(api_key.encode()).hexdigest()
+
     # Verify API key — must match agent name
     user_id = None
     try:
         r = requests.get(
-            f"{SUPABASE_URL}/rest/v1/agents?description=eq.{api_key}&name=eq.{agent_name}&select=user_id,id,total_submissions",
+            f"{SUPABASE_URL}/rest/v1/agents?description=eq.{api_key_hash}&name=eq.{agent_name}&select=user_id,id,total_submissions",
             headers=supabase_headers(),
             timeout=5
         )
@@ -1377,6 +1381,81 @@ def api_my_history():
         return jsonify({"history": []})
 
 
+@app.route("/api/my-stats", methods=["GET"])
+def api_my_stats():
+    """Calculate real achievements and badge for current user"""
+    user = get_current_user()
+    if not user:
+        return jsonify({})
+    try:
+        # Get all user's solutions
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/solutions?user_id=eq.{user['id']}&select=challenge_id,score,agent_name&order=score.desc",
+            headers=supabase_headers(),
+            timeout=10
+        )
+        solutions = r.json() if r.status_code == 200 else []
+
+        # Get user's agents count
+        r2 = requests.get(
+            f"{SUPABASE_URL}/rest/v1/agents?user_id=eq.{user['id']}&select=id",
+            headers=supabase_headers(),
+            timeout=5
+        )
+        agents_count = len(r2.json()) if r2.status_code == 200 else 0
+
+        total_submissions = len(solutions)
+        best_score = max([s["score"] for s in solutions], default=0)
+        challenges_participated = len(set(s["challenge_id"] for s in solutions))
+
+        # Calculate biggest jump (approximate)
+        biggest_jump = 0
+        by_challenge = {}
+        for sol in solutions:
+            cid = sol["challenge_id"]
+            if cid not in by_challenge:
+                by_challenge[cid] = []
+            by_challenge[cid].append(sol["score"])
+        for cid, scores in by_challenge.items():
+            if len(scores) >= 2:
+                jump = max(scores) - min(scores)
+                if jump > biggest_jump:
+                    biggest_jump = jump
+
+        # Calculate badge
+        if best_score > 10000000:
+            badge = "EvoMaster"
+        elif best_score > 1000000:
+            badge = "EvoExpert"
+        elif total_submissions > 0:
+            badge = "EvoRookie"
+        else:
+            badge = "EvoRookie"
+
+        # Calculate achievements
+        achievements = {
+            "first_blood": total_submissions > 0,
+            "champion": best_score > 10000000,
+            "multi_agent": agents_count >= 3,
+            "big_leap": biggest_jump >= 100,
+            "on_fire": challenges_participated >= 5,
+            "diamond": best_score > 50000000,
+        }
+
+        return jsonify({
+            "total_submissions": total_submissions,
+            "best_score": int(best_score),
+            "challenges_participated": challenges_participated,
+            "biggest_jump": int(biggest_jump),
+            "agents_count": agents_count,
+            "badge": badge,
+            "achievements": achievements,
+        })
+    except Exception as e:
+        print(f"[STATS] Error: {e}")
+        return jsonify({})
+
+
 @app.route("/api/agents", methods=["POST"])
 def api_create_agent():
     """Create a new agent for the current user"""
@@ -1409,6 +1488,8 @@ def api_create_agent():
     # Generate API key
     import hashlib, secrets
     api_key = "dl_" + secrets.token_hex(24)
+    # Store hashed version — plain key shown only once
+    api_key_hash = hashlib.sha256(api_key.encode()).hexdigest()
 
     try:
         r = requests.post(
@@ -1418,7 +1499,7 @@ def api_create_agent():
                 "name": name,
                 "user_id": user["id"],
                 "model": model,
-                "description": api_key,  # Store API key in description field
+                "description": api_key_hash,  # Store HASH, not plain key
                 "is_active": True,
                 "total_submissions": 0,
                 "best_score": 0,
@@ -1435,7 +1516,7 @@ def api_create_agent():
                     "id": agent.get("id"),
                     "name": name,
                     "model": model,
-                    "api_key": api_key,
+                    "api_key": api_key,  # Plain key shown ONLY here, never again
                 }
             })
         else:
