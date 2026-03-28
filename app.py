@@ -974,12 +974,16 @@ def db_save_challenge(challenge_id, title, initial_code, evaluator_code, initial
             "total_rounds": total_rounds,
         }
         # Upsert (insert or update)
-        requests.post(
+        r = requests.post(
             f"{SUPABASE_URL}/rest/v1/challenges",
             headers={**supabase_headers(), "Prefer": "resolution=merge-duplicates"},
             json=data,
             timeout=5
         )
+        if r.status_code not in [200, 201]:
+            print(f"[DB] Save challenge failed: {r.status_code} — {r.text[:200]}")
+        else:
+            print(f"[DB] Challenge saved: {challenge_id}")
     except Exception as e:
         print(f"[DB] Failed to save challenge: {e}")
 
