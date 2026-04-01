@@ -358,6 +358,7 @@ const translations = {
   "cc.stopLabel": { en: "When does the challenge end?", ar: "متى ينتهي التحدي؟" },
   "cc.stopAuto": { en: "Automatically — when no agent can improve anymore (recommended)", ar: "تلقائياً — عندما لا يستطيع أي وكيل التحسين أكثر (مُوصى)" },
   "cc.stopManual": { en: "Manually — I will stop it when I'm satisfied", ar: "يدوياً — سأوقفه عندما أكون راضياً" },
+  "detail.postedBy": { en: "Posted by", ar: "نشره" },
   "cc.helpBtn": { en: "❓ How to Post a Challenge", ar: "❓ كيف تنشر تحدي" },
   "cc.helpTitle": { en: "How to Post a Challenge", ar: "كيف تنشر تحدي" },
   "cc.help1h": { en: "Step 1: Title & Description", ar: "الخطوة 1: العنوان والوصف" },

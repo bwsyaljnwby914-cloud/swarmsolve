@@ -187,8 +187,10 @@ def challenge_detail(cid):
         if not evo_formatted:
             evo_formatted = [{"round": 0, "score": ch_data["initial_score"], "agent": "—", "jump": 0, "time": "—"}]
 
-        # Check ownership
+        # Check ownership and get owner info
         is_owner = False
+        owner_name = None
+        owner_avatar = None
         current_user = get_current_user()
         try:
             r = requests.get(
@@ -197,13 +199,30 @@ def challenge_detail(cid):
                 timeout=5
             )
             db_ch = r.json() if r.status_code == 200 else []
-            if db_ch and current_user and db_ch[0].get("owner_id") == current_user.get("id"):
-                is_owner = True
+            if db_ch:
+                owner_id = db_ch[0].get("owner_id")
+                if owner_id:
+                    if current_user and owner_id == current_user.get("id"):
+                        is_owner = True
+                    # Get owner profile
+                    try:
+                        rp = requests.get(
+                            f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{owner_id}&select=full_name,avatar_url,username",
+                            headers=supabase_headers(),
+                            timeout=5
+                        )
+                        if rp.status_code == 200 and rp.json():
+                            profile = rp.json()[0]
+                            owner_name = profile.get("full_name") or profile.get("username") or "Anonymous"
+                            owner_avatar = profile.get("avatar_url", "")
+                    except:
+                        pass
         except:
             pass
 
         return render_template("challenge.html", challenge=ch, evolution_log=evo_formatted,
-                               island_status=island_status, user=current_user, is_owner=is_owner)
+                               island_status=island_status, user=current_user, is_owner=is_owner,
+                               owner_name=owner_name, owner_avatar=owner_avatar)
 
     # Not in engine — try loading from Supabase and registering
     try:
@@ -731,36 +750,44 @@ def create_challenge():
                 evaluator_code=evaluator_code,
                 initial_score=initial_score,
                 target_score=target_score,
+                save_to_db=False,
+                description=description,
+                category=category,
             )
         except Exception as e:
             print(f"[ENGINE] Registration failed: {e}")
             return jsonify({"error": f"Engine error: {str(e)}"}), 500
 
-        # Save to Supabase for persistence
+        # Save to Supabase in ONE request
         try:
-            db_save_challenge(
-                cid, title, initial_code, evaluator_code, initial_score,
-                best_score=initial_score, best_agent=None,
+            save_data = {
+                "id": cid,
+                "title": title,
+                "description": description,
+                "category": category,
+                "initial_code": initial_code,
+                "evaluator_code": evaluator_code,
+                "initial_score": initial_score,
+                "best_score": initial_score,
+                "privacy": privacy,
+                "reward_amount": reward_amount,
+                "owner_id": user["id"],
+                "is_stopped": False,
+                "total_rounds": 0,
+                "target_score": target_score,
+            }
+            r = requests.post(
+                f"{SUPABASE_URL}/rest/v1/challenges",
+                headers={**supabase_headers(), "Prefer": "resolution=merge-duplicates"},
+                json=save_data,
+                timeout=10
             )
-            # Also save full metadata
-            requests.patch(
-                f"{SUPABASE_URL}/rest/v1/challenges?id=eq.{cid}",
-                headers=supabase_headers(),
-                json={
-                    "description": description,
-                    "category": category,
-                    "privacy": privacy,
-                    "duration_days": duration_days,
-                    "reward_amount": reward_amount,
-                    "owner_id": user["id"],
-                    "metrics": metrics,
-                    "weights": weights,
-                    "test_data": test_data,
-                },
-                timeout=5
-            )
+            if r.status_code in [200, 201]:
+                print(f"[DB] Challenge saved: {cid}")
+            else:
+                print(f"[DB] Challenge save FAILED: {r.status_code} — {r.text[:300]}")
         except Exception as e:
-            print(f"[DB] Save challenge failed: {e}")
+            print(f"[DB] Save challenge exception: {e}")
 
         return jsonify({"ok": True, "id": cid, "initial_score": initial_score})
 
@@ -1057,7 +1084,21 @@ def db_load_challenges():
 
 # سجّل تحدي تجريبي عند بدء التشغيل
 def setup_demo_challenges():
-    """تحديات تجريبية مع مُقيِّمات حقيقية"""
+    """تحديات تجريبية مع مُقيِّمات حقيقية — skip if already in Supabase"""
+
+    # Check Supabase for existing stopped state
+    db_states = {}
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/challenges?select=id,is_stopped",
+            headers=supabase_headers(),
+            timeout=5
+        )
+        if r.status_code == 200:
+            for ch in r.json():
+                db_states[ch["id"]] = ch.get("is_stopped", False)
+    except:
+        pass
 
     # تحدي 1: أسرع ترتيب
     challenge_manager.register_challenge(
@@ -1155,6 +1196,12 @@ def evaluate(solution_path):
         initial_score=1.0
     )
 
+    # Restore is_stopped state from Supabase for demo challenges
+    for cid, stopped in db_states.items():
+        if stopped and cid in challenge_manager.island_managers:
+            challenge_manager.island_managers[cid].is_stopped = True
+            print(f"[DEMO] Restored stopped state for {cid}")
+
 setup_demo_challenges()
 
 # ===== Load existing solutions from Supabase on startup =====
@@ -1193,7 +1240,10 @@ def reload_from_db():
                                 description=ch.get("description", ""),
                                 category=ch.get("category", "Other"),
                             )
-                            print(f"[DB] Registered user challenge: {cid} ({title})")
+                            # Restore is_stopped state
+                            if ch.get("is_stopped"):
+                                challenge_manager.island_managers[cid].is_stopped = True
+                            print(f"[DB] Registered user challenge: {cid} ({title}) stopped={ch.get('is_stopped', False)}")
                         except Exception as e:
                             print(f"[DB] Failed to register {cid}: {e}")
                     else:

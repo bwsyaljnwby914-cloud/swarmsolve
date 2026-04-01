@@ -152,6 +152,15 @@ body.rtl .nav-links.active{left:0!important}
             </div>
             <h1>{{ challenge.title }}</h1>
             <p class="cd-desc">{{ challenge.description }}</p>
+            {% if owner_name %}
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                {% if owner_avatar %}
+                <img src="{{ owner_avatar }}" style="width:24px;height:24px;border-radius:50%;object-fit:cover">
+                {% endif %}
+                <span style="color:#8b949e;font-size:13px" data-i18n="detail.postedBy">Posted by</span>
+                <span style="color:#c9d1d9;font-size:13px;font-weight:600">{{ owner_name }}</span>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Stats -->
