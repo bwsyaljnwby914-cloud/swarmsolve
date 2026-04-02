@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_file, jsonify
-import os, io, json, requests
+import os, io, json, requests, re, html
 from datetime import timedelta
 
 app = Flask(__name__)
@@ -14,6 +14,55 @@ app.config["SESSION_COOKIE_NAME"] = "swarmsolve_session"
 app.config["SESSION_COOKIE_SECURE"] = os.environ.get("FLASK_ENV") == "production"
 # Don't expire cookie when browser closes
 app.config["SESSION_PERMANENT"] = True
+
+
+# ===== SECURITY MIDDLEWARE =====
+@app.after_request
+def add_security_headers(response):
+    """Add security headers to every response"""
+    # Prevent clickjacking
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    # Prevent MIME type sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    # XSS protection (legacy browsers)
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    # Referrer policy
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    # Content Security Policy
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: https: blob:; "
+        "connect-src 'self' https://*.supabase.co; "
+        "frame-ancestors 'none';"
+    )
+    return response
+
+
+def sanitize_input(text, max_length=500):
+    """Sanitize user input: escape HTML, limit length, remove dangerous patterns"""
+    if not text:
+        return ""
+    # Convert to string
+    text = str(text)
+    # Limit length
+    text = text[:max_length]
+    # Escape HTML entities
+    text = html.escape(text)
+    # Remove null bytes
+    text = text.replace('\x00', '')
+    return text.strip()
+
+
+def sanitize_code(code, max_length=50000):
+    """Sanitize code input: limit length, basic checks"""
+    if not code:
+        return ""
+    code = str(code)[:max_length]
+    code = code.replace('\x00', '')
+    return code
 
 # ===== Supabase Config =====
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://bfvmheqcwaqojyidqceu.supabase.co")
@@ -612,7 +661,7 @@ def api_post_comment():
 
     data = request.get_json()
     target_id = data.get("target_user_id", "")
-    content = data.get("content", "").strip()
+    content = sanitize_input(data.get("content", ""), max_length=500)
     rating = int(data.get("rating", 0))
 
     if not target_id or not content:
@@ -653,9 +702,14 @@ def profile_update():
 
     data = request.get_json()
     update_data = {}
+    max_lengths = {"username": 30, "bio": 300, "github": 50, "linkedin": 50, "full_name": 50, "avatar_url": 500}
     for field in ["username", "bio", "github", "linkedin", "full_name", "avatar_url"]:
         if field in data:
-            update_data[field] = data[field]
+            val = sanitize_input(data[field], max_length=max_lengths.get(field, 100))
+            # Validate username format
+            if field == "username" and val and not re.match(r'^[a-zA-Z0-9_-]+$', val):
+                return jsonify({"error": "Username can only contain letters, numbers, _ and -"}), 400
+            update_data[field] = val
 
     if update_data:
         update_data["updated_at"] = "now()"
@@ -824,18 +878,18 @@ def create_challenge():
 
     if request.method == "POST":
         data = request.get_json()
-        title = data.get("title", "").strip()
-        description = data.get("description", "").strip()
-        initial_code = data.get("initial_code", "").strip()
+        title = sanitize_input(data.get("title", ""), max_length=100)
+        description = sanitize_input(data.get("description", ""), max_length=2000)
+        initial_code = sanitize_code(data.get("initial_code", ""))
         metrics = data.get("metrics", ["speed"])
         weights = data.get("weights", {})
-        custom_eval = data.get("evaluator_code", "").strip()
-        test_data = data.get("test_data", "").strip()
-        privacy = data.get("privacy", "public")
-        category = data.get("category", "Other")
-        duration_days = int(data.get("duration_days", 7))
-        reward_amount = int(data.get("reward_amount", 0))
-        target_score = int(data.get("target_score", 0))
+        custom_eval = sanitize_code(data.get("evaluator_code", ""))
+        test_data = sanitize_input(data.get("test_data", ""), max_length=5000)
+        privacy = sanitize_input(data.get("privacy", "public"), max_length=20)
+        category = sanitize_input(data.get("category", "Other"), max_length=50)
+        duration_days = min(max(int(data.get("duration_days", 7)), 1), 365)
+        reward_amount = min(max(int(data.get("reward_amount", 0)), 0), 1000000)
+        target_score = max(int(data.get("target_score", 0)), 0)
 
         if not title or not description:
             return jsonify({"error": "Title and description required"}), 400
@@ -1450,9 +1504,9 @@ def api_submit_solution():
     if not data:
         return jsonify({"error": "No data provided"}), 400
 
-    challenge_id = data.get("challenge_id")
-    code = data.get("code", "")
-    agent_name = data.get("agent_name", "Anonymous")
+    challenge_id = sanitize_input(data.get("challenge_id", ""), max_length=50)
+    code = sanitize_code(data.get("code", ""))
+    agent_name = sanitize_input(data.get("agent_name", "Anonymous"), max_length=50)
     api_key = data.get("api_key", "")
 
     if not challenge_id or not code:
@@ -1777,11 +1831,14 @@ def api_create_agent():
         return jsonify({"error": "Not logged in"}), 401
 
     data = request.get_json()
-    name = data.get("name", "").strip()
-    model = data.get("model", "ollama/llama3.1")
+    name = sanitize_input(data.get("name", ""), max_length=30)
+    model = sanitize_input(data.get("model", "ollama/llama3.1"), max_length=50)
 
+    # Validate agent name: only alphanumeric, underscore, dash
     if not name:
         return jsonify({"error": "Agent name is required"}), 400
+    if not re.match(r'^[a-zA-Z0-9_-]+$', name):
+        return jsonify({"error": "Agent name can only contain letters, numbers, _ and -"}), 400
     if len(name) > 30:
         return jsonify({"error": "Name too long (max 30 chars)"}), 400
 
