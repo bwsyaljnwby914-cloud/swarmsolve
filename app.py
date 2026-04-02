@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 if not app.secret_key:
     import secrets
+
     app.secret_key = secrets.token_hex(32)
     print("[SECURITY] WARNING: SECRET_KEY not set in environment. Using random key (sessions will reset on restart).")
 app.permanent_session_lifetime = timedelta(days=30)
@@ -83,9 +84,11 @@ def is_valid_uuid(val):
     except (ValueError, AttributeError):
         return False
 
+
 # ===== Supabase Config =====
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://bfvmheqcwaqojyidqceu.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmdm1oZXFjd2Fxb2p5aWRxY2V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4Mjc3ODAsImV4cCI6MjA4OTQwMzc4MH0._msqBmI8SrDMmzdc76c5f-MkP4owZENIEnqaCnxSHeg")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY",
+                              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmdm1oZXFjd2Fxb2p5aWRxY2V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4Mjc3ODAsImV4cCI6MjA4OTQwMzc4MH0._msqBmI8SrDMmzdc76c5f-MkP4owZENIEnqaCnxSHeg")
 
 HEADERS = {
     "apikey": SUPABASE_KEY,
@@ -94,6 +97,7 @@ HEADERS = {
 
 # Rate limiting: track last submission time per agent
 _rate_limits = {}
+
 
 def supabase_headers(access_token=None):
     h = {"apikey": SUPABASE_KEY, "Content-Type": "application/json"}
@@ -117,26 +121,33 @@ def get_profile(user_id, access_token=None):
 
 def update_profile(user_id, data, access_token=None):
     """Update user profile in Supabase"""
-    # Remove updated_at with now() — Supabase REST doesn't support SQL functions
+    # Fix updated_at
     if "updated_at" in data:
-        from datetime import datetime
-        data["updated_at"] = datetime.utcnow().isoformat()
-    h = supabase_headers(access_token)
-    h["Prefer"] = "return=representation"
-    try:
-        r = requests.patch(
-            f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}",
-            headers=h,
-            json=data,
-            timeout=10
-        )
-        if r.status_code in [200, 204]:
-            return True
-        print(f"[PROFILE] Update failed: {r.status_code} — {r.text[:200]}")
-        return False
-    except Exception as e:
-        print(f"[PROFILE] Update error: {e}")
-        return False
+        data["updated_at"] = __import__('datetime').datetime.utcnow().isoformat()
+
+    # Try with access_token first, then anon key
+    for token in [access_token, SUPABASE_KEY]:
+        if not token:
+            continue
+        h = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+        }
+        try:
+            r = requests.patch(
+                f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}",
+                headers=h,
+                json=data,
+                timeout=10
+            )
+            if r.status_code in [200, 204]:
+                return True
+            print(f"[PROFILE] Update with token failed: {r.status_code} — {r.text[:200]}")
+        except Exception as e:
+            print(f"[PROFILE] Update error: {e}")
+    return False
 
 
 def get_current_user():
@@ -414,14 +425,19 @@ def leaderboard_page():
 
             real_leaderboard.append({
                 "rank": i + 1,
-                "username": profile.get("username") or profile.get("full_name") or (uid.replace("anon_", "") if is_anon else "User"),
+                "username": profile.get("username") or profile.get("full_name") or (
+                    uid.replace("anon_", "") if is_anon else "User"),
                 "avatar_url": profile.get("avatar_url", ""),
-                "avatar": "🤖" if is_anon else (profile.get("username", "U")[0].upper() if profile.get("username") else "U"),
+                "avatar": "🤖" if is_anon else (
+                    profile.get("username", "U")[0].upper() if profile.get("username") else "U"),
                 "agents": len(agent_names),
-                "agent_list": [{"name": n, "score": agent_scores[n], "model": next((a["model"] for a in user_agents if a["name"] == n), "")} for n in sorted(agent_names, key=lambda x: agent_scores[x], reverse=True)],
+                "agent_list": [{"name": n, "score": agent_scores[n],
+                                "model": next((a["model"] for a in user_agents if a["name"] == n), "")} for n in
+                               sorted(agent_names, key=lambda x: agent_scores[x], reverse=True)],
                 "best_score": int(data["best_score"]),
                 "total_submissions": data["total_submissions"],
-                "badge": "EvoMaster" if data["best_score"] > 10000000 else ("EvoExpert" if data["best_score"] > 1000000 else "EvoRookie"),
+                "badge": "EvoMaster" if data["best_score"] > 10000000 else (
+                    "EvoExpert" if data["best_score"] > 1000000 else "EvoRookie"),
                 "github": profile.get("github", ""),
                 "country": "🌍",
             })
@@ -829,7 +845,7 @@ def profile_update():
             update_data[field] = val
 
     if update_data:
-        update_data["updated_at"] = "now()"
+        update_data["updated_at"] = __import__('datetime').datetime.utcnow().isoformat()
         success = update_profile(user["id"], update_data, session.get("access_token"))
         if success:
             # Update session too
@@ -867,7 +883,8 @@ def upload_avatar():
 
     # Determine content type
     ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else "jpg"
-    content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "gif": "image/gif", "webp": "image/webp"}.get(ext, "image/jpeg")
+    content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "gif": "image/gif",
+                    "webp": "image/webp"}.get(ext, "image/jpeg")
 
     file_path = f"{user['id']}/avatar.{ext}"
     access_token = session.get("access_token", SUPABASE_KEY)
@@ -977,7 +994,8 @@ def challenges_page():
     except Exception as e:
         print(f"[CHALLENGES] Failed to load from Supabase: {e}")
 
-    categories = ["GPU & Inference", "Algorithm Speed", "Compression", "Math & Discovery", "Scheduling", "Prompts", "Memory", "Other"]
+    categories = ["GPU & Inference", "Algorithm Speed", "Compression", "Math & Discovery", "Scheduling", "Prompts",
+                  "Memory", "Other"]
     return render_template("challenges.html",
                            challenges=engine_challenges,
                            categories=categories,
@@ -1182,7 +1200,8 @@ def build_evaluator(metrics, weights, test_data=""):
         parts.append('        compress_fn = namespace.get("compress")')
         parts.append('        decompress_fn = namespace.get("decompress")')
         parts.append('        if compress_fn and decompress_fn:')
-        parts.append('            test_bytes = test_input.encode() if isinstance(test_input, str) else bytes(str(test_input), "utf-8")')
+        parts.append(
+            '            test_bytes = test_input.encode() if isinstance(test_input, str) else bytes(str(test_input), "utf-8")')
         parts.append('            compressed = compress_fn(test_bytes)')
         parts.append('            decompressed = decompress_fn(compressed)')
         parts.append('            if decompressed == test_bytes:')
@@ -1254,6 +1273,7 @@ def build_evaluator(metrics, weights, test_data=""):
 # هذه نقاط الوصول التي يتصل بها الوكلاء
 
 from engine import challenge_manager
+
 
 # ===== Supabase Persistence Layer =====
 
@@ -1376,6 +1396,7 @@ def db_load_challenges():
         print(f"[DB] Failed to load challenges: {e}")
     return []
 
+
 # سجّل تحدي تجريبي عند بدء التشغيل
 def setup_demo_challenges():
     """تحديات تجريبية مع مُقيِّمات حقيقية — skip if already in Supabase"""
@@ -1496,7 +1517,9 @@ def evaluate(solution_path):
             challenge_manager.island_managers[cid].is_stopped = True
             print(f"[DEMO] Restored stopped state for {cid}")
 
+
 setup_demo_challenges()
+
 
 # ===== Load existing solutions from Supabase on startup =====
 def reload_from_db():
@@ -1537,7 +1560,8 @@ def reload_from_db():
                             # Restore is_stopped state
                             if ch.get("is_stopped"):
                                 challenge_manager.island_managers[cid].is_stopped = True
-                            print(f"[DB] Registered user challenge: {cid} ({title}) stopped={ch.get('is_stopped', False)}")
+                            print(
+                                f"[DB] Registered user challenge: {cid} ({title}) stopped={ch.get('is_stopped', False)}")
                         except Exception as e:
                             print(f"[DB] Failed to register {cid}: {e}")
                     else:
@@ -1587,6 +1611,7 @@ def reload_from_db():
         )
 
     print(f"[DB] Reload complete — {len(challenge_manager.challenges)} challenges active")
+
 
 try:
     reload_from_db()
@@ -1866,7 +1891,6 @@ def api_recent_activity():
 
 @app.route("/api/my-stats", methods=["GET"])
 def api_my_stats():
-
     """Calculate real achievements and badge for current user"""
     user = get_current_user()
     if not user:
