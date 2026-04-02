@@ -352,6 +352,8 @@ const translations = {
   "detail.topRank": { en: "Top Rank", ar: "المركز الأول" },
   "detail.improvementLabel": { en: "faster than the starting code", ar: "أسرع من الكود الأولي" },
   "ch.improvement": { en: "improvement", ar: "تحسين" },
+  "ch.noImprovement": { en: "No improvement achieved", ar: "لم يتحقق تحسين" },
+  "ch.filterEnded": { en: "🏁 Ended", ar: "🏁 منتهية" },
   "ch.waitingImprovement": { en: "Waiting for improvements", ar: "بانتظار التحسينات" },
   "home.improvement": { en: "improvement", ar: "تحسين" },
   "home.waiting": { en: "waiting", ar: "بانتظار" },

@@ -186,9 +186,9 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
 
         <!-- Filters -->
         <div class="ch-filters">
-            <button class="ch-filter active" data-filter="status" data-value="all" onclick="applyFilter(this)" data-i18n="ch.filterAll">All</button>
-            <button class="ch-filter" data-filter="status" data-value="active" onclick="applyFilter(this)" data-i18n="ch.filterActive">🟢 Active</button>
-            <button class="ch-filter" data-filter="status" data-value="completed" onclick="applyFilter(this)" data-i18n="ch.filterCompleted">✅ Completed</button>
+            <button class="ch-filter" data-filter="status" data-value="all" onclick="applyFilter(this)" data-i18n="ch.filterAll">All</button>
+            <button class="ch-filter active" data-filter="status" data-value="active" onclick="applyFilter(this)" data-i18n="ch.filterActive">🟢 Active</button>
+            <button class="ch-filter" data-filter="status" data-value="stopped" onclick="applyFilter(this)" data-i18n="ch.filterEnded">🏁 Ended</button>
             <span style="width:1px;background:#21262d;margin:0 4px"></span>
             <button class="ch-filter active" data-filter="category" data-value="all" onclick="applyFilter(this)" data-i18n="ch.catAll">All Types</button>
             {% for cat in categories %}
@@ -222,8 +222,10 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                     {% if best > start and start > 0 %}
                     <div class="ch-improve-badge">🚀 {{ ((best / start)|round(0)|int) }}x <span data-i18n="ch.improvement">improvement</span></div>
                     <div class="ch-score-bar"><div class="ch-score-bar-fill" style="width:{{ [((best - start) / (best if best > 0 else 1) * 100)|int, 100]|min }}%"></div></div>
+                    {% elif c.status == 'stopped' %}
+                    <div class="ch-improve-badge" style="opacity:.5">🏁 <span data-i18n="ch.noImprovement">No improvement achieved</span></div>
                     {% else %}
-                    <div class="ch-improve-badge" style="opacity:.5">⏳ <span data-i18n="ch.waitingImprovement">Waiting for improvements</span></div>
+                    <div class="ch-score-bar"><div class="ch-score-bar-fill" style="width:0%"></div></div>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -270,7 +272,7 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
     })();
 
     // Instant filters
-    var activeStatus = "all";
+    var activeStatus = "active";
     var activeCategory = "all";
 
     function applyFilter(btn) {
@@ -304,6 +306,15 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
         document.getElementById("ch-empty").style.display = visible === 0 ? "" : "none";
         document.getElementById("ch-grid").style.display = visible === 0 ? "none" : "";
     }
+
+    // Apply default filter on page load (show active only)
+    (function(){
+        var cards = document.querySelectorAll(".ch-card");
+        cards.forEach(function(card){
+            var s = card.getAttribute("data-status");
+            if(s !== "active") card.style.display = "none";
+        });
+    })();
     </script>
 
     <footer class="dl-footer">
