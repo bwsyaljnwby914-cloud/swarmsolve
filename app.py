@@ -3,7 +3,12 @@ import os, io, json, requests, re, html
 from datetime import timedelta
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "swarmsolve_dev_key_2026")
+# SECRET_KEY must be set in environment — no default fallback for security
+app.secret_key = os.environ.get("SECRET_KEY")
+if not app.secret_key:
+    import secrets
+    app.secret_key = secrets.token_hex(32)
+    print("[SECURITY] WARNING: SECRET_KEY not set in environment. Using random key (sessions will reset on restart).")
 app.permanent_session_lifetime = timedelta(days=30)
 
 # Session cookie settings — persist across browser restarts
@@ -28,6 +33,10 @@ def add_security_headers(response):
     response.headers['X-XSS-Protection'] = '1; mode=block'
     # Referrer policy
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    # Prevent other sites from making API requests
+    response.headers['Access-Control-Allow-Origin'] = request.host_url.rstrip('/')
+    # Permissions policy
+    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()'
     # Content Security Policy
     response.headers['Content-Security-Policy'] = (
         "default-src 'self'; "
@@ -63,6 +72,16 @@ def sanitize_code(code, max_length=50000):
     code = str(code)[:max_length]
     code = code.replace('\x00', '')
     return code
+
+
+def is_valid_uuid(val):
+    """Check if string is valid UUID format"""
+    try:
+        import uuid
+        uuid.UUID(str(val))
+        return True
+    except (ValueError, AttributeError):
+        return False
 
 # ===== Supabase Config =====
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://bfvmheqcwaqojyidqceu.supabase.co")
@@ -545,7 +564,7 @@ def setup():
     user = get_current_user()
     if not user:
         return redirect(url_for("login"))
-    return render_template("setup.html", user=user, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
+    return render_template("setup.html", user=user, supabase_url=SUPABASE_URL)
 
 
 # ===== PROFILE =====
@@ -572,12 +591,14 @@ def profile():
         })
         session["user"] = user
         session.modified = True
-    return render_template("profile.html", user=user, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
+    return render_template("profile.html", user=user, supabase_url=SUPABASE_URL)
 
 
 @app.route("/user/<user_id>")
 def public_profile(user_id):
     """View any user's public profile"""
+    if not is_valid_uuid(user_id):
+        return "User not found", 404
     try:
         # Get profile
         r = requests.get(
@@ -666,6 +687,8 @@ def api_post_comment():
 
     if not target_id or not content:
         return jsonify({"error": "Content required"}), 400
+    if not is_valid_uuid(target_id):
+        return jsonify({"error": "Invalid user"}), 400
     if len(content) > 500:
         return jsonify({"error": "Comment too long (max 500 chars)"}), 400
     if rating < 0 or rating > 5:
