@@ -694,6 +694,82 @@ def api_post_comment():
         return jsonify({"error": "Failed"}), 500
 
 
+@app.route("/api/comment/<int:comment_id>", methods=["PATCH"])
+def api_edit_comment(comment_id):
+    """Edit your own comment"""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    data = request.get_json()
+    content = sanitize_input(data.get("content", ""), max_length=500)
+    if not content:
+        return jsonify({"error": "Content required"}), 400
+
+    # Verify ownership
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/comments?id=eq.{comment_id}&select=author_id",
+            headers=supabase_headers(),
+            timeout=5
+        )
+        comments = r.json() if r.status_code == 200 else []
+        if not comments:
+            return jsonify({"error": "Comment not found"}), 404
+        if comments[0].get("author_id") != user["id"]:
+            return jsonify({"error": "You can only edit your own comments"}), 403
+    except:
+        return jsonify({"error": "Failed"}), 500
+
+    # Update
+    try:
+        r = requests.patch(
+            f"{SUPABASE_URL}/rest/v1/comments?id=eq.{comment_id}",
+            headers=supabase_headers(),
+            json={"content": content, "is_edited": True, "edited_at": "now()"},
+            timeout=5
+        )
+        if r.status_code in [200, 204]:
+            return jsonify({"ok": True})
+        return jsonify({"error": "Failed to update"}), 500
+    except:
+        return jsonify({"error": "Failed"}), 500
+
+
+@app.route("/api/comment/<int:comment_id>", methods=["DELETE"])
+def api_delete_comment(comment_id):
+    """Delete your own comment"""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    # Verify ownership
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/comments?id=eq.{comment_id}&select=author_id",
+            headers=supabase_headers(),
+            timeout=5
+        )
+        comments = r.json() if r.status_code == 200 else []
+        if not comments:
+            return jsonify({"error": "Comment not found"}), 404
+        if comments[0].get("author_id") != user["id"]:
+            return jsonify({"error": "You can only delete your own comments"}), 403
+    except:
+        return jsonify({"error": "Failed"}), 500
+
+    # Delete
+    try:
+        requests.delete(
+            f"{SUPABASE_URL}/rest/v1/comments?id=eq.{comment_id}",
+            headers=supabase_headers(),
+            timeout=5
+        )
+        return jsonify({"ok": True})
+    except:
+        return jsonify({"error": "Failed"}), 500
+
+
 @app.route("/profile/update", methods=["POST"])
 def profile_update():
     user = get_current_user()
