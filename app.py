@@ -802,9 +802,15 @@ def profile_update():
     data = request.get_json()
     update_data = {}
     max_lengths = {"username": 30, "bio": 300, "github": 200, "linkedin": 200, "full_name": 50, "avatar_url": 500}
+    url_fields = {"github", "linkedin", "avatar_url"}  # Don't HTML escape URLs
     for field in ["username", "bio", "github", "linkedin", "full_name", "avatar_url"]:
         if field in data:
-            val = sanitize_input(data[field], max_length=max_lengths.get(field, 100))
+            if field in url_fields:
+                # URLs: just limit length, strip, remove null bytes — no HTML escape
+                val = str(data[field] or "").strip()[:max_lengths.get(field, 200)]
+                val = val.replace('\x00', '')
+            else:
+                val = sanitize_input(data[field], max_length=max_lengths.get(field, 100))
             # Validate username format
             if field == "username" and val and not re.match(r'^[a-zA-Z0-9_-]+$', val):
                 return jsonify({"error": "Username can only contain letters, numbers, _ and -"}), 400
