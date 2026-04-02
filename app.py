@@ -117,14 +117,26 @@ def get_profile(user_id, access_token=None):
 
 def update_profile(user_id, data, access_token=None):
     """Update user profile in Supabase"""
+    # Remove updated_at with now() — Supabase REST doesn't support SQL functions
+    if "updated_at" in data:
+        from datetime import datetime
+        data["updated_at"] = datetime.utcnow().isoformat()
     h = supabase_headers(access_token)
     h["Prefer"] = "return=representation"
-    r = requests.patch(
-        f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}",
-        headers=h,
-        json=data
-    )
-    return r.status_code == 200
+    try:
+        r = requests.patch(
+            f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}",
+            headers=h,
+            json=data,
+            timeout=10
+        )
+        if r.status_code in [200, 204]:
+            return True
+        print(f"[PROFILE] Update failed: {r.status_code} — {r.text[:200]}")
+        return False
+    except Exception as e:
+        print(f"[PROFILE] Update error: {e}")
+        return False
 
 
 def get_current_user():
