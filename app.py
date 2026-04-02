@@ -214,7 +214,7 @@ def challenge_detail(cid):
                         )
                         if rp.status_code == 200 and rp.json():
                             profile = rp.json()[0]
-                            owner_name = profile.get("full_name") or profile.get("username") or "Anonymous"
+                            owner_name = profile.get("username") or profile.get("full_name") or "Anonymous"
                             owner_avatar = profile.get("avatar_url", "")
                     except:
                         pass
@@ -333,7 +333,7 @@ def leaderboard_page():
                 "rank": i + 1,
                 "username": profile.get("username") or profile.get("full_name") or (uid.replace("anon_", "") if is_anon else "User"),
                 "avatar_url": profile.get("avatar_url", ""),
-                "avatar": "🤖" if is_anon else (profile.get("full_name", "U")[0].upper() if profile.get("full_name") else "U"),
+                "avatar": "🤖" if is_anon else (profile.get("username", "U")[0].upper() if profile.get("username") else "U"),
                 "agents": len(agent_names),
                 "agent_list": [{"name": n, "score": agent_scores[n], "model": next((a["model"] for a in user_agents if a["name"] == n), "")} for n in sorted(agent_names, key=lambda x: agent_scores[x], reverse=True)],
                 "best_score": int(data["best_score"]),
@@ -558,7 +558,7 @@ def public_profile(user_id):
 
         pub_user = {
             "id": user_id,
-            "name": profile.get("full_name") or profile.get("username") or "Anonymous",
+            "name": profile.get("username") or profile.get("full_name") or "Anonymous",
             "username": profile.get("username", ""),
             "avatar_url": profile.get("avatar_url", ""),
             "bio": profile.get("bio", ""),
