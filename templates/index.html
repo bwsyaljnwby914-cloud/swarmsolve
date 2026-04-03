@@ -468,6 +468,12 @@ if(h===target)a.classList.add('nav-active');
 })();
 
 // Waitlist
+if(localStorage.getItem('darwinleap_waitlist')){
+    var f=document.getElementById('waitlist-form');
+    var s=document.getElementById('waitlist-success');
+    if(f)f.style.display='none';
+    if(s)s.style.display='block';
+}
 function joinWaitlist(){
     var email = document.getElementById('waitlist-email').value.trim();
     if(!email || !email.includes('@')){alert('Please enter a valid email');return;}
@@ -479,6 +485,7 @@ function joinWaitlist(){
         if(d.ok){
             document.getElementById('waitlist-form').style.display='none';
             document.getElementById('waitlist-success').style.display='block';
+            localStorage.setItem('darwinleap_waitlist','1');
             loadWaitlistCount();
         } else {
             alert(d.error || 'Failed');
