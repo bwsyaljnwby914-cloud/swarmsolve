@@ -1053,24 +1053,8 @@ def create_challenge():
             print(f"[EVAL] Initial eval failed: {e}")
             initial_score = 1
 
-        # Register in the engine (makes it live immediately)
-        try:
-            challenge_manager.register_challenge(
-                challenge_id=cid,
-                title=title,
-                initial_code=initial_code,
-                evaluator_code=evaluator_code,
-                initial_score=initial_score,
-                target_score=target_score,
-                save_to_db=False,
-                description=description,
-                category=category,
-            )
-        except Exception as e:
-            print(f"[ENGINE] Registration failed: {e}")
-            return jsonify({"error": f"Engine error: {str(e)}"}), 500
-
-        # Save to Supabase in ONE request
+        # Do NOT register in engine — wait for admin approval
+        # Save to Supabase as pending
         try:
             save_data = {
                 "id": cid,
