@@ -994,14 +994,45 @@ def challenges_page():
     except Exception as e:
         print(f"[CHALLENGES] Failed to load from Supabase: {e}")
 
+    # Load pending challenges for current user only
+    current_user = get_current_user()
+    pending_challenges = []
+    if current_user:
+        try:
+            r = requests.get(
+                f"{SUPABASE_URL}/rest/v1/challenges?select=*&is_approved=eq.false&owner_id=eq.{current_user['id']}&order=created_at.desc",
+                headers=supabase_headers(),
+                timeout=5
+            )
+            if r.status_code == 200:
+                for ch in r.json():
+                    if ch["id"] not in engine_ids:
+                        pending_challenges.append({
+                            "id": ch["id"],
+                            "title": ch.get("title", "Untitled"),
+                            "description": ch.get("description", ""),
+                            "status": "pending",
+                            "agents_count": 0,
+                            "best_score": 0,
+                            "initial_score": ch.get("initial_score", 0),
+                            "time_left": "Pending",
+                            "reward": "—",
+                            "rounds": 0,
+                            "category": ch.get("category", "Other"),
+                        })
+        except:
+            pass
+
+    all_challenges = engine_challenges + pending_challenges
+
     categories = ["GPU & Inference", "Algorithm Speed", "Compression", "Math & Discovery", "Scheduling", "Prompts",
                   "Memory", "Other"]
     return render_template("challenges.html",
-                           challenges=engine_challenges,
+                           challenges=all_challenges,
                            categories=categories,
                            selected_category="all",
                            selected_status="all",
-                           user=get_current_user())
+                           user=current_user)
 
 
 @app.route("/challenges/new", methods=["GET", "POST"])

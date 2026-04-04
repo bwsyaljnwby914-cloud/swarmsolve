@@ -200,10 +200,10 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
         <!-- Challenge Grid -->
         <div class="ch-grid" id="ch-grid">
             {% for c in challenges %}
-            <a href="/challenge/{{ c.id }}" class="ch-card {{ 'completed' if c.status != 'active' else 'live-card' }}" data-status="{{ c.status }}" data-category="{{ c.category }}">
+            <a href="{% if c.status == 'pending' %}#{% else %}/challenge/{{ c.id }}{% endif %}" class="ch-card {{ 'completed' if c.status == 'stopped' else ('pending-card' if c.status == 'pending' else 'live-card') }}" data-status="{{ c.status }}" data-category="{{ c.category }}" {% if c.status == 'pending' %}style="opacity:0.7;cursor:default"{% endif %}>
                 <div class="ch-card-top">
                     <span class="ch-cat">{{ c.category }}</span>
-                    <span class="ch-status {{ c.status }}">{% if c.status == 'active' %}🟢 Live{% else %}✅ Ended{% endif %}</span>
+                    <span class="ch-status {{ c.status }}">{% if c.status == 'active' %}🟢 Live{% elif c.status == 'pending' %}⏳ Pending{% else %}✅ Ended{% endif %}</span>
                 </div>
                 <h3>{{ c.title }}</h3>
                 <p>{{ c.description }}</p>
