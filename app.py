@@ -848,7 +848,7 @@ def profile_update():
         if success:
             # Update session too
             for k, v in update_data.items():
-                if k in user:
+                if k != "updated_at":
                     user[k] = v
             session["user"] = user
             session.modified = True
