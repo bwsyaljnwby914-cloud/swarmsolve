@@ -682,6 +682,7 @@ def public_profile(user_id):
             "bio": profile.get("bio", ""),
             "github": profile.get("github", ""),
             "linkedin": profile.get("linkedin", ""),
+            "public_email": profile.get("public_email", ""),
             "badge": profile.get("badge", "EvoRookie"),
             "agents_count": len(agents),
             "agents": agents,

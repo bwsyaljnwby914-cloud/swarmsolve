@@ -110,11 +110,11 @@ html.i18n-loading body{opacity:0}html:not(.i18n-loading) body{transition:opacity
                 </div>
             </div>
 
-            {% if pub_user.github or pub_user.linkedin or pub_user.email %}
+            {% if pub_user.github or pub_user.linkedin or pub_user.public_email %}
             <div class="pub-links">
                 {% if pub_user.github %}<a href="{{ pub_user.github if pub_user.github.startswith('http') else 'https://github.com/' + pub_user.github }}" target="_blank">🔗 GitHub</a>{% endif %}
                 {% if pub_user.linkedin %}<a href="{{ pub_user.linkedin if pub_user.linkedin.startswith('http') else 'https://linkedin.com/in/' + pub_user.linkedin }}" target="_blank">🔗 LinkedIn</a>{% endif %}
-                {% if pub_user.email %}<a href="mailto:{{ pub_user.email }}">📧 Email</a>{% endif %}
+                {% if pub_user.public_email %}<a href="mailto:{{ pub_user.public_email }}">📧 Email</a>{% endif %}
             </div>
             {% endif %}
         </div>
