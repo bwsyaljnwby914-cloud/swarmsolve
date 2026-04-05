@@ -175,6 +175,21 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
     </nav>
 
     <div class="ch-page">
+        <!-- Notify box for bounty challenges -->
+        <div style="background:#0d1117;border:1px solid #22d3ee20;border-radius:14px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap" id="ch-notify-box">
+            <div style="flex:1;min-width:200px">
+                <div style="font-size:15px;font-weight:700;color:#f0f6fc;margin-bottom:4px" data-i18n="ch.notifyTitle">🔔 Get notified when new bounty challenges are posted</div>
+                <div style="font-size:12px;color:#6e7681" data-i18n="ch.notifyHint">We'll email you only when a challenge with a reward is published. No spam.</div>
+            </div>
+            <div style="display:flex;gap:8px" id="ch-notify-form">
+                <input type="email" id="ch-notify-email" placeholder="your@email.com" style="padding:10px 14px;border-radius:10px;border:1px solid #21262d;background:#161b22;color:#f0f6fc;font-size:13px;font-family:inherit;width:220px">
+                <button onclick="chNotify()" style="padding:10px 18px;border-radius:10px;background:linear-gradient(135deg,#22d3ee,#06b6d4);color:#060911;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap" data-i18n="ch.notifyBtn">Notify Me</button>
+            </div>
+            <div id="ch-notify-success" style="display:none;padding:10px 18px;background:#22d3ee15;border:1px solid #22d3ee30;border-radius:10px;color:#22d3ee;font-size:13px;font-weight:600">
+                ✅ <span data-i18n="ch.notifyDone">You're on the list!</span>
+            </div>
+        </div>
+
         <div class="ch-header">
             <h1 data-i18n="ch.title">🏆 Challenges</h1>
             {% if user %}
@@ -259,6 +274,35 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
         </div>
     </div>
 
+
+    <script>
+    // Challenges notify box
+    if(localStorage.getItem('darwinleap_ch_notify')){
+        var f=document.getElementById('ch-notify-form');
+        var s=document.getElementById('ch-notify-success');
+        if(f)f.style.display='none';
+        if(s)s.style.display='block';
+    }
+    function chNotify(){
+        var email=document.getElementById('ch-notify-email').value.trim();
+        if(!email||!email.includes('@')){alert('Please enter a valid email');return;}
+        document.getElementById('ch-notify-form').style.display='none';
+        document.getElementById('ch-notify-success').style.display='block';
+        localStorage.setItem('darwinleap_ch_notify','1');
+        fetch('/api/waitlist',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({email:email})
+        }).then(function(r){return r.json();}).then(function(d){
+            if(!d.ok&&d.error){
+                document.getElementById('ch-notify-form').style.display='';
+                document.getElementById('ch-notify-success').style.display='none';
+                localStorage.removeItem('darwinleap_ch_notify');
+                alert(d.error);
+            }
+        }).catch(function(){});
+    }
+    </script>
 
     <script>
     // Sidebar
