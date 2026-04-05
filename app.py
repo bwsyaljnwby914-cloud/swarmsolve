@@ -1940,6 +1940,29 @@ def api_waitlist_count():
         return jsonify({"count": 0})
 
 
+@app.route("/api/bounty-notify", methods=["POST"])
+def api_bounty_notify():
+    """Add email to bounty notifications (separate from experiment waitlist)"""
+    data = request.get_json()
+    email = sanitize_input(data.get("email", ""), max_length=100)
+    if not email or "@" not in email or "." not in email:
+        return jsonify({"error": "Valid email required"}), 400
+    try:
+        r = requests.post(
+            f"{SUPABASE_URL}/rest/v1/bounty_notify",
+            headers={**supabase_headers(), "Prefer": "return=representation"},
+            json={"email": email},
+            timeout=5
+        )
+        if r.status_code in [200, 201]:
+            return jsonify({"ok": True})
+        if "duplicate" in r.text.lower() or "unique" in r.text.lower():
+            return jsonify({"ok": True})
+        return jsonify({"error": "Failed"}), 500
+    except:
+        return jsonify({"error": "Failed"}), 500
+
+
 @app.route("/api/my-stats", methods=["GET"])
 def api_my_stats():
     """Calculate real achievements and badge for current user"""
