@@ -158,7 +158,6 @@ body.rtl .model-card h3{padding-right:0;padding-left:60px}
                 <a href="/" data-i18n="nav.home">Home</a>
                 <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
                 <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
-                <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
                 <a href="/why" class="nav-why-link" data-i18n="nav.why">Why Collective Evolution?</a>
                 <a href="/how-it-works" class="nav-why-link" data-i18n="nav.howItWorks">How It Works</a>
             </div>
@@ -390,7 +389,6 @@ body.rtl .model-card h3{padding-right:0;padding-left:60px}
                     <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
                     <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
                     <a href="/how-it-works" data-i18n="nav.howItWorks">How It Works</a>
-                    <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
                 </div>
                 <div class="footer-links-col">
                     <a href="/new-agent" data-i18n="nav.newAgent">+ New Agent</a>
@@ -408,7 +406,7 @@ body.rtl .model-card h3{padding-right:0;padding-left:60px}
 
     <script>
     (function(){var h=document.getElementById("hamburger"),n=document.getElementById("nav-links"),o=document.getElementById("nav-sidebar-overlay");if(!h||!n)return;h.addEventListener("click",function(e){e.stopPropagation();h.classList.toggle("active");n.classList.toggle("active");if(o)o.classList.toggle("active");document.body.style.overflow=n.classList.contains("active")?"hidden":"";});if(o)o.addEventListener("click",c);n.querySelectorAll("a").forEach(function(a){a.addEventListener("click",c);});function c(){h.classList.remove("active");n.classList.remove("active");if(o)o.classList.remove("active");document.body.style.overflow="";}
-    var p=window.location.pathname;var map={'/':'/','/challenges':'/challenges','/leaderboard':'/leaderboard','/solutions':'/solutions','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/new-agent','/profile':'/profile'};var seg='/'+p.split('/').filter(Boolean)[0]||'/';if(seg==='/'){seg=p;}var target=map[seg]||seg;document.querySelectorAll('.nav-group-links a').forEach(function(a){var href=a.getAttribute('href');if(href===target)a.classList.add('nav-active');});
+    var p=window.location.pathname;var map={'/':'/','/challenges':'/challenges','/leaderboard':'/leaderboard','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/new-agent','/profile':'/profile'};var seg='/'+p.split('/').filter(Boolean)[0]||'/';if(seg==='/'){seg=p;}var target=map[seg]||seg;document.querySelectorAll('.nav-group-links a').forEach(function(a){var href=a.getAttribute('href');if(href===target)a.classList.add('nav-active');});
     })();
 
     var lastCreatedKey="",lastCreatedName="";

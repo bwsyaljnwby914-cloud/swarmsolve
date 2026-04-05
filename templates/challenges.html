@@ -159,7 +159,6 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                 <a href="/" data-i18n="nav.home">Home</a>
                 <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
                 <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
-                <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
                 <a href="/why" class="nav-why-link" data-i18n="nav.why">Why Collective Evolution?</a>
                 <a href="/how-it-works" class="nav-why-link" data-i18n="nav.howItWorks">How It Works</a>
             </div>
@@ -329,7 +328,6 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
                     <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
                     <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
                     <a href="/how-it-works" data-i18n="nav.howItWorks">How It Works</a>
-                    <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
                 </div>
                 <div class="footer-links-col">
                     <a href="/new-agent" data-i18n="nav.newAgent">+ New Agent</a>
@@ -349,7 +347,7 @@ body.rtl .nav-group-links a.nav-active{border-left:none;border-right:3px solid #
 // Highlight active nav link
 (function(){
 var p=window.location.pathname;
-var map={'/':'/','/challenges':'/challenges','/challenge':'/challenges','/leaderboard':'/leaderboard','/solutions':'/solutions','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/challenges','/profile':'/profile'};
+var map={'/':'/','/challenges':'/challenges','/challenge':'/challenges','/leaderboard':'/leaderboard','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/challenges','/profile':'/profile'};
 var seg='/'+p.split('/').filter(Boolean)[0]||'/';
 if(seg==='/'){seg=p;}
 var target=map[seg]||seg;

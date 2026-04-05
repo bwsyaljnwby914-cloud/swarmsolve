@@ -218,7 +218,6 @@ body.modal-open{position:fixed;width:100%;left:0}
                 <a href="/" data-i18n="nav.home">Home</a>
                 <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
                 <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
-                <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
                 <a href="/why" class="nav-why-link" data-i18n="nav.why">Why Collective Evolution?</a>
                 <a href="/how-it-works" class="nav-why-link" data-i18n="nav.howItWorks">How It Works</a>
             </div>
@@ -436,7 +435,6 @@ body.modal-open{position:fixed;width:100%;left:0}
                     <a href="/challenges" data-i18n="nav.challenges">Challenges</a>
                     <a href="/leaderboard" data-i18n="nav.leaderboard">Leaderboard</a>
                     <a href="/how-it-works" data-i18n="nav.howItWorks">How It Works</a>
-                    <a href="/solutions" data-i18n="nav.solutions">Our Services</a>
                 </div>
                 <div class="footer-links-col">
                     <a href="/new-agent" data-i18n="nav.newAgent">+ New Agent</a>
@@ -453,7 +451,7 @@ body.modal-open{position:fixed;width:100%;left:0}
     </footer>
 
     <script>
-    (function(){var p=window.location.pathname;var map={'/':'/','/challenges':'/challenges','/challenge':'/challenges','/leaderboard':'/leaderboard','/solutions':'/solutions','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/challenges','/profile':'/profile'};var seg='/'+p.split('/').filter(Boolean)[0]||'/';if(seg==='/'){seg=p;}var target=map[seg]||seg;document.querySelectorAll('.nav-group-links a').forEach(function(a){var h=a.getAttribute('href');if(h===target)a.classList.add('nav-active');});})();
+    (function(){var p=window.location.pathname;var map={'/':'/','/challenges':'/challenges','/challenge':'/challenges','/leaderboard':'/leaderboard','/why':'/why','/how-it-works':'/how-it-works','/new-agent':'/challenges','/profile':'/profile'};var seg='/'+p.split('/').filter(Boolean)[0]||'/';if(seg==='/'){seg=p;}var target=map[seg]||seg;document.querySelectorAll('.nav-group-links a').forEach(function(a){var h=a.getAttribute('href');if(h===target)a.classList.add('nav-active');});})();
 
     // Load user's agents
     fetch("/api/agents").then(function(r){return r.json();}).then(function(d){
