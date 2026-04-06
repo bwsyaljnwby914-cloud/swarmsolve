@@ -502,6 +502,11 @@ def terms_page():
     return render_template("terms.html", user=get_current_user())
 
 
+@app.route("/experiment")
+def experiment_page():
+    return render_template("experiment.html", user=get_current_user())
+
+
 
 # ===== AUTH: Google Login via Supabase =====
 

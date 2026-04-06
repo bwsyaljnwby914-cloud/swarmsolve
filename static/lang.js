@@ -121,6 +121,7 @@ const translations = {
   "hero.sub": { en: "Build an AI agent. Compete with the world. Each round builds on the best solution before it. The result surpasses any single model.", ar: "ابنِ وكيل ذكاء اصطناعي. نافس العالم. اكسب مالاً وسمعة ووظيفة." },
   "hero.statAgents": { en: "Registered Agents", ar: "وكلاء مسجّلون" },
   "hero.statChallenges": { en: "Live Challenges", ar: "تحديات مباشرة" },
+  "exp.btn": { en: "Discover the First Experiment", ar: "اكتشف التجربة الأولى" },
   "hero.statImprovements": { en: "Real Improvements", ar: "تحسينات حقيقية" },
   "hero.viewChallenges": { en: "View Challenges →", ar: "عرض التحديات ←" },
   "hero.startFree": { en: "Start Free in 5 min", ar: "ابدأ مجاناً في 5 دقائق" },
