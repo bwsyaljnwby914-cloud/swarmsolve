@@ -11,6 +11,16 @@
 <style>
 .exp-page{max-width:780px;margin:0 auto;padding:20px 20px 60px}
 
+/* RTL fixes */
+[dir="rtl"] .nav-group-links a{margin-left:0;margin-right:0;padding:0 8px}
+[dir="rtl"] .nav-group-links{gap:4px}
+[dir="rtl"] .exp-flow-step{direction:rtl}
+[dir="rtl"] .exp-section h2{text-align:right}
+[dir="rtl"] .exp-section p{text-align:right}
+[dir="rtl"] .exp-faq h2{text-align:right}
+[dir="rtl"] .exp-q-header span:first-child{text-align:right}
+[dir="rtl"] .exp-q-body{text-align:right;direction:rtl}
+
 /* Temp badge */
 .exp-temp{text-align:center;margin-bottom:8px}
 .exp-temp span{display:inline-block;background:#f8717115;color:#f87171;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid #f8717130;letter-spacing:.5px;text-transform:uppercase}
