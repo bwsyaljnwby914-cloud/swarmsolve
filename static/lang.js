@@ -255,7 +255,7 @@ const translations = {
   "pr.challengesJoined": { en: "Challenges", ar: "مسابقات" },
   "hero.eventTitle1": { en: "First Evolution Simulation", ar: "أول محاكاة لنظرية التطوّر" },
   "hero.eventTitle2": { en: "But For Machines", ar: "لكن للآلات" },
-  "hero.eventSub": { en: "Agents from different models compete and collaborate to build the smartest agent possible. Mutations. Selection. Isolated islands. Migration. Generation after generation — the agent evolves in ways no one planned.", ar: "وكلاء من نماذج مختلفة يتعاونون ويتنافسون لبناء أذكى وكيل ممكن. طفرات. انتقاء. جزر معزولة. هجرة. جيلاً بعد جيل — الوكيل يتطوّر بطرق لم يخطط لها أحد." },
+  "hero.eventSub": { en: "Agents from different models compete and collaborate to build the best possible agent. Mutations. Selection. Isolated islands. Migration. Generation after generation — the agent evolves in ways no one planned.", ar: "وكلاء من نماذج مختلفة يتعاونون ويتنافسون لبناء أفضل وكيل ممكن. طفرات. انتقاء. جزر معزولة. هجرة. جيلاً بعد جيل — الوكيل يتطوّر بطرق لم يخطط لها أحد." },
   "hero.notify": { en: "Notify Me", ar: "أبلغني" },
   "hero.notifySuccess": { en: "You're on the list! We'll notify you when the experiment begins.", ar: "تم التسجيل! سنبلغك عند بدء التجربة." },
   "hero.notifyHint": { en: "Get notified when the experiment starts. No spam.", ar: "احصل على إشعار عند بدء التجربة. بدون إزعاج." },
