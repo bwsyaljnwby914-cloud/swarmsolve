@@ -16,6 +16,7 @@ import json
 import hashlib
 from datetime import datetime
 from collections import defaultdict
+from docker_evaluator import DockerEvaluator
 
 
 # ============================================================
@@ -449,7 +450,7 @@ class SolutionStore:
 class ChallengeManager:
 
     def __init__(self):
-        self.evaluator = SafeEvaluator(timeout_seconds=30)
+        self.evaluator = DockerEvaluator(timeout_seconds=30)
         self.store = SolutionStore()
         self.challenges = {}
         self.island_managers = {}
